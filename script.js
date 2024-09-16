@@ -319,6 +319,7 @@
 //-----  -----
 //----- NeetCode: Search a 2D Matrix-----
 //-----  -----
+
 // const matrix = [
 //   [1, 2, 4, 8],
 //   [10, 11, 12, 13],
@@ -332,84 +333,164 @@
 // ];
 // const target = 11;
 
-const matrix = [
-  [1, 3, 5, 7],
-  [10, 11, 16, 20],
-  [23, 30, 34, 50],
-];
-const target = 2;
+// const matrix = [
+//   [1, 3, 5, 7],
+//   [10, 11, 16, 20],
+//   [23, 30, 34, 50],
+// ];
+// const target = 2;
 
-function searchMatrix(matrix, target) {
-  function binarySearch(nums, target) {
-    let [left, right] = [0, nums.length - 1];
+// function searchMatrix(matrix, target) {
+//   function binarySearch(nums, target) {
+//     let [left, right] = [0, nums.length - 1];
 
-    if (target < nums[0] || target > nums[nums.length - 1]) return -1;
+//     if (target < nums[0] || target > nums[nums.length - 1]) return -1;
 
-    while (left <= right) {
-      let mid = Math.floor((left + right) / 2);
+//     while (left <= right) {
+//       let mid = Math.floor((left + right) / 2);
 
-      if (target < nums[mid]) {
-        right = mid - 1;
-      } else if (target > nums[mid]) {
-        left = mid + 1;
-      } else if (target === nums[mid]) return mid;
-    }
+//       if (target < nums[mid]) {
+//         right = mid - 1;
+//       } else if (target > nums[mid]) {
+//         left = mid + 1;
+//       } else if (target === nums[mid]) return mid;
+//     }
 
-    return -1;
-  }
+//     return -1;
+//   }
 
-  function binaryRowSearch(nums, target) {
-    if (target >= nums[nums.length - 1]) return nums.length - 1;
-    if (target === nums[0]) return 0;
+//   function binaryRowSearch(nums, target) {
+//     if (target >= nums[nums.length - 1]) return nums.length - 1;
+//     if (target === nums[0]) return 0;
 
-    let [left, right] = [0, nums.length - 1];
+//     let [left, right] = [0, nums.length - 1];
 
-    while (right - left >= 0) {
-      let mid = Math.floor((left + right) / 2);
+//     while (right - left >= 0) {
+//       let mid = Math.floor((left + right) / 2);
 
-      if (target < nums[mid] && target > nums[mid - 1]) {
-        return mid - 1;
-      } else if (target < nums[mid] && target < nums[mid - 1]) {
-        right = mid - 1;
-      } else if (target > nums[mid] && target > nums[mid + 1]) {
-        left = mid + 1;
-      } else if (target > nums[mid] && target < nums[mid + 1]) {
-        return mid;
-      } else if (target === nums[mid]) return mid;
-    }
+//       if (target < nums[mid] && target > nums[mid - 1]) {
+//         return mid - 1;
+//       } else if (target < nums[mid] && target < nums[mid - 1]) {
+//         right = mid - 1;
+//       } else if (target > nums[mid] && target > nums[mid + 1]) {
+//         left = mid + 1;
+//       } else if (target > nums[mid] && target < nums[mid + 1]) {
+//         return mid;
+//       } else if (target === nums[mid]) return mid;
+//     }
 
-    return -1;
-  }
+//     return -1;
+//   }
 
-  if (
-    matrix[0][0] > target ||
-    matrix[matrix.length - 1][matrix[0].length - 1] < target
-  )
-    return false;
+//   if (
+//     matrix[0][0] > target ||
+//     matrix[matrix.length - 1][matrix[0].length - 1] < target
+//   )
+//     return false;
 
-  if (
-    matrix[0][0] === target ||
-    target === matrix[matrix.length - 1][matrix[0].length - 1]
-  )
-    return true;
+//   if (
+//     matrix[0][0] === target ||
+//     target === matrix[matrix.length - 1][matrix[0].length - 1]
+//   )
+//     return true;
 
-  //1. Check what row needs to be searched
-  //1a. Compose a new array of first elements
-  let firstRowElements = [];
+//   //1. Check what row needs to be searched
+//   //1a. Compose a new array of first elements
+//   let firstRowElements = [];
 
-  for (let i = 0; i <= matrix.length - 1; i++) {
-    firstRowElements.push(matrix[i][0]);
-  }
+//   for (let i = 0; i <= matrix.length - 1; i++) {
+//     firstRowElements.push(matrix[i][0]);
+//   }
 
-  //1b. Find a row to look at
-  const row = binaryRowSearch(firstRowElements, target);
+//   //1b. Find a row to look at
+//   const row = binaryRowSearch(firstRowElements, target);
 
-  //2. Do Binary search to find a value in a row
-  const valueIndex = binarySearch(matrix[row], target);
+//   //2. Do Binary search to find a value in a row
+//   const valueIndex = binarySearch(matrix[row], target);
 
-  const result = valueIndex === -1 ? false : true;
+//   const result = valueIndex === -1 ? false : true;
 
-  return result;
+//   return result;
+// }
+
+// console.log(searchMatrix(matrix, target));
+
+//-----  -----
+//----- LeetCode: Guess Number Higher or Lower-----
+//-----  -----
+
+// function guess(n, secret) {
+//   if (n > secret) {
+//     return -1;
+//   } else if (n < secret) {
+//     return 1;
+//   } else return 0;
+// }
+
+// function guessNumber(n) {
+//   //NOTE: FOR DEBUGGING
+//   // const secret = Math.floor(Math.random() * n);
+//   // console.log(secret);
+
+//   if (n === 1) return 1;
+
+//   let [left, right] = [1, n];
+
+//   while (left <= right) {
+//     const mid = Math.floor((left + right) / 2);
+//     //NOTE: FOR DEBUGGING
+//     // const guessedNum = guess(mid, secret);
+//     const guessedNum = guess(mid);
+
+//     if (guessedNum < 0) {
+//       right = mid - 1;
+//     } else if (guessedNum > 0) {
+//       left = mid + 1;
+//     } else return mid;
+//   }
+
+//   return -1;
+// }
+
+// console.log(guessNumber(100));
+
+//-----  -----
+//----- LeetCode: First Bad Version-----
+//-----  -----
+
+function isBadVersion(num, secretFirstBuild) {
+  const res = num >= secretFirstBuild;
+  return res;
 }
 
-console.log(searchMatrix(matrix, target));
+function badBuild(n) {
+  // NOTE: FOR DEBUGGING
+  // const secretBuild = Math.floor(Math.random() * n);
+  // //const secretBuild = 7;
+  // console.log(secretBuild);
+
+  // NOTE: FOR DEBUGGING
+  // if (isBadVersion(1, secretBuild)) return 1;
+  if (isBadVersion(1)) return 1;
+
+  let [left, right] = [1, n];
+  let res = 0;
+
+  while (right - left >= 0) {
+    const mid = Math.floor((left + right) / 2);
+    //NOTE: FOR DEBUGGING
+    //const badMidBuild = isBadVersion(mid, secretBuild);
+    const badMidBuild = isBadVersion(mid);
+
+    if (badMidBuild) {
+      right = mid - 1;
+      res = mid;
+    } else {
+      left = mid + 1;
+    }
+  }
+
+  return res;
+}
+
+console.log(badBuild(100));
