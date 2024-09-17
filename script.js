@@ -455,42 +455,216 @@
 // console.log(guessNumber(100));
 
 //-----  -----
-//----- LeetCode: First Bad Version-----
+//----- LeetCode 278: First Bad Version-----
 //-----  -----
 
-function isBadVersion(num, secretFirstBuild) {
-  const res = num >= secretFirstBuild;
-  return res;
+// function isBadVersion(num, secretFirstBuild) {
+//   const res = num >= secretFirstBuild;
+//   return res;
+// }
+
+// function badBuild(n) {
+//   // NOTE: FOR DEBUGGING
+//   // const secretBuild = Math.floor(Math.random() * n);
+//   // //const secretBuild = 7;
+//   // console.log(secretBuild);
+
+//   // NOTE: FOR DEBUGGING
+//   // if (isBadVersion(1, secretBuild)) return 1;
+//   if (isBadVersion(1)) return 1;
+
+//   let [left, right] = [1, n];
+//   let res = 0;
+
+//   while (right - left >= 0) {
+//     const mid = Math.floor((left + right) / 2);
+//     //NOTE: FOR DEBUGGING
+//     //const badMidBuild = isBadVersion(mid, secretBuild);
+//     const badMidBuild = isBadVersion(mid);
+
+//     if (badMidBuild) {
+//       right = mid - 1;
+//       res = mid;
+//     } else {
+//       left = mid + 1;
+//     }
+//   }
+
+//   return res;
+// }
+
+// console.log(badBuild(100));
+
+//-----  -----
+//----- NeetCode: Eating Bananas-----
+//-----  -----
+
+// function minEatingSpeed(piles, h) {
+//   function hoursToEat(k) {
+//     let hours = 0;
+
+//     piles.forEach((pile) => {
+//       hours += Math.ceil(pile / k);
+//     });
+
+//     return hours;
+//   }
+
+//   let left = 1;
+//   let right = Math.max(...piles);
+//   let k = 1;
+
+//   while (right - left >= 0) {
+//     const mid = Math.floor((left + right) / 2);
+
+//     const hours = hoursToEat(mid);
+
+//     if (hours <= h) {
+//       right = mid - 1;
+//       k = mid;
+//     } else {
+//       left = mid + 1;
+//     }
+//   }
+
+//   return k;
+// }
+
+// // const piles = [1, 4, 3, 2];
+// // const h = 9;
+
+// const piles = [25, 10, 23, 4];
+// const h = 4;
+// console.log(minEatingSpeed(piles, h));
+
+//-----  -----
+//----- LeetCode 700: Search in a Binary Search Tree-----
+//-----  -----
+
+/**
+ * Definition for a binary tree node.
+ * function TreeNode(val, left, right) {
+ *     this.val = (val===undefined ? 0 : val)
+ *     this.left = (left===undefined ? null : left)
+ *     this.right = (right===undefined ? null : right)
+ * }
+ */
+// /**
+//  * @param {TreeNode} root
+//  * @param {number} val
+//  * @return {TreeNode}
+//  */
+// var searchBST = function (root, val) {
+//   if (root === null) return null;
+
+//   if (root.val > val) {
+//     return searchBST(root.left, val);
+//   }
+//   if (root.val < val) {
+//     return searchBST(root.right, val);
+//   } else return root;
+// };
+
+//-----  -----
+//----- LeetCode 701: Insert into a Binary Search Tree-----
+//-----  -----
+
+// var insertIntoBST = function(root, val) {
+//   if (root === null) return new TreeNode(val);
+
+//   if (val > root.val) {
+//       root.right = insertIntoBST(root.right, val)
+//   } else if (val < root.val) {
+//       root.left = insertIntoBST(root.left, val)
+//   }
+//   return root;
+// };
+
+//-----  -----
+//----- LeetCode 450: Delete Node in a BST-----
+//-----  -----
+
+//Definition for a binary tree node.
+function TreeNode(val, left, right) {
+  this.val = val === undefined ? 0 : val;
+  this.left = left === undefined ? null : left;
+  this.right = right === undefined ? null : right;
 }
 
-function badBuild(n) {
-  // NOTE: FOR DEBUGGING
-  // const secretBuild = Math.floor(Math.random() * n);
-  // //const secretBuild = 7;
-  // console.log(secretBuild);
+//Test case 1
+// const node2 = new TreeNode(2);
+// const node4 = new TreeNode(4);
+// const node7 = new TreeNode(7);
+// const node3 = new TreeNode(3, node2, node4);
+// const node6 = new TreeNode(6, null, node7);
+// const node = new TreeNode(5, node3, node6);
+// const key = 3;
 
-  // NOTE: FOR DEBUGGING
-  // if (isBadVersion(1, secretBuild)) return 1;
-  if (isBadVersion(1)) return 1;
+//Test case 2
+const node40 = new TreeNode(40);
+const node60 = new TreeNode(60);
+const node80 = new TreeNode(80);
+const node30 = new TreeNode(30, null, node40);
+const node70 = new TreeNode(70, node60, node80);
+const node = new TreeNode(50, node30, node70);
+const key = 50;
 
-  let [left, right] = [1, n];
-  let res = 0;
+//Test case 3
+// const node1 = new TreeNode(1);
+// const node = new TreeNode(2, node1, null);
+// const key = 2;
 
-  while (right - left >= 0) {
-    const mid = Math.floor((left + right) / 2);
-    //NOTE: FOR DEBUGGING
-    //const badMidBuild = isBadVersion(mid, secretBuild);
-    const badMidBuild = isBadVersion(mid);
+var deleteNode = function (root, key) {
+  if (!root) return root;
 
-    if (badMidBuild) {
-      right = mid - 1;
-      res = mid;
+  function minNode(node) {
+    let res = node;
+
+    while (res.left) {
+      res = res.left;
+    }
+    return res;
+  }
+
+  //1. Find a note to be deleted
+  if (key > root.val) {
+    root.right = deleteNode(root.right, key);
+  } else if (key < root.val) {
+    root.left = deleteNode(root.left, key);
+  } else {
+    //2. The note to delete has been found. Delete it
+    //2a. Removing a node that has 0 or 1 child. Chust replacing a reference.
+    if (root.left === null) {
+      return root.right;
+    } else if (root.right === null) {
+      return root.left;
     } else {
-      left = mid + 1;
+      //2b. If there are 2 child nodes, need to do replacement with the min node of the right sub-tree.
+      const minValNode = minNode(root.right);
+      console.log(minValNode);
+      root.val = minValNode.val;
+      root.right = deleteNode(root.right, minValNode.val);
     }
   }
 
+  return root;
+};
+
+//console.log(deleteNode(node, key));
+
+//-----  -----
+//----- LeetCode 94: Binary Tree Inorder Traversal-----
+//-----  -----
+
+function inorderTraversal(root) {
+  if (!root) return [];
+  let res = [];
+
+  res.push(...inorderTraversal(root.left));
+  res.push(root.val);
+  res.push(...inorderTraversal(root.right));
+
   return res;
 }
 
-console.log(badBuild(100));
+console.log(inorderTraversal(node));
