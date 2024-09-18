@@ -614,41 +614,41 @@ const key = 50;
 // const node = new TreeNode(2, node1, null);
 // const key = 2;
 
-var deleteNode = function (root, key) {
-  if (!root) return root;
+// const deleteNode = function (root, key) {
+//   if (!root) return root;
 
-  function minNode(node) {
-    let res = node;
+//   function minNode(node) {
+//     let res = node;
 
-    while (res.left) {
-      res = res.left;
-    }
-    return res;
-  }
+//     while (res.left) {
+//       res = res.left;
+//     }
+//     return res;
+//   }
 
-  //1. Find a note to be deleted
-  if (key > root.val) {
-    root.right = deleteNode(root.right, key);
-  } else if (key < root.val) {
-    root.left = deleteNode(root.left, key);
-  } else {
-    //2. The note to delete has been found. Delete it
-    //2a. Removing a node that has 0 or 1 child. Chust replacing a reference.
-    if (root.left === null) {
-      return root.right;
-    } else if (root.right === null) {
-      return root.left;
-    } else {
-      //2b. If there are 2 child nodes, need to do replacement with the min node of the right sub-tree.
-      const minValNode = minNode(root.right);
-      console.log(minValNode);
-      root.val = minValNode.val;
-      root.right = deleteNode(root.right, minValNode.val);
-    }
-  }
+//   //1. Find a note to be deleted
+//   if (key > root.val) {
+//     root.right = deleteNode(root.right, key);
+//   } else if (key < root.val) {
+//     root.left = deleteNode(root.left, key);
+//   } else {
+//     //2. The note to delete has been found. Delete it
+//     //2a. Removing a node that has 0 or 1 child. Chust replacing a reference.
+//     if (root.left === null) {
+//       return root.right;
+//     } else if (root.right === null) {
+//       return root.left;
+//     } else {
+//       //2b. If there are 2 child nodes, need to do replacement with the min node of the right sub-tree.
+//       const minValNode = minNode(root.right);
+//       console.log(minValNode);
+//       root.val = minValNode.val;
+//       root.right = deleteNode(root.right, minValNode.val);
+//     }
+//   }
 
-  return root;
-};
+//   return root;
+// };
 
 //console.log(deleteNode(node, key));
 
@@ -656,15 +656,135 @@ var deleteNode = function (root, key) {
 //----- LeetCode 94: Binary Tree Inorder Traversal-----
 //-----  -----
 
-function inorderTraversal(root) {
-  if (!root) return [];
-  let res = [];
+// function inorderTraversal(root) {
+//   if (!root) return [];
+//   let res = [];
 
-  res.push(...inorderTraversal(root.left));
-  res.push(root.val);
-  res.push(...inorderTraversal(root.right));
+//   res.push(...inorderTraversal(root.left));
+//   res.push(root.val);
+//   res.push(...inorderTraversal(root.right));
+
+//   return res;
+// }
+
+// console.log(inorderTraversal(node));
+
+//-----  -----
+//----- NeetCode: Kth Smallest Integer in BST -----
+//-----  -----
+
+// function kthSmallest(root, k) {
+//   function inorderTraversal(root) {
+//     if (!root) return [];
+//     let res = [];
+
+//     res.push(...inorderTraversal(root.left));
+//     res.push(root.val);
+//     res.push(...inorderTraversal(root.right));
+
+//     console.log(res);
+//     return res;
+//   }
+
+//   return inorderTraversal(root)[k - 1];
+// }
+
+// console.log(kthSmallest(node, 1));
+
+//-----  -----
+//----- NeetCode: Binary Tree from Preorder and Inorder Traversal -----
+//-----  -----
+
+//Test case 1
+// const preorder = [1, 2, 3, 4];
+// const inorder = [2, 1, 3, 4];
+
+//Test case 2
+// const preorder = [50, 30, 40, 70, 60, 80];
+// const inorder = [30, 40, 50, 60, 70, 80];
+
+// function buildBTree(preorder, inorder) {
+//   if (preorder.length === 0 || inorder.length === 0) return null;
+
+//   const root = new TreeNode(preorder[0]);
+//   const rootInd = inorder.indexOf(preorder[0]);
+
+//   const leftInorde = inorder.slice(0, rootInd);
+//   const rightInorder = inorder.slice(rootInd + 1);
+//   const leftPreorder = preorder.slice(1, leftInorde.length + 1);
+//   const rightPreorder = preorder.slice(-rightInorder.length);
+
+//   root.left = buildBTree(leftPreorder, leftInorde);
+//   root.right = buildBTree(rightPreorder, rightInorder);
+
+//   return root;
+// }
+
+// console.log(buildBTree(preorder, inorder));
+
+//-----  -----
+//----- NeetCode: Level Order Traversal of Binary Tree -----
+//-----  -----
+
+// function levelOrder(root) {
+//   let arr = [];
+//   let queue = [];
+//   let level = 0;
+
+//   if (root) queue.push(root);
+
+//   while (queue.length > 0) {
+//     arr.push([]);
+//     const currQueueLength = queue.length;
+
+//     for (let i = 0; i < currQueueLength; i++) {
+//       const curr = queue.shift();
+//       arr[level].push(curr.val);
+
+//       if (curr.left) queue.push(curr.left);
+//       if (curr.right) queue.push(curr.right);
+//     }
+
+//     level++;
+//   }
+
+//   return arr;
+// }
+
+// console.log(levelOrder(node));
+
+//-----  -----
+//----- LeetCode 199: Binary Tree Right Side View -----
+//-----  -----
+
+const rightSideView = function (root) {
+  let arr = [];
+  let queue = [];
+  let level = 0;
+
+  if (root) queue.push(root);
+
+  while (queue.length > 0) {
+    arr.push([]);
+    const currQueueLength = queue.length;
+
+    for (let i = 0; i < currQueueLength; i++) {
+      const curr = queue.shift();
+      arr[level].push(curr.val);
+
+      if (curr.left) queue.push(curr.left);
+      if (curr.right) queue.push(curr.right);
+    }
+
+    level++;
+  }
+
+  let res = [];
+  arr.forEach((el) => {
+    res.push(...el.slice(-1));
+  });
 
   return res;
-}
+};
 
-console.log(inorderTraversal(node));
+console.log(rightSideView(node));
