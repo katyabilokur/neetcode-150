@@ -1,3 +1,5 @@
+import { Heap } from "heap-js";
+
 //-----  -----
 //----- Stack: Valid Parentheses -----
 //-----  -----
@@ -601,13 +603,13 @@ function TreeNode(val, left, right) {
 // const key = 3;
 
 //Test case 2
-const node40 = new TreeNode(40);
-const node60 = new TreeNode(60);
-const node80 = new TreeNode(80);
-const node30 = new TreeNode(30, null, node40);
-const node70 = new TreeNode(70, node60, node80);
-const node = new TreeNode(50, node30, node70);
-const key = 50;
+// const node40 = new TreeNode(40);
+// const node60 = new TreeNode(60);
+// const node80 = new TreeNode(80);
+// const node30 = new TreeNode(30, null, node40);
+// const node70 = new TreeNode(70, node60, node80);
+// const node = new TreeNode(50, node30, node70);
+// const key = 50;
 
 //Test case 3
 // const node1 = new TreeNode(1);
@@ -757,34 +759,151 @@ const key = 50;
 //----- LeetCode 199: Binary Tree Right Side View -----
 //-----  -----
 
-const rightSideView = function (root) {
-  let arr = [];
-  let queue = [];
-  let level = 0;
+// const rightSideView = function (root) {
+//   let arr = [];
+//   let queue = [];
+//   let level = 0;
 
-  if (root) queue.push(root);
+//   if (root) queue.push(root);
 
-  while (queue.length > 0) {
-    arr.push([]);
-    const currQueueLength = queue.length;
+//   while (queue.length > 0) {
+//     arr.push([]);
+//     const currQueueLength = queue.length;
 
-    for (let i = 0; i < currQueueLength; i++) {
-      const curr = queue.shift();
-      arr[level].push(curr.val);
+//     for (let i = 0; i < currQueueLength; i++) {
+//       const curr = queue.shift();
+//       arr[level].push(curr.val);
 
-      if (curr.left) queue.push(curr.left);
-      if (curr.right) queue.push(curr.right);
-    }
+//       if (curr.left) queue.push(curr.left);
+//       if (curr.right) queue.push(curr.right);
+//     }
 
-    level++;
-  }
+//     level++;
+//   }
 
-  let res = [];
-  arr.forEach((el) => {
-    res.push(...el.slice(-1));
+//   let res = [];
+//   arr.forEach((el) => {
+//     res.push(...el.slice(-1));
+//   });
+
+//   return res;
+// };
+
+// console.log(rightSideView(node));
+
+//-----  -----
+//----- LeetCode 112: Path Sum -----
+//-----  -----
+
+//Test case 1
+const node40 = new TreeNode(40);
+const node60 = new TreeNode(60);
+const node80 = new TreeNode(80);
+const node30 = new TreeNode(30, null, node40);
+const node70 = new TreeNode(70, node60, node80);
+const node = new TreeNode(50, node30, node70);
+
+//Test case 2
+// const node3 = new TreeNode(-3);
+// const node = new TreeNode(-2, null, node3);
+
+// const hasPathSum = function (root, targetSum) {
+//   let sum = 0;
+//   function hasPath(root, targetSum, sum) {
+//     if (!root) return false;
+//     sum += root.val;
+
+//     if (!root.left && !root.right && sum === targetSum) return true;
+//     if (!root.left && !root.right && sum !== targetSum) return false;
+
+//     if (hasPath(root.left, targetSum, sum)) return true;
+//     if (hasPath(root.right, targetSum, sum)) return true;
+
+//     sum -= root.val;
+//     return false;
+//   }
+
+//   return hasPath(root, targetSum, sum);
+// };
+
+// console.log(hasPathSum(node, 100));
+
+//-----  -----
+//----- NeetCode: Subsets -----
+//-----  -----
+
+// function subsets(nums) {
+//   function createSubSets(nums, i, subset, res) {
+//     if (i >= nums.length) {
+//       res.push([...subset]);
+//       return;
+//     }
+
+//     subset.push(nums[i]);
+//     createSubSets(nums, i + 1, subset, res);
+//     subset.pop();
+//     createSubSets(nums, i + 1, subset, res);
+//   }
+
+//   let subset = [];
+//   let res = [];
+//   createSubSets(nums, 0, subset, res);
+
+//   return res;
+// }
+
+// console.log(subsets([1, 2, 3]));
+
+//-----  -----
+//----- NeetCode, LeetCode 1046: Last Stone Weight -----
+//-----  -----
+
+// const { Heap } = require('heap-js');
+
+// const stones = [2, 7, 4, 1, 8, 1];
+
+// const lastStoneWeight = function (stones) {
+//   let stoneHeap = new Heap(Heap.maxComparator);
+//   stoneHeap.init(stones);
+
+//   while (stoneHeap.size() > 1) {
+//     const firstHeavy = stoneHeap.pop();
+//     const secondHeavy = stoneHeap.pop();
+
+//     if (firstHeavy !== secondHeavy) {
+//       stoneHeap.push(firstHeavy - secondHeavy);
+//     }
+//   }
+//   return stoneHeap.size() === 1 ? stoneHeap.peek() : 0;
+// };
+
+// console.log(lastStoneWeight(stones));
+
+//SAME ONE USING @datastructures-js/priority-queue
+
+import { MaxPriorityQueue } from "@datastructures-js/priority-queue";
+
+const stones = [2, 7, 4, 1, 8, 1];
+
+const lastStoneWeight = function (stones) {
+  let stoneHeap = new MaxPriorityQueue();
+  stones.forEach((stone) => {
+    stoneHeap.enqueue(stone);
   });
 
-  return res;
+  while (stoneHeap.size() > 1) {
+    const firstHeavy = stoneHeap.dequeue();
+    const secondHeavy = stoneHeap.dequeue();
+
+    if (firstHeavy !== secondHeavy) {
+      stoneHeap.enqueue(firstHeavy - secondHeavy);
+    }
+  }
+  return stoneHeap.size() === 1 ? stoneHeap.front() : 0;
 };
 
-console.log(rightSideView(node));
+console.log(lastStoneWeight(stones));
+
+//-----  -----
+//----- NeetCode, LeetCode 1046: Last Stone Weight -----
+//-----  -----

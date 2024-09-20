@@ -1,0 +1,20 @@
+{
+  "name": "150",
+  "version": "1.0.0",
+  "type": "module",
+  "main": "script.js",
+  "scripts": {
+    "dev": "vite"
+  },
+  "keywords": [],
+  "author": "Kateryna Bilokur",
+  "license": "ISC",
+  "description": "",
+  "dependencies": {
+    "@datastructures-js/priority-queue": "^6.3.1",
+    "heap-js": "^2.5.0"
+  },
+  "devDependencies": {
+    "vite": "^5.4.6"
+  }
+}
