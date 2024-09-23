@@ -881,29 +881,241 @@ const node = new TreeNode(50, node30, node70);
 
 //SAME ONE USING @datastructures-js/priority-queue
 
+// import { MaxPriorityQueue } from "@datastructures-js/priority-queue";
+
+// const stones = [2, 7, 4, 1, 8, 1];
+
+// const lastStoneWeight = function (stones) {
+//   let stoneHeap = new MaxPriorityQueue();
+//   stones.forEach((stone) => {
+//     stoneHeap.enqueue(stone);
+//   });
+
+//   while (stoneHeap.size() > 1) {
+//     const firstHeavy = stoneHeap.dequeue();
+//     const secondHeavy = stoneHeap.dequeue();
+
+//     if (firstHeavy !== secondHeavy) {
+//       stoneHeap.enqueue(firstHeavy - secondHeavy);
+//     }
+//   }
+//   return stoneHeap.size() === 1 ? stoneHeap.front() : 0;
+// };
+
+// console.log(lastStoneWeight(stones));
+
+//-----  -----
+//----- NeetCode, LeetCode 1: Two Integer Sum -----
+//-----  -----
+
+//Test case 1
+// const nums = [3, 4, 5, 6];
+// const target = 7;
+
+//Test case 2
+// const nums = [5, 5];
+// const target = 10;
+
+// function twoSum(nums, target) {
+//   const passedMap = new Map();
+
+//   for (let i = 0; i < nums.length; i++) {
+//     const complementValue = target - nums[i];
+//     const mapValue = passedMap.get(complementValue);
+
+//     if (mapValue !== null && mapValue !== undefined) return [mapValue, i];
+
+//     passedMap.set(nums[i], i);
+//   }
+
+//   //Solution does not exist
+//   return [-1, -1];
+// }
+// console.log(twoSum(nums, target));
+
+//-----  -----
+//----- NeetCode, LeetCode 146: LRU Cache -----
+//-----  -----
+
+// class LRUCache {
+//   constructor(capacity) {
+//     this.capacity = capacity;
+//     this.usageQueue = [];
+//     this.cache = new Map();
+//   }
+//   cacheExists(cacheVal) {
+//     return cacheVal !== null && cacheVal !== undefined ? true : false;
+//   }
+
+//   updateUsageQueue(key) {
+//     this.usageQueue = this.usageQueue.filter((el) => el !== key);
+//     this.usageQueue.push(key);
+//   }
+
+//   get(key) {
+//     const cacheValue = this.cache.get(key);
+
+//     if (this.cacheExists(cacheValue)) {
+//       this.updateUsageQueue(key);
+//       return cacheValue;
+//     }
+
+//     return -1;
+//   }
+
+//   /**
+//    * @param {number} key
+//    * @param {number} value
+//    * @return {void}
+//    */
+//   put(key, value) {
+//     this.updateUsageQueue(key);
+
+//     this.cache.set(key, value);
+
+//     if (this.cache.size > this.capacity) {
+//       const keyToRemove = this.usageQueue[0];
+
+//       //Remove from cache
+//       this.cache.delete(keyToRemove);
+
+//       //Remove from traching cachUsage queue
+//       this.usageQueue.shift();
+//     }
+//   }
+// }
+
+//Test case 1
+//["LRUCache", [2], "put", [1, 10],  "get", [1], "put", [2, 20], "put", [3, 30], "get", [2], "get", [1]]
+// const lRUCache = new LRUCache(2);
+// lRUCache.put(1, 10); // cache: {1=10}
+// console.log(lRUCache.get(1)); // return 10
+// lRUCache.put(2, 20); // cache: {1=10, 2=20}
+// lRUCache.put(3, 30); // cache: {2=20, 3=30}, key=1 was evicted
+// console.log(lRUCache.get(2)); // returns 20
+// console.log(lRUCache.get(1)); // return -1 (not found)
+
+//Test case 2
+//["LRUCache", [2], "put", [1, 1], "put", [2, 2], "get", [1], "put", [3, 3],
+// "get", [2], "put", [4, 4], "get", [1], "get", [3], "get", [4]]
+//EXPECTED: [null,null,null,1,null,-1,null,-1,3,4]
+//my [null,null,null,1,null,2,null,-1,3,4]
+// const lRUCache = new LRUCache(2);
+// lRUCache.put(1, 1); // cache: {1=1}
+// lRUCache.put(2, 2); // cache: {1=1, 2=2}
+// console.log(lRUCache.get(1)); // return 1
+// lRUCache.put(3, 3); // cache: {2=2, 3=3}
+// console.log(lRUCache.get(2)); // return 2
+// lRUCache.put(4, 4); // cache: {2=2, 4=4}
+// console.log(lRUCache.get(1)); // return -1
+// console.log(lRUCache.get(3)); // returns -1
+// console.log(lRUCache.get(4)); // return 4
+
+//Test case 3
+//["LRUCache", [3], "put", [1, 1], "put", [2, 2], "put", [3, 3], "get", [1],
+// "get", [2], "get", [4], "put", [4, 4], "get", [1], "get", [2], "get", [3],
+//"get", [4], "get", [2], "put", [1, 8], "put", [3, 7], "get", [1], "get", [2],
+// "get", [3], "get", [4], "get", [5], "get", [2], "get", [3], "get", [4],
+// || "put", [1,9], "put", [6,6], "get", [1], "get", [2], "get", [3], "get", [4],
+//"get", [5], "get", [6]]
+
+//EXPECTED
+//[null,null,null,null,1,2,-1,null,1,2,-1,4,2,null,null,8,2,7,-1,-1,2,7,-1,
+//null,null,9,-1,7,-1,-1,6]
+// const lRUCache = new LRUCache(3);
+// lRUCache.put(1, 1); // cache: {1=1}
+// lRUCache.put(2, 2); // cache: {1=1, 2=2}
+// lRUCache.put(3, 3); // cache: {1=1, 2=2, 3=3}
+// console.log(lRUCache.get(1)); // return 1
+// console.log(lRUCache.get(2)); // return 2
+// console.log(lRUCache.get(4)); // return -1
+// lRUCache.put(4, 4); // cache: {1=1, 2=2, 4=4}
+// console.log(lRUCache.get(1)); // return 1
+// console.log(lRUCache.get(2)); // return 2
+// console.log(lRUCache.get(3)); // return -1
+// console.log(lRUCache.get(4)); // return 4
+// console.log(lRUCache.get(2)); // return 2
+// lRUCache.put(1, 8); // cache: {1=8, 2=2, 4=4}
+// lRUCache.put(3, 7); // cache: {1=8, 2=2, 3=7}
+// console.log(lRUCache.get(1)); // return 8
+// console.log(lRUCache.get(2)); // return 2
+// console.log(lRUCache.get(3)); // return 7
+// console.log(lRUCache.get(4)); // return -1
+// console.log(lRUCache.get(5)); // return -1
+// console.log(lRUCache.get(2)); // return 2
+// console.log(lRUCache.get(3)); // return 7
+// console.log(lRUCache.get(4)); // return -1
+
+//-----  -----
+//----- NeetCode, LeetCode 973: K Closest Points to Origin -----
+//-----  -----
+
+// import { MinPriorityQueue } from "@datastructures-js/priority-queue";
+
+// const points = [
+//   [0, 2],
+//   [2, 0],
+//   [2, 2],
+// ];
+// const k = 2;
+
+// function kClosest(points, k) {
+//   let pointsHeap = new MinPriorityQueue((point) => point[0]);
+
+//   points.forEach((point) => {
+//     //(sqrt((x1 - x2)^2 + (y1 - y2)^2))
+//     const distance = Math.sqrt(point[0] ** 2 + point[1] ** 2);
+//     pointsHeap.enqueue([distance, point]);
+//   });
+
+//   let res = [];
+//   for (let i = 0; i < k; i++) {
+//     const topPoint = pointsHeap.dequeue();
+//     res.push(topPoint[1]);
+//   }
+
+//   return res;
+// }
+
+// console.log(kClosest(points, k));
+
+//-----  -----
+//----- NeetCode, LeetCode 703: Kth Largest Integer in a Streamn -----
+//-----  -----
+
 import { MaxPriorityQueue } from "@datastructures-js/priority-queue";
 
-const stones = [2, 7, 4, 1, 8, 1];
+class KthLargest {
+  constructor(k, nums) {
+    this.k = k;
+    this.nums = [...nums];
+    this.heap = new MaxPriorityQueue();
 
-const lastStoneWeight = function (stones) {
-  let stoneHeap = new MaxPriorityQueue();
-  stones.forEach((stone) => {
-    stoneHeap.enqueue(stone);
-  });
-
-  while (stoneHeap.size() > 1) {
-    const firstHeavy = stoneHeap.dequeue();
-    const secondHeavy = stoneHeap.dequeue();
-
-    if (firstHeavy !== secondHeavy) {
-      stoneHeap.enqueue(firstHeavy - secondHeavy);
-    }
+    nums.forEach((num) => {
+      this.heap.enqueue(num);
+    });
   }
-  return stoneHeap.size() === 1 ? stoneHeap.front() : 0;
-};
 
-console.log(lastStoneWeight(stones));
+  add(val) {
+    this.nums.push(val);
 
-//-----  -----
-//----- NeetCode, LeetCode 1046: Last Stone Weight -----
-//-----  -----
+    this.heap.clear();
+    this.nums.forEach((num) => {
+      this.heap.enqueue(num);
+    });
+
+    for (let i = 0; i < this.k - 1; i++) {
+      this.heap.dequeue();
+    }
+
+    return this.heap.dequeue();
+  }
+}
+
+//Test case 1
+const kthLargest = new KthLargest(3, [1, 2, 3, 3]);
+console.log(kthLargest.add(3)); // return 3
+console.log(kthLargest.add(5)); // return 3
+console.log(kthLargest.add(6)); // return 3
+console.log(kthLargest.add(7)); // return 5
+console.log(kthLargest.add(8)); // return 6
