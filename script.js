@@ -1083,39 +1083,417 @@ const node = new TreeNode(50, node30, node70);
 //----- NeetCode, LeetCode 703: Kth Largest Integer in a Streamn -----
 //-----  -----
 
-import { MaxPriorityQueue } from "@datastructures-js/priority-queue";
+// import { MaxPriorityQueue } from "@datastructures-js/priority-queue";
 
-class KthLargest {
-  constructor(k, nums) {
-    this.k = k;
-    this.nums = [...nums];
-    this.heap = new MaxPriorityQueue();
+// class KthLargest {
+//   constructor(k, nums) {
+//     this.k = k;
+//     this.nums = [...nums];
+//     this.heap = new MaxPriorityQueue();
 
-    nums.forEach((num) => {
-      this.heap.enqueue(num);
-    });
-  }
+//     nums.forEach((num) => {
+//       this.heap.enqueue(num);
+//     });
+//   }
 
-  add(val) {
-    this.nums.push(val);
+//   add(val) {
+//     this.nums.push(val);
 
-    this.heap.clear();
-    this.nums.forEach((num) => {
-      this.heap.enqueue(num);
-    });
+//     this.heap.clear();
+//     this.nums.forEach((num) => {
+//       this.heap.enqueue(num);
+//     });
 
-    for (let i = 0; i < this.k - 1; i++) {
-      this.heap.dequeue();
-    }
+//     for (let i = 0; i < this.k - 1; i++) {
+//       this.heap.dequeue();
+//     }
 
-    return this.heap.dequeue();
+//     return this.heap.dequeue();
+//   }
+// }
+
+// //Test case 1
+// const kthLargest = new KthLargest(3, [1, 2, 3, 3]);
+// console.log(kthLargest.add(3)); // return 3
+// console.log(kthLargest.add(5)); // return 3
+// console.log(kthLargest.add(6)); // return 3
+// console.log(kthLargest.add(7)); // return 5
+// console.log(kthLargest.add(8)); // return 6
+
+//-----  -----
+//----- NeetCode, LeetCode 200: Count Number of Islands -----
+//-----  -----
+
+// const grid = [
+//   ["1", "1", "0", "0", "1"],
+//   ["1", "1", "0", "0", "1"],
+//   ["0", "0", "1", "0", "0"],
+//   ["0", "0", "0", "1", "1"],
+// ];
+
+// //expected 4;
+
+// function numIslands(grid) {
+//   function dfs(grid, r, c) {
+//     //Check if we are out of boundaries OR water, return. No need to do anything
+//     if (
+//       r < 0 ||
+//       c < 0 ||
+//       r === grid.length ||
+//       c === grid[0].length ||
+//       grid[r][c] === "0"
+//     ) {
+//       return;
+//     }
+//     grid[r][c] = "0";
+
+//     dfs(grid, r + 1, c);
+//     dfs(grid, r - 1, c);
+//     dfs(grid, r, c + 1);
+//     dfs(grid, r, c - 1);
+//   }
+
+//   let islands = 0;
+
+//   for (let i = 0; i < grid.length; i++) {
+//     for (let j = 0; j < grid[0].length; j++) {
+//       if (grid[i][j] === "1") {
+//         dfs(grid, i, j);
+//         islands++;
+//       }
+//     }
+//   }
+
+//   return islands;
+// }
+
+// console.log(numIslands(grid));
+
+//-----  -----
+//----- NeetCode, LeetCode 695: Max Area of Island -----
+//-----  -----
+
+// const grid = [
+//   [0, 1, 1, 0, 1],
+//   [1, 0, 1, 0, 1],
+//   [0, 1, 1, 0, 1],
+//   [0, 1, 0, 0, 1],
+// ];
+// const grid = [[0, 0, 0, 0, 0]];
+
+// function maxAreaOfIsland(grid) {
+//   function dfs(grid, r, c, islands, currIsl) {
+//     //Check if we are out of boundaries OR water, return. No need to do anything
+//     if (
+//       r < 0 ||
+//       c < 0 ||
+//       r === grid.length ||
+//       c === grid[0].length ||
+//       grid[r][c] === 0
+//     ) {
+//       return;
+//     }
+//     grid[r][c] = 0;
+//     const currIslSize = islands.get(currIsl) + 1;
+//     islands.set(currIsl, currIslSize);
+
+//     dfs(grid, r + 1, c, islands, currIsl);
+//     dfs(grid, r - 1, c, islands, currIsl);
+//     dfs(grid, r, c + 1, islands, currIsl);
+//     dfs(grid, r, c - 1, islands, currIsl);
+//   }
+
+//   let islands = new Map();
+
+//   for (let i = 0; i < grid.length; i++) {
+//     for (let j = 0; j < grid[0].length; j++) {
+//       if (grid[i][j] === 1) {
+//         islands.set(`${i}${j}`, 0);
+//         dfs(grid, i, j, islands, `${i}${j}`);
+//       }
+//     }
+//   }
+
+//   if (islands.size === 0) return 0;
+//   return Math.max(...islands.values());
+// }
+
+// console.log(maxAreaOfIsland(grid));
+
+//-----  -----
+//----- LeetCode 1091: Shortest Path in Binary Matrix-----
+//-----  -----
+
+////Test case 1. Expected: 2
+// const grid = [
+//   [0, 1],
+//   [1, 0],
+// ];
+// //Test case 2. Expected 4
+// const grid2 = [
+//   [0, 0, 0],
+//   [1, 1, 0],
+//   [1, 1, 0],
+// ];
+
+// //Test case 3. Expected: -1
+// const grid3 = [
+//   [1, 0, 0],
+//   [1, 1, 0],
+//   [1, 1, 0],
+// ];
+
+// //Test case 4. Expected -1
+// const grid4 = [
+//   [0, 0, 1],
+//   [1, 1, 1],
+//   [1, 1, 0],
+// ];
+
+// //Test case 5. Expected 3
+// const grid5 = [
+//   [0, 0, 0],
+//   [0, 0, 0],
+//   [0, 0, 0],
+// ];
+
+// const shortestPathBinaryMatrix = function (grid) {
+//   function bfs(grid) {
+//     const rows = grid.length - 1;
+//     const columns = grid[0].length - 1;
+//     if (grid[0][0] !== 0 || grid[rows][columns] !== 0) return -1;
+
+//     let visit = new Array(rows + 1)
+//       .fill(0)
+//       .map(() => new Array(columns + 1).fill(0));
+
+//     let queue = [[0, 0]];
+//     visit[0][0] = 1;
+
+//     let length = 1;
+//     while (queue.length > 0) {
+//       const queueLength = queue.length;
+//       for (let i = 0; i < queueLength; i++) {
+//         const [r, c] = queue.shift();
+
+//         if (r === rows && c === columns) return length;
+
+//         const neighbors = [
+//           [r + 1, c + 1],
+//           [r + 1, c - 1],
+//           [r - 1, c - 1],
+//           [r - 1, c + 1],
+//           [r, c + 1],
+//           [r, c - 1],
+//           [r + 1, c],
+//           [r - 1, c],
+//         ];
+//         for (let j = 0; j < neighbors.length; j++) {
+//           let [newR, newC] = neighbors[j];
+
+//           if (
+//             Math.min(newR, newC) < 0 ||
+//             newR === rows + 1 ||
+//             newC === columns + 1 ||
+//             visit[newR][newC] === 1 ||
+//             grid[newR][newC] === 1
+//           ) {
+//             continue;
+//           }
+//           if (newR === rows && newC === columns) {
+//             return ++length;
+//           }
+//           queue.push(neighbors[j]);
+//           visit[newR][newC] = 1;
+//         }
+//       }
+//       length++;
+//     }
+
+//     return -1;
+//   }
+
+//   return bfs(grid);
+// };
+
+// console.log(shortestPathBinaryMatrix(grid4));
+
+//-----  -----
+//----- LeetCode 994: Rotting Oranges-----
+//-----  -----
+
+// //test case 1. Expected 4
+// const grid = [
+//   [2, 1, 1],
+//   [1, 1, 0],
+//   [0, 1, 1],
+// ];
+
+// //Test case 2. Expected -1;
+// const grid2 = [
+//   [2, 1, 1],
+//   [0, 1, 1],
+//   [1, 0, 1],
+// ];
+
+// //Test case 3. Expected 0;
+// const grid3 = [[0, 2]];
+
+// //Test case 4. Expected 0;
+// const grid4 = [[0]];
+
+// //Test case 5. Expected 0;
+// const grid5 = [[1]];
+
+// const orangesRotting = function (grid) {
+//   function freshOrangesLeft(grid) {
+//     let freshOranges = 0;
+//     for (let i = 0; i < grid.length; i++) {
+//       for (let j = 0; j < grid[0].length; j++) {
+//         if (grid[i][j] === 1) freshOranges++;
+//       }
+//     }
+
+//     return freshOranges;
+//   }
+
+//   function bfs(grid) {
+//     const rows = grid.length - 1;
+//     const columns = grid[0].length - 1;
+
+//     let queue = [];
+//     let visit = new Array(rows + 1)
+//       .fill(0)
+//       .map(() => new Array(columns + 1).fill(0));
+
+//     //See if there are rotten oranges and add them to the queue to start counting time
+//     for (let i = 0; i <= rows; i++) {
+//       for (let j = 0; j <= columns; j++) {
+//         if (grid[i][j] === 2) {
+//           queue.push([i, j]);
+//           visit[i][j] = 1;
+//         }
+//       }
+//     }
+
+//     let time = 0;
+
+//     if (freshOrangesLeft(grid) === 0) return time;
+
+//     //While we have rotten fruits in the grid, run this cycle
+//     while (queue.length > 0) {
+//       //Check if grid has all rotten oranges, return time
+//       if (freshOrangesLeft(grid) === 0) return time;
+
+//       //Define a first layer
+//       const queueLength = queue.length;
+
+//       //First run through all rotten oranges in the queue and make neighbors rotten, add them to the queue
+//       for (let i = 0; i < queueLength; i++) {
+//         const [r, c] = queue.shift();
+
+//         const neighbors = [
+//           [r, c + 1],
+//           [r, c - 1],
+//           [r + 1, c],
+//           [r - 1, c],
+//         ];
+//         for (let j = 0; j < neighbors.length; j++) {
+//           let [newR, newC] = neighbors[j];
+
+//           if (
+//             Math.min(newR, newC) < 0 ||
+//             newR === rows + 1 ||
+//             newC === columns + 1 ||
+//             visit[newR][newC] === 1 ||
+//             grid[newR][newC] === 0 ||
+//             grid[newR][newC] === 2
+//           ) {
+//             continue;
+//           }
+
+//           queue.push(neighbors[j]);
+//           grid[newR][newC] = 2;
+//           visit[newR][newC] = 1;
+//         }
+//       }
+//       time++;
+//     }
+
+//     return -1;
+//   }
+
+//   return bfs(grid);
+// };
+
+// console.log(orangesRotting(grid));
+
+//-----  -----
+//----- LeetCode 133: Clone Graphs -----
+//-----  -----
+
+class Node {
+  constructor(val = 0, neighbors = []) {
+    this.val = val;
+    this.neighbors = neighbors;
   }
 }
 
 //Test case 1
-const kthLargest = new KthLargest(3, [1, 2, 3, 3]);
-console.log(kthLargest.add(3)); // return 3
-console.log(kthLargest.add(5)); // return 3
-console.log(kthLargest.add(6)); // return 3
-console.log(kthLargest.add(7)); // return 5
-console.log(kthLargest.add(8)); // return 6
+// const node2 = new Node(2);
+// const node3 = new Node(3, [node2]);
+// const node1 = new Node(1, [node2]);
+// node2.neighbors.push(node1);
+// node2.neighbors.push(node3);
+
+//Test case 2
+const node1 = new Node(1);
+const node2 = new Node(2);
+const node3 = new Node(3);
+const node4 = new Node(4);
+node1.neighbors.push(node2, node3);
+node4.neighbors.push(node2, node3);
+node2.neighbors.push(node1, node4);
+node3.neighbors.push(node1, node4);
+
+function cloneGraph(node) {
+  if (node === null) return null;
+
+  let resNode = new Node(node.val);
+  let created = new Map();
+
+  created.set(node.val, resNode);
+  let queue = [node];
+
+  while (queue.length > 0) {
+    const queueLength = queue.length;
+
+    //For each element in Queue - added node
+    for (let i = 0; i < queueLength; i++) {
+      const linkList = queue[i].neighbors;
+
+      linkList.forEach((link) => {
+        let nodeToAdd = created.get(link.val);
+
+        //Check if linked node has already been created.
+        // If not create a new node, add to the list, add to createdList
+        if (!nodeToAdd) {
+          nodeToAdd = new Node(link.val);
+          created.set(link.val, nodeToAdd);
+          queue.push(link);
+        }
+
+        const nodeToUpdate = created.get(queue[i].val);
+        nodeToUpdate.neighbors.push(nodeToAdd);
+      });
+
+      // queue.shift();
+    }
+
+    for (let i = 0; i < queueLength; i++) queue.shift();
+  }
+
+  return resNode;
+}
+
+console.log(cloneGraph(node1));
