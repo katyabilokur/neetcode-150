@@ -1432,68 +1432,256 @@ const node = new TreeNode(50, node30, node70);
 //----- LeetCode 133: Clone Graphs -----
 //-----  -----
 
-class Node {
-  constructor(val = 0, neighbors = []) {
-    this.val = val;
-    this.neighbors = neighbors;
-  }
-}
+// class Node {
+//   constructor(val = 0, neighbors = []) {
+//     this.val = val;
+//     this.neighbors = neighbors;
+//   }
+// }
 
-//Test case 1
+// //Test case 1
+// // const node2 = new Node(2);
+// // const node3 = new Node(3, [node2]);
+// // const node1 = new Node(1, [node2]);
+// // node2.neighbors.push(node1);
+// // node2.neighbors.push(node3);
+
+// //Test case 2
+// const node1 = new Node(1);
 // const node2 = new Node(2);
-// const node3 = new Node(3, [node2]);
-// const node1 = new Node(1, [node2]);
-// node2.neighbors.push(node1);
-// node2.neighbors.push(node3);
+// const node3 = new Node(3);
+// const node4 = new Node(4);
+// node1.neighbors.push(node2, node3);
+// node4.neighbors.push(node2, node3);
+// node2.neighbors.push(node1, node4);
+// node3.neighbors.push(node1, node4);
 
-//Test case 2
-const node1 = new Node(1);
-const node2 = new Node(2);
-const node3 = new Node(3);
-const node4 = new Node(4);
-node1.neighbors.push(node2, node3);
-node4.neighbors.push(node2, node3);
-node2.neighbors.push(node1, node4);
-node3.neighbors.push(node1, node4);
+// function cloneGraph(node) {
+//   if (node === null) return null;
 
-function cloneGraph(node) {
-  if (node === null) return null;
+//   let resNode = new Node(node.val);
+//   let created = new Map();
 
-  let resNode = new Node(node.val);
-  let created = new Map();
+//   created.set(node.val, resNode);
+//   let queue = [node];
 
-  created.set(node.val, resNode);
-  let queue = [node];
+//   while (queue.length > 0) {
+//     const queueLength = queue.length;
 
-  while (queue.length > 0) {
-    const queueLength = queue.length;
+//     //For each element in Queue - added node
+//     for (let i = 0; i < queueLength; i++) {
+//       const linkList = queue[i].neighbors;
 
-    //For each element in Queue - added node
-    for (let i = 0; i < queueLength; i++) {
-      const linkList = queue[i].neighbors;
+//       linkList.forEach((link) => {
+//         let nodeToAdd = created.get(link.val);
 
-      linkList.forEach((link) => {
-        let nodeToAdd = created.get(link.val);
+//         //Check if linked node has already been created.
+//         // If not create a new node, add to the list, add to createdList
+//         if (!nodeToAdd) {
+//           nodeToAdd = new Node(link.val);
+//           created.set(link.val, nodeToAdd);
+//           queue.push(link);
+//         }
 
-        //Check if linked node has already been created.
-        // If not create a new node, add to the list, add to createdList
-        if (!nodeToAdd) {
-          nodeToAdd = new Node(link.val);
-          created.set(link.val, nodeToAdd);
-          queue.push(link);
-        }
+//         const nodeToUpdate = created.get(queue[i].val);
+//         nodeToUpdate.neighbors.push(nodeToAdd);
+//       });
 
-        const nodeToUpdate = created.get(queue[i].val);
-        nodeToUpdate.neighbors.push(nodeToAdd);
-      });
+//       // queue.shift();
+//     }
 
-      // queue.shift();
-    }
+//     for (let i = 0; i < queueLength; i++) queue.shift();
+//   }
 
-    for (let i = 0; i < queueLength; i++) queue.shift();
-  }
+//   return resNode;
+// }
 
-  return resNode;
+// console.log(cloneGraph(node1));
+
+//-----  -----
+//----- NeetCode, LeetCode 207: Course Schedule -----
+//-----  -----
+
+// //Test Case 1. true
+// const numCourses = 2;
+// const prerequisites = [[1, 0]];
+
+// //Test Case 2. false
+// const numCourses2 = 2;
+// const prerequisites2 = [
+//   [1, 0],
+//   [0, 1],
+// ];
+
+// //Test Case 3. true
+// const numCourses3 = 5;
+// const prerequisites3 = [
+//   [1, 4],
+//   [2, 4],
+//   [3, 1],
+//   [3, 2],
+// ];
+
+// //Test Case 4. true
+// const numCourses4 = 1;
+// const prerequisites4 = [];
+
+// //Test case 5. false
+// const numCourses5 = 20;
+// const prerequisites5 = [
+//   [0, 10],
+//   [3, 18],
+//   [5, 5],
+//   [6, 11],
+//   [11, 14],
+//   [13, 1],
+//   [15, 1],
+//   [17, 4],
+// ];
+
+// //Test case 6 false
+// const numCourses6 = 3;
+// const prerequisites6 = [
+//   [0, 2],
+//   [1, 2],
+//   [2, 0],
+// ];
+
+// //Test case 7 true
+// const numCourses7 = 3;
+// const prerequisites7 = [
+//   [0, 1],
+//   [0, 2],
+//   [1, 2],
+// ];
+
+// //Test case 8 true
+// const numCourses8 = 4;
+// const prerequisites8 = [
+//   [1, 0],
+//   [2, 0],
+//   [3, 1],
+//   [3, 2],
+// ];
+
+// const canFinish = function (numCourses, prerequisites) {
+//   if (prerequisites.length === 0) return true;
+//   // Step 1. Init
+//   //i element represent the course in preCourses array.
+//   let courses = new Map();
+//   //Init the prerequisites for each course
+//   for (let index = 0; index < numCourses; index++) {
+//     courses.set(index, []);
+//   }
+//   //Fill prerequisites in accordance with initial values in prerequisites
+//   prerequisites.forEach((prerequisite) => {
+//     let pre = courses.get(prerequisite[1]);
+//     courses.set(prerequisite[1], [...pre, prerequisite[0]]);
+//   });
+
+//   //Check if there is no element with 0 prerequisite, it is not possible to take all courses
+//   //const values = Array.from(courses.values());
+//   const zeroCourses = Array.from(courses.values()).filter(
+//     (course) => course.length === 0
+//   );
+//   if (zeroCourses.length === 0) return false;
+
+//   //Step 2.
+//   let coursesTaken = [];
+
+//   //For each course check if to take it takes less than numCourses -1. Otherwise, there is a cycle.
+//   for (let i = 0; i < numCourses; i++) {
+//     let count = 0;
+//     count = dfs(i, courses.get(i), courses, coursesTaken, count);
+
+//     if (count > numCourses) return false;
+//   }
+
+//   function dfs(courseNum, depCourses, courses, coursesTaken, count) {
+//     //If courses count are too much, return that max that can be taken
+//     if (count > courses.size - 1) return courses.size + 1;
+
+//     //If no courses prereq.
+//     if (depCourses.length === 0) {
+//       {
+//         coursesTaken.push(courseNum);
+//         return count;
+//       }
+//     }
+
+//     if (depCourses.includes(courseNum)) return courses.size + 1;
+
+//     depCourses.forEach((depCourse) => {
+//       if (coursesTaken.includes(depCourse)) {
+//         return ++count;
+//       }
+
+//       const newDepCourses = courses.get(depCourse);
+//       count = dfs(depCourse, newDepCourses, courses, coursesTaken, ++count);
+//     });
+
+//     coursesTaken.push(courseNum);
+//     return count;
+//   }
+
+//   return true;
+// };
+
+// console.log(canFinish(numCourses, prerequisites));
+// console.log(canFinish(numCourses2, prerequisites2));
+// console.log(canFinish(numCourses3, prerequisites3));
+// console.log(canFinish(numCourses4, prerequisites4));
+// console.log(canFinish(numCourses5, prerequisites5));
+// console.log(canFinish(numCourses6, prerequisites6));
+// console.log(canFinish(numCourses7, prerequisites7));
+// console.log(canFinish(numCourses8, prerequisites8));
+
+//-----  -----
+//----- NeetCode, LeetCode 338: Counting Bits -----
+//-----  -----
+
+// function countBits(n) {
+//   function countBitsNum(num) {
+//     let count = 0;
+//     while (num > 0) {
+//       if (num & (1 === 1)) count++;
+//       num = num >> 1;
+//     }
+
+//     return count;
+//     // const n2base = num.toString(2).split("");
+//     // return n2base.filter((el) => el === "1").length;
+//   }
+
+//   let res = [];
+//   for (let i = 0; i <= n; i++) {
+//     res.push(countBitsNum(i));
+//   }
+
+//   return res;
+// }
+
+// console.log(countBits(4));
+
+// //-----  -----
+// //----- NeetCode, LeetCode 191: Number of 1 Bits -----
+// //-----  -----
+
+// const hammingWeight = function(n) {
+
+//   const n2base = n.toString(2).split("");
+//   return n2base.filter((el) => el === "1").length;
+// };
+
+// console.log(hammingWeight(5));
+
+//-----  -----
+//----- NeetCode, LeetCode 191: Number of 1 Bits -----
+//-----  -----
+
+function reverseBits(n) {
+  const str = n.toString(2).padStart(32, "0").split("");
+  return parseInt(str.reverse().join(""), 2);
 }
 
-console.log(cloneGraph(node1));
+console.log(reverseBits(3454));
