@@ -1679,9 +1679,155 @@ const node = new TreeNode(50, node30, node70);
 //----- NeetCode, LeetCode 191: Number of 1 Bits -----
 //-----  -----
 
-function reverseBits(n) {
-  const str = n.toString(2).padStart(32, "0").split("");
-  return parseInt(str.reverse().join(""), 2);
-}
+// function reverseBits(n) {
+//   const str = n.toString(2).padStart(32, "0").split("");
+//   return parseInt(str.reverse().join(""), 2);
+// }
 
-console.log(reverseBits(3454));
+// console.log(reverseBits(3454));
+
+//-----  -----
+//----- NeetCode, LeetCode 198: House Robber -----
+//-----  -----
+
+// //test case 1
+// const nums = [1, 1, 4, 5, 5]; //expected 10
+
+// //test case 2
+// const nums2 = [1, 1, 4, 5, 0]; //expected 6
+
+// //test case 3
+// const nums3 = [1, 3, 1, 4, 50]; //expected 53
+
+// function rob(nums) {
+//   if (nums.length <= 2) return Math.max(...nums);
+
+//   let potRobs = [nums[2] + nums[0], nums[1], nums[0]];
+
+//   if (nums.length === 3) return Math.max(...potRobs);
+
+//   for (let i = 3; i < nums.length; i++) {
+//     const temp = [
+//       Math.max(potRobs[1] + nums[i], potRobs[2] + nums[i]),
+//       potRobs[0],
+//       potRobs[1],
+//     ];
+//     potRobs[0] = temp[0];
+//     potRobs[1] = temp[1];
+//     potRobs[2] = temp[2];
+//   }
+
+//   return Math.max(...potRobs);
+// }
+
+// console.log(rob(nums3));
+
+//-----  -----
+//----- NeetCode, LeetCode 62: Unique Paths -----
+//-----  -----
+
+// function uniquePaths(m, n) {
+//   let prevRow = new Array(n).fill(0);
+
+//   for (let r = m - 1; r >= 0; r--) {
+//     const currRow = new Array(n);
+//     currRow[n - 1] = 1;
+
+//     for (let c = n - 2; c >= 0; c--) {
+//       currRow[c] = currRow[c + 1] + prevRow[c];
+//     }
+//     for (let i = 0; i < n; i++) {
+//       prevRow[i] = currRow[i];
+//     }
+//   }
+
+//   return prevRow[0];
+// }
+
+// console.log(uniquePaths(3, 7)); //expected 21 // 3 rows, 6 columns
+
+//-----  -----
+//----- NeetCode, LeetCode 63: Unique Paths II-----
+//-----  -----
+
+// //test case 1
+// const grid = [
+//   [0, 0, 0],
+//   [0, 1, 0],
+//   [0, 0, 0],
+// ]; //expected 2
+
+// //test case 2
+// const grid2 = [
+//   [0, 0],
+//   [0, 1],
+// ]; //expected 0
+
+// //test case 3
+// const grid3 = [
+//   [0, 0],
+//   [1, 1],
+//   [0, 0],
+// ]; //expected 0
+
+// const uniquePathsWithObstacles = function (obstacleGrid) {
+//   const m = obstacleGrid.length; //rows
+//   const n = obstacleGrid[0].length; //columns
+
+//   if (obstacleGrid[m - 1][n - 1] === 1) return 0;
+
+//   let prevRow = new Array(n).fill(0);
+//   prevRow[n - 1] = 1;
+
+//   for (let r = m - 1; r >= 0; r--) {
+//     const currRow = new Array(n);
+//     currRow[n - 1] = obstacleGrid[r][n - 1] === 1 ? 0 : 1 * prevRow[n - 1];
+
+//     for (let c = n - 2; c >= 0; c--) {
+//       currRow[c] = obstacleGrid[r][c] === 1 ? 0 : currRow[c + 1] + prevRow[c];
+//     }
+//     for (let i = 0; i < n; i++) {
+//       prevRow[i] = currRow[i];
+//     }
+//   }
+
+//   return prevRow[0];
+// };
+
+// console.log(uniquePathsWithObstacles(grid2));
+
+//-----  -----
+//----- NeetCode, LeetCode 1143: Longest Common Subsequence -----
+//-----  -----
+
+// // const text1 = "abcde"; //expected 3
+// // const text2 = "ace";
+
+// // const text1 = "wqeqwe"; //expected 6
+// // const text2 = "wqeqwe";
+
+// const text1 = "abcba"; //expected 5
+// const text2 = "abcbcba";
+
+// function longestCommonSubsequence(text1, text2) {
+//   const txtR = text1.split("");
+//   const txtC = text2.split("");
+
+//   let matchArr = new Array(txtR.length + 1)
+//     .fill()
+//     .map(() => new Array(txtC.length + 1).fill(0));
+
+//   for (let r = txtR.length - 1; r >= 0; r--) {
+//     for (let c = txtC.length - 1; c >= 0; c--) {
+//       matchArr[r][c] =
+//         txtR[r] === txtC[c]
+//           ? 1 + matchArr[r + 1][c + 1]
+//           : Math.max(matchArr[r + 1][c], matchArr[r][c + 1]);
+//     }
+//   }
+
+//   console.log(matchArr);
+//   return matchArr[0][0];
+// }
+
+// console.log(longestCommonSubsequence(text1, text2));
