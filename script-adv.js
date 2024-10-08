@@ -73,58 +73,128 @@
 //-----  -----
 //----- LeetCode 978. Longest Turbulent Subarray -----
 //-----  -----
-const arr = [9, 4, 2, 10, 7, 8, 8, 1, 9]; //expected 5
-const arr2 = [4, 8, 12, 16]; //expected 2
-const arr3 = [3]; // expected 1
 
-const arr4 = [0, 1, 1, 0, 1, 0, 1, 1, 0, 0]; // expected 5
+// const arr = [9, 4, 2, 10, 7, 8, 8, 1, 9]; //expected 5
+// const arr2 = [4, 8, 12, 16]; //expected 2
+// const arr3 = [3]; // expected 1
 
-const maxTurbulenceSize = function (arr) {
-  let maxSize = 1;
-  let currSize = 1;
-  let prev = null; // true: < ----  false: > ---- null not: defined
+// const arr4 = [0, 1, 1, 0, 1, 0, 1, 1, 0, 0]; // expected 5
 
-  for (let i = 1; i < arr.length; i++) {
-    //case1 That's for case when we are staring subarray
-    if (prev === null) {
-      if (arr[i] > arr[i - 1]) {
-        prev = true;
-        currSize++;
-      }
+// const maxTurbulenceSize = function (arr) {
+//   let maxSize = 1;
+//   let currSize = 1;
+//   let prev = null; // true: < ----  false: > ---- null not: defined
 
-      if (arr[i] < arr[i - 1]) {
-        prev = false;
-        currSize++;
-      }
-    } else {
-      //case2 Turbulent subarray continues or breaks if rule breaks
-      if (prev) {
-        if (arr[i] < arr[i - 1]) {
-          prev = false;
-          currSize++;
-        } else {
-          if (arr[i] === arr[i - 1]) {
-            currSize = 1;
-            prev = null;
-          } else currSize = 2;
-        }
-      } else {
-        if (arr[i] > arr[i - 1]) {
-          prev = true;
-          currSize++;
-        } else {
-          if (arr[i] === arr[i - 1]) {
-            currSize = 1;
-            prev = null;
-          } else currSize = 2;
-        }
-      }
-    }
+//   for (let i = 1; i < arr.length; i++) {
+//     //case1 That's for case when we are staring subarray
+//     if (prev === null) {
+//       if (arr[i] > arr[i - 1]) {
+//         prev = true;
+//         currSize++;
+//       }
 
-    maxSize = Math.max(maxSize, currSize);
+//       if (arr[i] < arr[i - 1]) {
+//         prev = false;
+//         currSize++;
+//       }
+//     } else {
+//       //case2 Turbulent subarray continues or breaks if rule breaks
+//       if (prev) {
+//         if (arr[i] < arr[i - 1]) {
+//           prev = false;
+//           currSize++;
+//         } else {
+//           if (arr[i] === arr[i - 1]) {
+//             currSize = 1;
+//             prev = null;
+//           } else currSize = 2;
+//         }
+//       } else {
+//         if (arr[i] > arr[i - 1]) {
+//           prev = true;
+//           currSize++;
+//         } else {
+//           if (arr[i] === arr[i - 1]) {
+//             currSize = 1;
+//             prev = null;
+//           } else currSize = 2;
+//         }
+//       }
+//     }
+
+//     maxSize = Math.max(maxSize, currSize);
+//   }
+
+//   return maxSize;
+// };
+
+// console.log(maxTurbulenceSize(arr2));
+
+//-----  -----
+//----- LeetCode 219. Contains Duplicate II -----
+//-----  -----
+
+//test case 1 // expected true
+// const nums = [1, 2, 3, 1];
+// const k = 3;
+
+// //test case 2 // true
+// const nums = [1, 0, 1, 1];
+// const k = 1;
+
+// //test case 3 // false
+// const nums = [1, 2, 3, 1, 2, 3];
+// const k = 2;
+
+// const containsNearbyDuplicate = function (nums, k) {
+//   let map = new Map();
+
+//   for (let i = 0; i < nums.length; i++) {
+//     if (map.has(nums[i])) {
+//       if (Math.abs(map.get(nums[i]) - i) <= k) {
+//         return true;
+//       } else map.set(nums[i], i);
+//     } else map.set(nums[i], i);
+//   }
+
+//   return false;
+// };
+
+// console.log(containsNearbyDuplicate(nums, k));
+
+//-----  -----
+//----- LeetCode 1343. Number of Sub-arrays of Size K and Average Greater than or Equal to Threshold -----
+//-----  -----
+
+// //test case 1 //expected 3
+// const arr = [2, 2, 2, 5, 5, 5, 8];
+// const k = 3;
+// const threshold = 4;
+
+//test case 2 // expected 6
+const arr = [11, 13, 17, 23, 29, 31, 7, 5, 2, 3];
+const k = 3;
+const threshold = 5;
+
+const numOfSubarrays = function (arr, k, threshold) {
+  let l = 0;
+  let number = 0;
+  let sum = 0;
+
+  for (let i = 0; i < k; i++) {
+    sum += arr[i];
+  }
+  if (sum / k >= threshold) number++;
+
+  for (let r = 0; r < arr.length - k; r++) {
+    sum += arr[r + k];
+    sum -= arr[l];
+    l++;
+
+    if (sum / k >= threshold) number++;
   }
 
-  return maxSize;
+  return number;
 };
 
-console.log(maxTurbulenceSize(arr2));
+console.log(numOfSubarrays(arr, k, threshold));
