@@ -166,35 +166,138 @@
 //----- LeetCode 1343. Number of Sub-arrays of Size K and Average Greater than or Equal to Threshold -----
 //-----  -----
 
-// //test case 1 //expected 3
-// const arr = [2, 2, 2, 5, 5, 5, 8];
+// // //test case 1 //expected 3
+// // const arr = [2, 2, 2, 5, 5, 5, 8];
+// // const k = 3;
+// // const threshold = 4;
+
+// //test case 2 // expected 6
+// const arr = [11, 13, 17, 23, 29, 31, 7, 5, 2, 3];
 // const k = 3;
-// const threshold = 4;
+// const threshold = 5;
 
-//test case 2 // expected 6
-const arr = [11, 13, 17, 23, 29, 31, 7, 5, 2, 3];
-const k = 3;
-const threshold = 5;
+// const numOfSubarrays = function (arr, k, threshold) {
+//   let l = 0;
+//   let number = 0;
+//   let sum = 0;
 
-const numOfSubarrays = function (arr, k, threshold) {
+//   for (let i = 0; i < k; i++) {
+//     sum += arr[i];
+//   }
+//   if (sum / k >= threshold) number++;
+
+//   for (let r = 0; r < arr.length - k; r++) {
+//     sum += arr[r + k];
+//     sum -= arr[l];
+//     l++;
+
+//     if (sum / k >= threshold) number++;
+//   }
+
+//   return number;
+// };
+
+// console.log(numOfSubarrays(arr, k, threshold));
+
+//-----  -----
+//----- LeetCode 209. Minimum Size Subarray Sum -----
+//-----  -----
+
+// //expected 2
+// const target = 7;
+// const nums = [2, 3, 1, 2, 4, 3];
+
+// const minSubArrayLen = function (target, nums) {
+//   let l = 0;
+//   let total = 0;
+//   let length = nums.length + 1;
+
+//   for (let r = 0; r < nums.length; r++) {
+//     total += nums[r];
+//     while (total >= target) {
+//       length = Math.min(length, r - l + 1);
+//       total -= nums[l];
+//       l++;
+//     }
+//   }
+//   return length === nums.length + 1 ? 0 : length;
+// };
+
+// console.log(minSubArrayLen(target, nums));
+
+//-----  -----
+//----- NeetCode, LeetCode 3. Longest Substring Without Repeating Characters-----
+//-----  -----
+
+// const s = "zxyzxyz";
+// const s1 = "ffffff";
+// const s2 = "pwwkew";
+// const s3 = "abcabcbb";
+
+// function lengthOfLongestSubstring(s) {
+//   const arr = s.split("");
+//   if (arr.length === 0) return 0;
+
+//   let l = 0;
+//   let maxLength = 1;
+
+//   let setChars = new Set();
+//   setChars.add(arr[0]);
+
+//   for (let r = 1; r < arr.length; r++) {
+//     while (setChars.has(arr[r])) {
+//       setChars.delete(arr[l]);
+//       l++;
+//     }
+
+//     setChars.add(arr[r]);
+//     maxLength = Math.max(maxLength, setChars.size);
+//   }
+
+//   return maxLength;
+// }
+
+// console.log(lengthOfLongestSubstring(s1));
+
+//-----  -----
+//----- NeetCode, LeetCode 424. Longest Repeating Character Replacement -----
+//-----  -----
+
+//test case 1 //expected 4
+const s = "XYYX";
+const k = 2;
+
+//test case 2 //expected 5
+const s1 = "AAABABB";
+const k1 = 1;
+
+//test case 3 // 3
+const s2 = "ABAAA";
+const k2 = 0;
+
+function characterReplacement(s, k) {
+  const arr = s.split("");
+  if (arr.length === 0) return 0;
+
   let l = 0;
-  let number = 0;
-  let sum = 0;
+  let maxLength = 1;
+  let map = new Map();
 
-  for (let i = 0; i < k; i++) {
-    sum += arr[i];
+  for (let r = 0; r < arr.length; r++) {
+    map.set(arr[r], 1 + (map.get(arr[r]) || 0));
+
+    let length = r - l + 1;
+    if (length - Math.max(...map.values()) > k) {
+      map.set(arr[l], map.get(arr[l]) - 1);
+      l++;
+    }
+
+    length = r - l + 1;
+
+    maxLength = Math.max(maxLength, length);
   }
-  if (sum / k >= threshold) number++;
 
-  for (let r = 0; r < arr.length - k; r++) {
-    sum += arr[r + k];
-    sum -= arr[l];
-    l++;
+  return maxLength;
+}
 
-    if (sum / k >= threshold) number++;
-  }
-
-  return number;
-};
-
-console.log(numOfSubarrays(arr, k, threshold));
+console.log(characterReplacement(s2, k2));
