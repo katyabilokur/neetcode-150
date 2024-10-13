@@ -375,12 +375,12 @@
 
 // console.log(maxArea(height));
 
-//-----  -----
-//----- NeetCode, LeetCode 42. Trapping Rain Water -----
-//-----  -----
+// -----  -----
+// ----- NeetCode, LeetCode 42. Trapping Rain Water -----
+// -----  -----
 
-// //Test case 1
-// //expected 9;
+//Test case 1
+////expected 9;
 // const height = [0, 2, 0, 3, 1, 0, 1, 3, 2, 1];
 
 // //Test case 2
@@ -405,35 +405,18 @@
 //   let l = 0;
 //   let r = height.length - 1;
 //   let level = 0;
-//   let prevLevel = 0;
 //   let water = 0;
 
 //   while (l < r) {
-//     if (height[l] === 0) {
-//       l++;
-//       continue;
-//     }
-//     if (height[r] === 0) {
-//       r--;
-//       continue;
-//     }
-
 //     const minBar = Math.min(height[l], height[r]);
-//     prevLevel = level;
-
-//     if (minBar > prevLevel) {
-//       level = minBar;
-
-//       for (let i = l + 1; i < r; i++) {
-//         if (height[i] <= prevLevel) water += level - prevLevel;
-//         if (height[i] > prevLevel && height[i] < level)
-//           water += level - height[i];
-//       }
-//     }
-
-//     if (height[l] < height[r]) {
+//     if (minBar > level) level = minBar;
+//     if (height[l] <= height[r]) {
+//       water += level - height[l];
 //       l++;
-//     } else r--;
+//     } else {
+//       water += level - height[r];
+//       r--;
+//     }
 //   }
 
 //   return water;
@@ -507,3 +490,72 @@
 // };
 
 // console.log(pivotIndex(nums2));
+
+//-----  -----
+//----- NeetCode, LeetCode 560. Subarray Sum Equals K -----
+//-----  -----
+
+// //test case 1, expected 2
+// const nums = [1, 2, 3];
+// const k = 3;
+
+// //test case 2, expected 3 / 6
+// const nums1 = [1, 2, 0, 3, 0];
+// const k1 = 3;
+
+// //test case 2, expected 2
+// const nums2 = [1, 1];
+// const k2 = 1;
+
+// //expected 1
+// const nums3 = [1];
+// const k3 = 1;
+
+// //expected 1
+// const nums4 = [-1, -1, 1];
+// const k4 = 0;
+
+// //expected
+// const nums5 = [6, 4, 3, 1];
+// const k5 = 10;
+
+// const subarraySum = function (nums, k) {
+//   if (nums.length === 1 && nums[0] === k) return 1;
+//   if (nums.length === 1 && nums[0] !== k) return 0;
+
+//   let pre = [nums[0]];
+//   let post = [nums[nums.length - 1]];
+
+//   let res = 0;
+
+//   for (let i = 1; i < nums.length; i++) {
+//     pre.push(nums[i] + pre[i - 1]);
+//     post.unshift(nums[nums.length - 1 - i] + post[0]);
+//   }
+
+//   const totalSum = post[0];
+
+//   pre.unshift(0);
+//   pre.push(pre[pre.length - 1]);
+
+//   post.unshift(post[0]);
+//   post.push(0);
+
+//   // console.log(pre);
+//   // console.log(post);
+
+//   for (let i = 0; i < pre.length - 1; i++) {
+//     for (let j = post.length - 1; j > i + 1; j--) {
+//       if (totalSum - pre[i] - post[j] === k) res++;
+//     }
+//   }
+
+//   return res;
+// };
+
+// console.log(subarraySum(nums, k));
+// console.log(subarraySum(nums1, k1));
+// console.log(subarraySum(nums2, k2));
+// console.log(subarraySum(nums3, k3));
+// console.log(subarraySum(nums4, k4));
+// console.log(subarraySum(nums5, k5));
