@@ -559,3 +559,162 @@
 // console.log(subarraySum(nums3, k3));
 // console.log(subarraySum(nums4, k4));
 // console.log(subarraySum(nums5, k5));
+
+// -----  -----
+// ----- NeetCode, LeetCode 141. Linked List Cycle -----
+// -----  -----
+
+class ListNode {
+  constructor(val = 0, next = null) {
+    this.val = val;
+    this.next = next;
+  }
+}
+
+// //test case 1 // expected TRUE
+// //head = [1,2,3,4]
+// const node2 = new ListNode(2);
+// const node4 = new ListNode(4, node2);
+// const node1 = new ListNode(1, node2);
+// const node3 = new ListNode(3, node4);
+// node2.next = node3;
+
+// function hasCycle(head) {
+//   let s = head;
+//   let f = head;
+
+//   while (f && f.next) {
+//     f = f.next.next;
+//     s = s.next;
+
+//     if (f === s) {
+//       return true;
+//     }
+//   }
+
+//   return false;
+// }
+
+// console.log(hasCycle(node1));
+
+// -----  -----
+// ----- NeetCode, LeetCode 876. Middle of the Linked List -----
+// -----  -----
+
+// const node4 = new ListNode(4);
+// const node3 = new ListNode(3, node4);
+// const node2 = new ListNode(2, node3);
+// const node1 = new ListNode(2, node2);
+// const node0 = new ListNode(2, node1);
+
+// const middleNode = function (head) {
+//   let s = head;
+//   let f = head;
+
+//   while (f && f.next) {
+//     f = f.next.next;
+//     s = s.next;
+//   }
+
+//   return s;
+// };
+
+// console.log(middleNode(node0));
+
+// -----  -----
+// ----- NeetCode, LeetCode 142. Linked List Cycle II-----
+// -----  -----
+
+//test case //expected 2
+// const node2 = new ListNode(2);
+// const node4 = new ListNode(4, node2);
+// const node1 = new ListNode(1, node2);
+// const node3 = new ListNode(3, node4);
+// node2.next = node3;
+
+// const detectCycle = function (head) {
+//   let s = head;
+//   let f = head;
+
+//   while (f && f.next) {
+//     f = f.next.next;
+//     s = s.next;
+
+//     if (f === s) {
+//       let s2 = head;
+//       while (s2 !== s) {
+//         s = s.next;
+//         s2 = s2.next;
+//       }
+//       return s;
+//     }
+//   }
+
+//   return null;
+// };
+
+// console.log(detectCycle(node1));
+
+// -----  -----
+// ----- NeetCode, LeetCode 287. Find the Duplicate Number-----
+// -----  -----
+
+// test case 1 // expected 2
+// const nums = [1, 3, 4, 2, 2];
+
+// function findDuplicate(nums) {
+//   let s = 0;
+//   let f = 0;
+
+//   //part 1 - find the cycle
+//   while (true) {
+//     s = nums[s];
+//     f = nums[nums[f]];
+
+//     //part 2 - find the head of the cycle, that is a repeated element
+//     if (s === f) {
+//       let s2 = 0;
+//       while (true) {
+//         s = nums[s];
+//         s2 = nums[s2];
+
+//         if (s === s2) return s;
+//       }
+//     }
+//   }
+// }
+
+// console.log(findDuplicate(nums));
+
+// -----  -----
+// ----- NeetCode, LeetCode 2130. Maximum Twin Sum of a Linked List -----
+// -----  -----
+
+//test case 1
+//[4,2,2,3] //expected 7
+
+const node4 = new ListNode(3);
+const node3 = new ListNode(2, node4);
+const node2 = new ListNode(2, node3);
+const node1 = new ListNode(4, node2);
+
+const pairSum = function (head) {
+  let sums = [head.val];
+  let s = head;
+  let f = head.next;
+
+  while (f && f.next) {
+    s = s.next;
+    f = f.next.next;
+    sums.push(s.val);
+  }
+
+  for (let i = sums.length - 1; i >= 0; i--) {
+    s = s.next;
+    sums[i] = sums[i] + s.val;
+  }
+
+  return Math.max(...sums);
+};
+
+console.log(pairSum(node1)); //7
