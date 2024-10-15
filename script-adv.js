@@ -792,98 +792,203 @@ class ListNode {
 // ----- NeetCode, LeetCode 211. Design Add and Search Words Data Structure -----
 // -----  -----
 
-class PrefixTreeNode {
-  constructor() {
-    this.children = new Map();
-    this.isWord = false;
+// class PrefixTreeNode {
+//   constructor() {
+//     this.children = new Map();
+//     this.isWord = false;
+//   }
+// }
+
+// class WordDictionary {
+//   constructor() {
+//     this.root = new PrefixTreeNode();
+//   }
+
+//   addWord(word) {
+//     let node = this.root;
+
+//     for (const char of word) {
+//       const child = node.children.get(char) || new PrefixTreeNode();
+//       node.children.set(char, child);
+//       node = child;
+//     }
+
+//     node.isWord = true;
+//   }
+
+//   //return boolean
+//   search(word) {
+//     let node = this.root;
+
+//     let count = 0;
+//     count += dfs(node, word.split(""));
+
+//     if (count > 0) return true;
+
+//     return false;
+//   }
+// }
+
+// function dfs(node, word) {
+//   let curNode = node;
+//   let res = 0;
+
+//   for (let i = 0; i < word.length; i++) {
+//     if (word[i] === ".") {
+//       const children = [...curNode.children.values()];
+
+//       // if (children.length === 0 && word.length === 1) {
+//       //   return curNode.isWord ? 1 : 0;
+//       // }
+//       if (children.length === 0 && word.length >= 1) {
+//         return 0;
+//       }
+//       const remWord = word.slice(i + 1);
+//       //const childArr = Object.values(children);
+
+//       children.forEach((child) => {
+//         res += dfs(child, remWord);
+//       });
+//       break;
+//     } else {
+//       const child = curNode.children.get(word[i]);
+
+//       if (!child) {
+//         return 0;
+//       }
+
+//       curNode = child;
+//     }
+//   }
+
+//   if (curNode.isWord) res++;
+//   return res;
+// }
+
+// const wordDictionary = new WordDictionary();
+// // wordDictionary.addWord("bad");
+// // wordDictionary.addWord("dad");
+// // wordDictionary.addWord("mad");
+// // console.log(wordDictionary.search("pad")); // return False
+// // console.log(wordDictionary.search("bad")); // return True
+// // console.log(wordDictionary.search(".ad")); // return True
+// // console.log(wordDictionary.search("b..")); // return True
+
+// // wordDictionary.addWord("do");
+// // console.log(wordDictionary.search("d..")); // return True
+
+// wordDictionary.addWord("cat");
+// wordDictionary.addWord("cot");
+
+// console.log(wordDictionary.search("cat")); // return True
+// console.log(wordDictionary.search("cut")); // return False
+// console.log(wordDictionary.search("c.r")); // return False
+
+// console.log(wordDictionary.search("c.t")); // return True
+// console.log(wordDictionary.search("c..")); // return True
+// console.log(wordDictionary.search("..t")); // return True
+
+// -----  -----
+// ----- NeetCode, LeetCode 323. Count Connected Components -----
+// -----  -----
+
+//test case 1 //expected 1
+const n = 3;
+const edges = [
+  [0, 1],
+  [0, 2],
+];
+
+//test case 2 //expected 2
+const n1 = 6;
+const edges1 = [
+  [0, 1],
+  [1, 2],
+  [2, 3],
+  [4, 5],
+];
+
+//test case 3 //expected 3
+const n2 = 6;
+const edges2 = [
+  [0, 1],
+  [0, 2],
+  [1, 2],
+  [3, 4],
+];
+
+//test case 4 //expected 1
+const n3 = 6;
+const edges3 = [
+  [0, 1],
+  [2, 3],
+  [4, 5],
+  [1, 2],
+  [3, 4],
+];
+
+class UnionFind {
+  constructor(n) {
+    this.par = new Map();
+    this.rank = new Map();
+
+    for (let i = 0; i < n; i++) {
+      this.par.set(i, i);
+      this.rank.set(i, 0);
+    }
   }
-}
 
-class WordDictionary {
-  constructor() {
-    this.root = new PrefixTreeNode();
+  find(x) {
+    if (x !== this.par.get(x)) {
+      this.par.set(x, this.find(this.par.get(x)));
+    }
+    return this.par.get(x);
   }
 
-  addWord(word) {
-    let node = this.root;
-
-    for (const char of word) {
-      const child = node.children.get(char) || new PrefixTreeNode();
-      node.children.set(char, child);
-      node = child;
+  union(n1, n2) {
+    let p1 = this.find(n1),
+      p2 = this.find(n2);
+    if (p1 == p2) {
+      return false;
     }
 
-    node.isWord = true;
-  }
-
-  //return boolean
-  search(word) {
-    let node = this.root;
-
-    let count = 0;
-    count += dfs(node, word.split(""));
-
-    if (count > 0) return true;
-
-    return false;
-  }
-}
-
-function dfs(node, word) {
-  let curNode = node;
-  let res = 0;
-
-  for (let i = 0; i < word.length; i++) {
-    if (word[i] === ".") {
-      const children = [...curNode.children.values()];
-
-      // if (children.length === 0 && word.length === 1) {
-      //   return curNode.isWord ? 1 : 0;
-      // }
-      if (children.length === 0 && word.length >= 1) {
-        return 0;
+    if (this.rank.get(p1) > this.rank.get(p2)) {
+      for (let [key, value] of this.par) {
+        if (value === p2) this.par.set(key, p1);
       }
-      const remWord = word.slice(i + 1);
-      //const childArr = Object.values(children);
-
-      children.forEach((child) => {
-        res += dfs(child, remWord);
-      });
-      break;
+      this.par.set(p2, p1);
+    } else if (this.rank.get(p1) < this.rank.get(p2)) {
+      for (let [key, value] of this.par) {
+        if (value === p1) this.par.set(key, p2);
+      }
+      this.par.set(p1, p2);
     } else {
-      const child = curNode.children.get(word[i]);
+      const pToChange = p1;
+      this.par.set(p1, p2);
+      this.rank.set(p2, this.rank.get(p2) + 1);
 
-      if (!child) {
-        return 0;
+      for (let [key, value] of this.par) {
+        if (value === pToChange) this.par.set(key, p2);
       }
-
-      curNode = child;
     }
+    return true;
   }
-
-  if (curNode.isWord) res++;
-  return res;
 }
 
-const wordDictionary = new WordDictionary();
-// wordDictionary.addWord("bad");
-// wordDictionary.addWord("dad");
-// wordDictionary.addWord("mad");
-// console.log(wordDictionary.search("pad")); // return False
-// console.log(wordDictionary.search("bad")); // return True
-// console.log(wordDictionary.search(".ad")); // return True
-// console.log(wordDictionary.search("b..")); // return True
+function countComponents(n, edges) {
+  const union = new UnionFind(n);
 
-// wordDictionary.addWord("do");
-// console.log(wordDictionary.search("d..")); // return True
+  edges.forEach((edge) => {
+    union.union(...edge);
+  });
 
-wordDictionary.addWord("cat");
-wordDictionary.addWord("cot");
+  const parents = Array.from(union.par.values());
+  const uniquePar = [...new Set(parents)];
 
-console.log(wordDictionary.search("cat")); // return True
-console.log(wordDictionary.search("cut")); // return False
-console.log(wordDictionary.search("c.r")); // return False
+  return uniquePar.length;
+}
 
-console.log(wordDictionary.search("c.t")); // return True
-console.log(wordDictionary.search("c..")); // return True
-console.log(wordDictionary.search("..t")); // return True
+console.log(countComponents(n, edges));
+console.log(countComponents(n1, edges1));
+console.log(countComponents(n2, edges2));
+console.log(countComponents(n3, edges3));
