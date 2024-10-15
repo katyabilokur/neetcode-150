@@ -693,28 +693,197 @@ class ListNode {
 //test case 1
 //[4,2,2,3] //expected 7
 
-const node4 = new ListNode(3);
-const node3 = new ListNode(2, node4);
-const node2 = new ListNode(2, node3);
-const node1 = new ListNode(4, node2);
+// const node4 = new ListNode(3);
+// const node3 = new ListNode(2, node4);
+// const node2 = new ListNode(2, node3);
+// const node1 = new ListNode(4, node2);
 
-const pairSum = function (head) {
-  let sums = [head.val];
-  let s = head;
-  let f = head.next;
+// const pairSum = function (head) {
+//   let sums = [head.val];
+//   let s = head;
+//   let f = head.next;
 
-  while (f && f.next) {
-    s = s.next;
-    f = f.next.next;
-    sums.push(s.val);
+//   while (f && f.next) {
+//     s = s.next;
+//     f = f.next.next;
+//     sums.push(s.val);
+//   }
+
+//   for (let i = sums.length - 1; i >= 0; i--) {
+//     s = s.next;
+//     sums[i] = sums[i] + s.val;
+//   }
+
+//   return Math.max(...sums);
+// };
+
+// console.log(pairSum(node1)); //7
+
+// -----  -----
+// ----- NeetCode, LeetCode 208. Implement Trie (Prefix Tree) -----
+// -----  -----
+
+// class PrefixTreeNode {
+//   constructor() {
+//     this.children = {};
+//     this.isWord = false;
+//   }
+// }
+
+// class PrefixTree {
+//   constructor() {
+//     this.root = new PrefixTreeNode();
+//   }
+
+//   insert(word) {
+//     let node = this.root;
+
+//     for (const char of word) {
+//       const child = node.children[char] || new PrefixTreeNode();
+//       node.children[char] = child;
+//       node = child;
+//     }
+
+//     node.isWord = true;
+//   }
+
+//   //return boolean
+//   search(word) {
+//     let node = this.root;
+
+//     for (const char of word) {
+//       const child = node.children[char] || null;
+
+//       if (!child) {
+//         return false;
+//       }
+
+//       node = child;
+//     }
+//     return node.isWord;
+//   }
+
+//   //return boolean
+//   startsWith(prefix) {
+//     let node = this.root;
+
+//     for (const char of prefix) {
+//       const child = node.children[char] || null;
+
+//       if (!child) {
+//         return false;
+//       }
+
+//       node = child;
+//     }
+//     return true;
+//   }
+// }
+
+// const prefixTree = new PrefixTree();
+// prefixTree.insert("dog");
+// console.log(prefixTree.search("dog")); // return true
+// console.log(prefixTree.search("do")); // return false
+// console.log(prefixTree.startsWith("do")); // return true
+// prefixTree.insert("do");
+// console.log(prefixTree.search("do")); // return true
+
+// -----  -----
+// ----- NeetCode, LeetCode 211. Design Add and Search Words Data Structure -----
+// -----  -----
+
+class PrefixTreeNode {
+  constructor() {
+    this.children = new Map();
+    this.isWord = false;
+  }
+}
+
+class WordDictionary {
+  constructor() {
+    this.root = new PrefixTreeNode();
   }
 
-  for (let i = sums.length - 1; i >= 0; i--) {
-    s = s.next;
-    sums[i] = sums[i] + s.val;
+  addWord(word) {
+    let node = this.root;
+
+    for (const char of word) {
+      const child = node.children.get(char) || new PrefixTreeNode();
+      node.children.set(char, child);
+      node = child;
+    }
+
+    node.isWord = true;
   }
 
-  return Math.max(...sums);
-};
+  //return boolean
+  search(word) {
+    let node = this.root;
 
-console.log(pairSum(node1)); //7
+    let count = 0;
+    count += dfs(node, word.split(""));
+
+    if (count > 0) return true;
+
+    return false;
+  }
+}
+
+function dfs(node, word) {
+  let curNode = node;
+  let res = 0;
+
+  for (let i = 0; i < word.length; i++) {
+    if (word[i] === ".") {
+      const children = [...curNode.children.values()];
+
+      // if (children.length === 0 && word.length === 1) {
+      //   return curNode.isWord ? 1 : 0;
+      // }
+      if (children.length === 0 && word.length >= 1) {
+        return 0;
+      }
+      const remWord = word.slice(i + 1);
+      //const childArr = Object.values(children);
+
+      children.forEach((child) => {
+        res += dfs(child, remWord);
+      });
+      break;
+    } else {
+      const child = curNode.children.get(word[i]);
+
+      if (!child) {
+        return 0;
+      }
+
+      curNode = child;
+    }
+  }
+
+  if (curNode.isWord) res++;
+  return res;
+}
+
+const wordDictionary = new WordDictionary();
+// wordDictionary.addWord("bad");
+// wordDictionary.addWord("dad");
+// wordDictionary.addWord("mad");
+// console.log(wordDictionary.search("pad")); // return False
+// console.log(wordDictionary.search("bad")); // return True
+// console.log(wordDictionary.search(".ad")); // return True
+// console.log(wordDictionary.search("b..")); // return True
+
+// wordDictionary.addWord("do");
+// console.log(wordDictionary.search("d..")); // return True
+
+wordDictionary.addWord("cat");
+wordDictionary.addWord("cot");
+
+console.log(wordDictionary.search("cat")); // return True
+console.log(wordDictionary.search("cut")); // return False
+console.log(wordDictionary.search("c.r")); // return False
+
+console.log(wordDictionary.search("c.t")); // return True
+console.log(wordDictionary.search("c..")); // return True
+console.log(wordDictionary.search("..t")); // return True
