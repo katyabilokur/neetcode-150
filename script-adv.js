@@ -892,103 +892,286 @@ class ListNode {
 // ----- NeetCode, LeetCode 323. Count Connected Components -----
 // -----  -----
 
-//test case 1 //expected 1
-const n = 3;
-const edges = [
-  [0, 1],
-  [0, 2],
+// //test case 1 //expected 1
+// const n = 3;
+// const edges = [
+//   [0, 1],
+//   [0, 2],
+// ];
+
+// //test case 2 //expected 2
+// const n1 = 6;
+// const edges1 = [
+//   [0, 1],
+//   [1, 2],
+//   [2, 3],
+//   [4, 5],
+// ];
+
+// //test case 3 //expected 3
+// const n2 = 6;
+// const edges2 = [
+//   [0, 1],
+//   [0, 2],
+//   [1, 2],
+//   [3, 4],
+// ];
+
+// //test case 4 //expected 1
+// const n3 = 6;
+// const edges3 = [
+//   [0, 1],
+//   [2, 3],
+//   [4, 5],
+//   [1, 2],
+//   [3, 4],
+// ];
+
+// class UnionFind {
+//   constructor(n) {
+//     this.par = new Map();
+//     this.rank = new Map();
+
+//     for (let i = 0; i < n; i++) {
+//       this.par.set(i, i);
+//       this.rank.set(i, 0);
+//     }
+//   }
+
+//   find(x) {
+//     if (x !== this.par.get(x)) {
+//       this.par.set(x, this.find(this.par.get(x)));
+//     }
+//     return this.par.get(x);
+//   }
+
+//   union(n1, n2) {
+//     let p1 = this.find(n1),
+//       p2 = this.find(n2);
+//     if (p1 == p2) {
+//       return false;
+//     }
+
+//     if (this.rank.get(p1) > this.rank.get(p2)) {
+//       for (let [key, value] of this.par) {
+//         if (value === p2) this.par.set(key, p1);
+//       }
+//       this.par.set(p2, p1);
+//     } else if (this.rank.get(p1) < this.rank.get(p2)) {
+//       for (let [key, value] of this.par) {
+//         if (value === p1) this.par.set(key, p2);
+//       }
+//       this.par.set(p1, p2);
+//     } else {
+//       const pToChange = p1;
+//       this.par.set(p1, p2);
+//       this.rank.set(p2, this.rank.get(p2) + 1);
+
+//       for (let [key, value] of this.par) {
+//         if (value === pToChange) this.par.set(key, p2);
+//       }
+//     }
+//     return true;
+//   }
+// }
+
+// function countComponents(n, edges) {
+//   const union = new UnionFind(n);
+
+//   edges.forEach((edge) => {
+//     union.union(...edge);
+//   });
+
+//   const parents = Array.from(union.par.values());
+//   const uniquePar = [...new Set(parents)];
+
+//   return uniquePar.length;
+// }
+
+// console.log(countComponents(n, edges));
+// console.log(countComponents(n1, edges1));
+// console.log(countComponents(n2, edges2));
+// console.log(countComponents(n3, edges3));
+
+// -----  -----
+// ----- NeetCode, LeetCode 684. Redundant Connection -----
+// -----  -----
+
+// const edges = [
+//   [1, 2],
+//   [1, 3],
+//   [2, 3],
+// ]; //[2,3]
+
+// const edges1 = [
+//   [1, 2],
+//   [2, 3],
+//   [3, 4],
+//   [1, 4],
+//   [1, 5],
+// ]; //[1,4]
+
+// class UnionFind {
+//   constructor(edges) {
+//     const n = edges.length;
+//     this.par = new Map();
+//     this.rank = new Map();
+
+//     for (let i = 1; i <= n; i++) {
+//       this.par.set(i, i);
+//       this.rank.set(i, 0);
+//     }
+//   }
+
+//   find(x) {
+//     if (x !== this.par.get(x)) {
+//       this.par.set(x, this.find(this.par.get(x)));
+//     }
+//     return this.par.get(x);
+//   }
+
+//   union(n1, n2) {
+//     let p1 = this.find(n1),
+//       p2 = this.find(n2);
+//     if (p1 === p2) {
+//       return false;
+//     }
+
+//     if (this.rank.get(p1) > this.rank.get(p2)) {
+//       this.par.set(p2, p1);
+//     } else if (this.rank.get(p1) < this.rank.get(p2)) {
+//       this.par.set(p1, p2);
+//     } else {
+//       this.par.set(p1, p2);
+//       this.rank.set(p2, this.rank.get(p2) + 1);
+//     }
+//     return true;
+//   }
+// }
+
+// const findRedundantConnection = function (edges) {
+//   const union = new UnionFind(edges);
+
+//   for (let i = 0; i < edges.length; i++) {
+//     const newToUnite = union.union(...edges[i]);
+//     if (newToUnite === false) return edges[i];
+//   }
+// };
+
+// console.log(findRedundantConnection(edges));
+// console.log(findRedundantConnection(edges1));
+
+// -----  -----
+// ----- NeetCode, LeetCode 128. Longest Consecutive Sequence -----
+// -----  -----
+
+// const nums = [2, 20, 4, 10, 3, 4, 5]; //expected 4
+
+// function longestConsecutive(nums) {
+//   const set = new Set(nums);
+//   let longest = 0;
+
+//   nums.forEach((num) => {
+//     if (!set.has(num - 1)) {
+//       let curLength = 1;
+//       while (set.has(num + curLength)) {
+//         curLength++;
+//       }
+
+//       longest = Math.max(longest, curLength);
+//     }
+//   });
+
+//   return longest;
+// }
+
+// console.log(longestConsecutive(nums));
+
+// -----  -----
+// ----- NeetCode, LeetCode 721. Accounts Merge -----
+// -----  -----
+
+const accounts0 = [
+  ["John", "johnsmith@mail.com", "john_newyork@mail.com"],
+  ["John", "johnsmith@mail.com", "john00@mail.com"],
+  ["Mary", "mary@mail.com"],
+  ["John", "johnnybravo@mail.com"],
 ];
 
-//test case 2 //expected 2
-const n1 = 6;
-const edges1 = [
-  [0, 1],
-  [1, 2],
-  [2, 3],
-  [4, 5],
+const accounts = [
+  ["David", "David0@m.co", "David1@m.co"],
+  ["David", "David3@m.co", "David4@m.co"],
+  ["David", "David4@m.co", "David5@m.co"],
+  ["David", "David2@m.co", "David3@m.co"],
+  ["David", "David1@m.co", "David2@m.co"],
 ];
 
-//test case 3 //expected 3
-const n2 = 6;
-const edges2 = [
-  [0, 1],
-  [0, 2],
-  [1, 2],
-  [3, 4],
-];
-
-//test case 4 //expected 1
-const n3 = 6;
-const edges3 = [
-  [0, 1],
-  [2, 3],
-  [4, 5],
-  [1, 2],
-  [3, 4],
-];
-
-class UnionFind {
-  constructor(n) {
-    this.par = new Map();
-    this.rank = new Map();
-
-    for (let i = 0; i < n; i++) {
-      this.par.set(i, i);
-      this.rank.set(i, 0);
-    }
+class UnionAccounts {
+  constructor(edges) {
+    this.parents = new Map(); //e.g "David0@mail.com": "David"
+    this.emails = new Map(); //e.g "David0@mail.com": "David0@mail.com", "David1@mail.com": "David0@mail.com"
   }
 
-  find(x) {
-    if (x !== this.par.get(x)) {
-      this.par.set(x, this.find(this.par.get(x)));
+  findExistingAccount(account) {
+    for (let e = 1; e < account.length; e++) {
+      if (this.emails.has(account[e])) return this.emails.get(account[e]);
     }
-    return this.par.get(x);
+    return null;
   }
 
-  union(n1, n2) {
-    let p1 = this.find(n1),
-      p2 = this.find(n2);
-    if (p1 == p2) {
-      return false;
-    }
+  createRecord(account) {}
 
-    if (this.rank.get(p1) > this.rank.get(p2)) {
-      for (let [key, value] of this.par) {
-        if (value === p2) this.par.set(key, p1);
-      }
-      this.par.set(p2, p1);
-    } else if (this.rank.get(p1) < this.rank.get(p2)) {
-      for (let [key, value] of this.par) {
-        if (value === p1) this.par.set(key, p2);
-      }
-      this.par.set(p1, p2);
-    } else {
-      const pToChange = p1;
-      this.par.set(p1, p2);
-      this.rank.set(p2, this.rank.get(p2) + 1);
+  addAccount(account) {
+    const curOwner = this.findExistingAccount(account);
 
-      for (let [key, value] of this.par) {
-        if (value === pToChange) this.par.set(key, p2);
+    //If there is no owner yet, add all emails
+    if (!curOwner) {
+      this.parents.set(account[1], account[0]);
+      for (let e = 1; e < account.length; e++) {
+        this.emails.set(account[e], account[1]);
       }
     }
-    return true;
+    //if there is already at least one owner
+    else {
+      //do merging of a new account and possible existing ones
+      for (let e = 1; e < account.length; e++) {
+        if (!this.emails.has(account[e])) {
+          this.emails.set(account[e], curOwner);
+        } else {
+          const questionOwnerEmail = this.emails.get(account[e]);
+          if (questionOwnerEmail !== curOwner) {
+            //rewrite all owners with that email to a new curOwner email
+            this.parents.delete(questionOwnerEmail);
+            for (const [key, value] of this.emails.entries()) {
+              if (value === questionOwnerEmail) this.emails.set(key, curOwner);
+            }
+          }
+        }
+      }
+    }
   }
 }
 
-function countComponents(n, edges) {
-  const union = new UnionFind(n);
+function accountsMerge(accounts) {
+  const unionAcc = new UnionAccounts(accounts);
+  let res = [];
 
-  edges.forEach((edge) => {
-    union.union(...edge);
+  accounts.forEach((account) => {
+    unionAcc.addAccount(account);
   });
 
-  const parents = Array.from(union.par.values());
-  const uniquePar = [...new Set(parents)];
+  console.log(unionAcc);
 
-  return uniquePar.length;
+  for (const [keyOwner, valueOwner] of unionAcc.parents.entries()) {
+    let emails = [];
+    for (const [keyEmail, valueEmail] of unionAcc.emails.entries()) {
+      if (valueEmail === keyOwner) emails.push(keyEmail);
+    }
+    const sortedEmails = emails.sort();
+    res.push([valueOwner, ...sortedEmails]);
+  }
+
+  return res;
 }
 
-console.log(countComponents(n, edges));
-console.log(countComponents(n1, edges1));
-console.log(countComponents(n2, edges2));
-console.log(countComponents(n3, edges3));
+console.log(accountsMerge(accounts0));
