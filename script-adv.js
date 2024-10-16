@@ -1091,87 +1091,147 @@ class ListNode {
 // ----- NeetCode, LeetCode 721. Accounts Merge -----
 // -----  -----
 
-const accounts0 = [
-  ["John", "johnsmith@mail.com", "john_newyork@mail.com"],
-  ["John", "johnsmith@mail.com", "john00@mail.com"],
-  ["Mary", "mary@mail.com"],
-  ["John", "johnnybravo@mail.com"],
-];
+// const accounts0 = [
+//   ["John", "johnsmith@mail.com", "john_newyork@mail.com"],
+//   ["John", "johnsmith@mail.com", "john00@mail.com"],
+//   ["Mary", "mary@mail.com"],
+//   ["John", "johnnybravo@mail.com"],
+// ];
 
-const accounts = [
-  ["David", "David0@m.co", "David1@m.co"],
-  ["David", "David3@m.co", "David4@m.co"],
-  ["David", "David4@m.co", "David5@m.co"],
-  ["David", "David2@m.co", "David3@m.co"],
-  ["David", "David1@m.co", "David2@m.co"],
-];
+// const accounts = [
+//   ["David", "David0@m.co", "David1@m.co"],
+//   ["David", "David3@m.co", "David4@m.co"],
+//   ["David", "David4@m.co", "David5@m.co"],
+//   ["David", "David2@m.co", "David3@m.co"],
+//   ["David", "David1@m.co", "David2@m.co"],
+// ];
 
-class UnionAccounts {
-  constructor(edges) {
-    this.parents = new Map(); //e.g "David0@mail.com": "David"
-    this.emails = new Map(); //e.g "David0@mail.com": "David0@mail.com", "David1@mail.com": "David0@mail.com"
+// class UnionAccounts {
+//   constructor(edges) {
+//     this.parents = new Map(); //e.g "David0@mail.com": "David"
+//     this.emails = new Map(); //e.g "David0@mail.com": "David0@mail.com", "David1@mail.com": "David0@mail.com"
+//   }
+
+//   findExistingAccount(account) {
+//     for (let e = 1; e < account.length; e++) {
+//       if (this.emails.has(account[e])) return this.emails.get(account[e]);
+//     }
+//     return null;
+//   }
+
+//   createRecord(account) {}
+
+//   addAccount(account) {
+//     const curOwner = this.findExistingAccount(account);
+
+//     //If there is no owner yet, add all emails
+//     if (!curOwner) {
+//       this.parents.set(account[1], account[0]);
+//       for (let e = 1; e < account.length; e++) {
+//         this.emails.set(account[e], account[1]);
+//       }
+//     }
+//     //if there is already at least one owner
+//     else {
+//       //do merging of a new account and possible existing ones
+//       for (let e = 1; e < account.length; e++) {
+//         if (!this.emails.has(account[e])) {
+//           this.emails.set(account[e], curOwner);
+//         } else {
+//           const questionOwnerEmail = this.emails.get(account[e]);
+//           if (questionOwnerEmail !== curOwner) {
+//             //rewrite all owners with that email to a new curOwner email
+//             this.parents.delete(questionOwnerEmail);
+//             for (const [key, value] of this.emails.entries()) {
+//               if (value === questionOwnerEmail) this.emails.set(key, curOwner);
+//             }
+//           }
+//         }
+//       }
+//     }
+//   }
+// }
+
+// function accountsMerge(accounts) {
+//   const unionAcc = new UnionAccounts(accounts);
+//   let res = [];
+
+//   accounts.forEach((account) => {
+//     unionAcc.addAccount(account);
+//   });
+
+//   console.log(unionAcc);
+
+//   for (const [keyOwner, valueOwner] of unionAcc.parents.entries()) {
+//     let emails = [];
+//     for (const [keyEmail, valueEmail] of unionAcc.emails.entries()) {
+//       if (valueEmail === keyOwner) emails.push(keyEmail);
+//     }
+//     const sortedEmails = emails.sort();
+//     res.push([valueOwner, ...sortedEmails]);
+//   }
+
+//   return res;
+// }
+
+// console.log(accountsMerge(accounts0));
+
+// -----  -----
+// ----- NeetCode, LeetCode 295. Find Median from Data Stream -----
+// -----  -----
+
+//NOTE: for LeetCode add .element to front() and dequeue()
+//for Min/MaxPriorityQueue in leetcode requires you to use .front().element or .dequeue().element to get the actual element
+
+import {
+  MaxPriorityQueue,
+  MinPriorityQueue,
+} from "@datastructures-js/priority-queue";
+
+class MedianFinder {
+  constructor() {
+    this.smallHeap = new MaxPriorityQueue();
+    this.largeHeap = new MinPriorityQueue();
   }
 
-  findExistingAccount(account) {
-    for (let e = 1; e < account.length; e++) {
-      if (this.emails.has(account[e])) return this.emails.get(account[e]);
+  addNum(num) {
+    if (this.largeHeap.size() !== 0 && this.largeHeap.front() < num) {
+      this.smallHeap.enqueue(this.largeHeap.dequeue());
+      this.largeHeap.enqueue(num);
+    } else this.smallHeap.enqueue(num);
+
+    if (this.smallHeap.size() - this.largeHeap.size() > 1) {
+      const elementToMove = this.smallHeap.dequeue();
+      this.largeHeap.enqueue(elementToMove);
     }
-    return null;
+
+    if (
+      this.smallHeap.size() - this.largeHeap.size() === 1 &&
+      this.largeHeap.size() !== 0
+    ) {
+      const elementToPossiblyMove = this.smallHeap.front();
+      if (elementToPossiblyMove >= this.largeHeap.front()) {
+        this.largeHeap.enqueue(this.smallHeap.dequeue());
+      }
+    }
   }
 
-  createRecord(account) {}
+  findMedian() {
+    if (this.smallHeap.size() > this.largeHeap.size())
+      return this.smallHeap.front();
+    if (this.smallHeap.size() < this.largeHeap.size())
+      return this.largeHeap.front();
 
-  addAccount(account) {
-    const curOwner = this.findExistingAccount(account);
-
-    //If there is no owner yet, add all emails
-    if (!curOwner) {
-      this.parents.set(account[1], account[0]);
-      for (let e = 1; e < account.length; e++) {
-        this.emails.set(account[e], account[1]);
-      }
-    }
-    //if there is already at least one owner
-    else {
-      //do merging of a new account and possible existing ones
-      for (let e = 1; e < account.length; e++) {
-        if (!this.emails.has(account[e])) {
-          this.emails.set(account[e], curOwner);
-        } else {
-          const questionOwnerEmail = this.emails.get(account[e]);
-          if (questionOwnerEmail !== curOwner) {
-            //rewrite all owners with that email to a new curOwner email
-            this.parents.delete(questionOwnerEmail);
-            for (const [key, value] of this.emails.entries()) {
-              if (value === questionOwnerEmail) this.emails.set(key, curOwner);
-            }
-          }
-        }
-      }
-    }
+    return (this.smallHeap.front() + this.largeHeap.front()) / 2;
   }
 }
 
-function accountsMerge(accounts) {
-  const unionAcc = new UnionAccounts(accounts);
-  let res = [];
-
-  accounts.forEach((account) => {
-    unionAcc.addAccount(account);
-  });
-
-  console.log(unionAcc);
-
-  for (const [keyOwner, valueOwner] of unionAcc.parents.entries()) {
-    let emails = [];
-    for (const [keyEmail, valueEmail] of unionAcc.emails.entries()) {
-      if (valueEmail === keyOwner) emails.push(keyEmail);
-    }
-    const sortedEmails = emails.sort();
-    res.push([valueOwner, ...sortedEmails]);
-  }
-
-  return res;
-}
-
-console.log(accountsMerge(accounts0));
+const medianFinder = new MedianFinder();
+medianFinder.addNum(1); // arr = [1]
+console.log(medianFinder.findMedian()); // return 1.0
+medianFinder.addNum(2); // arr = [1, 2]
+console.log(medianFinder.findMedian()); // return 1.5
+medianFinder.addNum(3); // arr[1, 2, 3]
+console.log(medianFinder.findMedian()); // return 2.0
+medianFinder.addNum(4); // arr[1, 2, 3, 4]
+console.log(medianFinder.findMedian()); // return 2.5
