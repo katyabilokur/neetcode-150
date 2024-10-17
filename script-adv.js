@@ -1188,6 +1188,122 @@ import {
   MinPriorityQueue,
 } from "@datastructures-js/priority-queue";
 
+// class MedianFinder {
+//   constructor() {
+//     this.smallHeap = new MaxPriorityQueue();
+//     this.largeHeap = new MinPriorityQueue();
+//   }
+
+//   addNum(num) {
+//     if (this.largeHeap.size() !== 0 && this.largeHeap.front() < num) {
+//       this.smallHeap.enqueue(this.largeHeap.dequeue());
+//       this.largeHeap.enqueue(num);
+//     } else this.smallHeap.enqueue(num);
+
+//     if (this.smallHeap.size() - this.largeHeap.size() > 1) {
+//       const elementToMove = this.smallHeap.dequeue();
+//       this.largeHeap.enqueue(elementToMove);
+//     }
+
+//     if (
+//       this.smallHeap.size() - this.largeHeap.size() === 1 &&
+//       this.largeHeap.size() !== 0
+//     ) {
+//       const elementToPossiblyMove = this.smallHeap.front();
+//       if (elementToPossiblyMove >= this.largeHeap.front()) {
+//         this.largeHeap.enqueue(this.smallHeap.dequeue());
+//       }
+//     }
+//   }
+
+//   findMedian() {
+//     if (this.smallHeap.size() > this.largeHeap.size())
+//       return this.smallHeap.front();
+//     if (this.smallHeap.size() < this.largeHeap.size())
+//       return this.largeHeap.front();
+
+//     return (this.smallHeap.front() + this.largeHeap.front()) / 2;
+//   }
+// }
+
+// const medianFinder = new MedianFinder();
+// medianFinder.addNum(1); // arr = [1]
+// console.log(medianFinder.findMedian()); // return 1.0
+// medianFinder.addNum(2); // arr = [1, 2]
+// console.log(medianFinder.findMedian()); // return 1.5
+// medianFinder.addNum(3); // arr[1, 2, 3]
+// console.log(medianFinder.findMedian()); // return 2.0
+// medianFinder.addNum(4); // arr[1, 2, 3, 4]
+// console.log(medianFinder.findMedian()); // return 2.5
+
+// -----  -----
+// ----- NeetCode, LeetCode 502. IPO -----
+// -----  -----
+
+// const k = 3;
+// const w = 0;
+// const profits = [1, 2, 3];
+// const capital = [0, 1, 2];
+
+// function findMaximizedCapital(k, w, profits, capital) {
+//   if (w >= Math.max(capital) && k >= capital.length)
+//     return profits.reduce((cur, acc) => cur + acc, 0) + w;
+
+//   const maxProfit = new MaxPriorityQueue();
+//   const minCapital = new MinPriorityQueue((x) => x[0]);
+
+//   for (let i = 0; i < capital.length; i++) {
+//     minCapital.enqueue([capital[i], profits[i]]);
+//   }
+
+//   for (let i = 1; i <= k; i++) {
+//     while (!minCapital.isEmpty() && minCapital.front()[0] <= w) {
+//       maxProfit.enqueue(minCapital.dequeue()[1]);
+//     }
+
+//     if (maxProfit.isEmpty()) break;
+
+//     w += maxProfit.dequeue();
+//   }
+
+//   return w;
+// }
+
+// console.log(findMaximizedCapital(k, w, profits, capital));
+
+//LeetCode Heaps supported
+// findMaximizedCapital = function(k, w, profits, capital) {
+//   const maxProfit = new MaxPriorityQueue();
+// const minCapital = new MinPriorityQueue({priority: (x) => x[0]});
+
+// for (let i = 0; i < capital.length; i++) {
+// minCapital.enqueue([capital[i], profits[i]]);
+// }
+
+// for (let i = 1; i <= k; i++) {
+// while (!minCapital.isEmpty() && minCapital.front().element[0] <= w) {
+//   maxProfit.enqueue(minCapital.dequeue().element[1]);
+// }
+
+// if (maxProfit.isEmpty()) break;
+
+// w += maxProfit.dequeue().element;
+// }
+
+// return w;
+// };
+
+// -----  -----
+// ----- NeetCode, LeetCode 480. Sliding Window Median -----
+// -----  -----
+
+const nums = [1, 3, -1, -3, 5, 3, 6, 7];
+const k = 3;
+
+const nums1 = [1, 2, 3, 4, 2, 3, 1, 4, 2];
+const k1 = 3;
+
+//Approach 1 - Works but TLE in LeetCode
 class MedianFinder {
   constructor() {
     this.smallHeap = new MaxPriorityQueue();
@@ -1226,12 +1342,20 @@ class MedianFinder {
   }
 }
 
-const medianFinder = new MedianFinder();
-medianFinder.addNum(1); // arr = [1]
-console.log(medianFinder.findMedian()); // return 1.0
-medianFinder.addNum(2); // arr = [1, 2]
-console.log(medianFinder.findMedian()); // return 1.5
-medianFinder.addNum(3); // arr[1, 2, 3]
-console.log(medianFinder.findMedian()); // return 2.0
-medianFinder.addNum(4); // arr[1, 2, 3, 4]
-console.log(medianFinder.findMedian()); // return 2.5
+function medianSlidingWindow(nums, k) {
+  let res = [];
+
+  for (let i = 0; i <= nums.length - k; i++) {
+    const newHeap = new MedianFinder();
+    for (let j = i; j < i + k; j++) {
+      newHeap.addNum(nums[j]);
+    }
+
+    res.push(newHeap.findMedian());
+  }
+
+  return res;
+}
+
+console.log(medianSlidingWindow(nums, k));
+console.log(medianSlidingWindow(nums1, k1));
