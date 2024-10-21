@@ -1647,42 +1647,159 @@ import {
 // console.log(permute(nums));
 
 // -----  -----
-// ----- Neetcode, LeetCode 47. Permutations II -----
+// ----- LeetCode 47. Permutations II -----
 // -----  -----
 
-const nums1 = [1, 1, 2];
-const nums = [-1, 2, -1];
+// const nums1 = [1, 1, 2];
+// const nums = [-1, 2, -1];
 
-function permuteUnique(nums) {
-  let perms = [];
-  perms.push([]);
+// function permuteUnique(nums) {
+//   let perms = [];
+//   perms.push([]);
 
-  for (let n of nums) {
-    let nextPerms = [];
-    for (let p of perms) {
-      for (let i = 0; i < p.length + 1; i++) {
-        let pCopy = [...p];
-        pCopy.concat(p);
-        pCopy.splice(i, 0, n);
-        nextPerms.push(pCopy);
-      }
-    }
-    perms = nextPerms;
+//   for (let n of nums) {
+//     let nextPerms = [];
+//     for (let p of perms) {
+//       for (let i = 0; i < p.length + 1; i++) {
+//         let pCopy = [...p];
+//         pCopy.concat(p);
+//         pCopy.splice(i, 0, n);
+//         nextPerms.push(pCopy);
+//       }
+//     }
+//     perms = nextPerms;
+//   }
+
+//   //Remove extra repetitions
+//   let stringPerm = [];
+//   perms.forEach((el) => {
+//     stringPerm.push(el.join(""));
+//   });
+//   const newSet = new Set(stringPerm);
+
+//   let res = [];
+//   newSet.forEach((uniqueSet) => {
+//     res.push([...uniqueSet.match(/-?\d/g).map(Number)]);
+//   });
+
+//   return res;
+// }
+
+// console.log(permuteUnique(nums));
+
+// --------- GRAPHS --------
+
+// -----  -----
+// ----- Neetcode, LeetCode 743. Network Delay Time-----
+// -----  -----
+
+//test case 1
+const times = [
+  [1, 2, 1],
+  [2, 3, 1],
+  [1, 4, 4],
+  [3, 4, 1],
+];
+const n = 4;
+const k = 1;
+
+//test case 2
+const times1 = [
+  [1, 2, 1],
+  [2, 3, 1],
+];
+const n1 = 3;
+const k1 = 2;
+
+//test case 3
+const times2 = [
+  [2, 1, 1],
+  [2, 3, 1],
+  [3, 4, 1],
+];
+const n2 = 4;
+const k2 = 2;
+
+//test case 4
+const times3 = [[1, 2, 1]];
+const n3 = 2;
+const k3 = 1;
+
+//test case 5
+const times4 = [
+  [1, 2, 1],
+  [2, 1, 3],
+];
+const n4 = 2;
+const k4 = 2;
+
+//test case 5
+const times5 = [
+  [1, 2, 1],
+  [2, 3, 7],
+  [1, 3, 4],
+  [2, 1, 2],
+];
+const n5 = 4;
+const k5 = 1;
+
+function networkDelayTime(times, n, k) {
+  //Step 1 create a a graph
+  let graph = new Map();
+
+  //Creating a fresh list of nodes with empty list of neighbours
+  for (let i = 1; i <= n; i++) {
+    graph.set(i, []);
   }
 
-  //Remove extra repetitions
-  let stringPerm = [];
-  perms.forEach((el) => {
-    stringPerm.push(el.join(""));
-  });
-  const newSet = new Set(stringPerm);
-
-  let res = [];
-  newSet.forEach((uniqueSet) => {
-    res.push([...uniqueSet.match(/-?\d/g).map(Number)]);
+  //filling neighbours information
+  times.forEach((timeSet) => {
+    graph.set(timeSet[0], [
+      ...graph.get(timeSet[0]),
+      { nextNode: timeSet[1], time: timeSet[2] },
+    ]);
   });
 
-  return res;
+  //Step 2. Fill time table and min time heap until we can
+  let timeToReach = new Array(n).fill(-1);
+  timeToReach[k - 1] = 0; //To reach the initial node we need 0 time;
+  // let minTimeHeap = new MinPriorityQueue({ priority: (elem) => elem.time });
+  let minTimeHeap = new MinPriorityQueue((elem) => elem.time);
+
+  //Added a first set to go
+  graph.get(k).forEach((neigh) => {
+    minTimeHeap.enqueue({ node: neigh.nextNode, time: neigh.time });
+  });
+
+  //While heap is not empty, keep adding to it, calculating time and filling time table
+  while (minTimeHeap.size() > 0) {
+    const curNode = minTimeHeap.dequeue();
+    if (timeToReach[curNode.node - 1] === -1) {
+      //-1 means not filled, we need to add times
+      timeToReach[curNode.node - 1] = curNode.time;
+    }
+
+    //TODO: teh bug is here
+    if (timeToReach.includes(-1)) {
+      graph.get(curNode.node).forEach((neigh) => {
+        if (timeToReach[neigh.nextNode - 1] === -1)
+          minTimeHeap.enqueue({
+            node: neigh.nextNode,
+            time: curNode.time + neigh.time,
+          });
+      });
+    }
+  }
+
+  //Step 3. If all time table is filled, return sum time to go through all nodes. Otherwise some nodes remain unvisited, return 0
+  if (!timeToReach.includes(-1)) return Math.max(...timeToReach);
+
+  return -1;
 }
 
-console.log(permuteUnique(nums));
+console.log(networkDelayTime(times, n, k)); //3
+console.log(networkDelayTime(times1, n1, k1)); //-1
+console.log(networkDelayTime(times2, n2, k2)); //2
+console.log(networkDelayTime(times3, n3, k3)); //1
+console.log(networkDelayTime(times4, n4, k4)); //3
+console.log(networkDelayTime(times5, n5, k5)); //-1
