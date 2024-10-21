@@ -1575,45 +1575,114 @@ import {
 // -----  -----
 // ----- Neetcode, LeetCode 17. Letter Combinations of a Phone Number -----
 // -----  -----
-const digits = ""; //Output: ["ad","ae","af","bd","be","bf","cd","ce","cf"]
-const letters = [
-  [],
-  [],
-  ["a", "b", "c"],
-  ["d", "e", "f"],
-  ["g", "h", "i"],
-  ["j", "k", "l"],
-  ["m", "n", "o"],
-  ["p", "q", "r", "s"],
-  ["t", "u", "v"],
-  ["w", "x", "y", "z"],
-];
 
-function letterCombinations(digits) {
+// const digits = ""; //Output: ["ad","ae","af","bd","be","bf","cd","ce","cf"]
+// const letters = [
+//   [],
+//   [],
+//   ["a", "b", "c"],
+//   ["d", "e", "f"],
+//   ["g", "h", "i"],
+//   ["j", "k", "l"],
+//   ["m", "n", "o"],
+//   ["p", "q", "r", "s"],
+//   ["t", "u", "v"],
+//   ["w", "x", "y", "z"],
+// ];
+
+// function letterCombinations(digits) {
+//   let res = [];
+
+//   if (digits.length === 0) return res;
+
+//   createSubLetterSets(0, digits, res, "");
+
+//   return res;
+// }
+
+// function createSubLetterSets(i_start, digits, res, curSet) {
+//   if (i_start >= digits.length) {
+//     res.push(curSet);
+//     return;
+//   }
+
+//   const curChars = letters[digits[i_start]];
+
+//   for (let i = 0; i < curChars.length; i++) {
+//     curSet = curSet.concat("", curChars[i]);
+
+//     createSubLetterSets(i_start + 1, digits, res, curSet);
+//     curSet.slice(0, -1);
+//     curSet = curSet.slice(0, -1);
+//   }
+// }
+
+// console.log(letterCombinations(digits));
+
+// -----  -----
+// ----- Neetcode, LeetCode 17. Letter Combinations of a Phone Number -----
+// -----  -----
+
+// const nums = [1, 2, 3];
+
+// function permute(nums) {
+//   let perms = [];
+//   perms.push([]);
+
+//   for (let n of nums) {
+//     let nextPerms = [];
+//     for (let p of perms) {
+//       for (let i = 0; i < p.length + 1; i++) {
+//         let pCopy = [...p];
+//         pCopy.concat(p);
+//         pCopy.splice(i, 0, n);
+//         nextPerms.push(pCopy);
+//       }
+//     }
+//     perms = nextPerms;
+//   }
+//   return perms;
+// }
+
+// console.log(permute(nums));
+
+// -----  -----
+// ----- Neetcode, LeetCode 47. Permutations II -----
+// -----  -----
+
+const nums1 = [1, 1, 2];
+const nums = [-1, 2, -1];
+
+function permuteUnique(nums) {
+  let perms = [];
+  perms.push([]);
+
+  for (let n of nums) {
+    let nextPerms = [];
+    for (let p of perms) {
+      for (let i = 0; i < p.length + 1; i++) {
+        let pCopy = [...p];
+        pCopy.concat(p);
+        pCopy.splice(i, 0, n);
+        nextPerms.push(pCopy);
+      }
+    }
+    perms = nextPerms;
+  }
+
+  //Remove extra repetitions
+  let stringPerm = [];
+  perms.forEach((el) => {
+    stringPerm.push(el.join(""));
+  });
+  const newSet = new Set(stringPerm);
+
   let res = [];
-
-  if (digits.length === 0) return res;
-
-  createSubLetterSets(0, digits, res, "");
+  newSet.forEach((uniqueSet) => {
+    res.push([...uniqueSet.match(/-?\d/g).map(Number)]);
+  });
 
   return res;
 }
 
-function createSubLetterSets(i_start, digits, res, curSet) {
-  if (i_start >= digits.length) {
-    res.push(curSet);
-    return;
-  }
-
-  const curChars = letters[digits[i_start]];
-
-  for (let i = 0; i < curChars.length; i++) {
-    curSet = curSet.concat("", curChars[i]);
-
-    createSubLetterSets(i_start + 1, digits, res, curSet);
-    curSet.slice(0, -1);
-    curSet = curSet.slice(0, -1);
-  }
-}
-
-console.log(letterCombinations(digits));
+console.log(permuteUnique(nums));
