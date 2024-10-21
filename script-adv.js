@@ -1297,65 +1297,193 @@ import {
 // ----- NeetCode, LeetCode 480. Sliding Window Median -----
 // -----  -----
 
-const nums = [1, 3, -1, -3, 5, 3, 6, 7];
-const k = 3;
+// const nums = [1, 3, -1, -3, 5, 3, 6, 7];
+// const k = 3;
 
-const nums1 = [1, 2, 3, 4, 2, 3, 1, 4, 2];
-const k1 = 3;
+// const nums1 = [1, 2, 3, 4, 2, 3, 1, 4, 2];
+// const k1 = 3;
 
-//Approach 1 - Works but TLE in LeetCode
-class MedianFinder {
-  constructor() {
-    this.smallHeap = new MaxPriorityQueue();
-    this.largeHeap = new MinPriorityQueue();
-  }
+// //Approach 1 - Works but TLE in LeetCode
+// class MedianFinder {
+//   constructor() {
+//     this.smallHeap = new MaxPriorityQueue();
+//     this.largeHeap = new MinPriorityQueue();
+//   }
 
-  addNum(num) {
-    if (this.largeHeap.size() !== 0 && this.largeHeap.front() < num) {
-      this.smallHeap.enqueue(this.largeHeap.dequeue());
-      this.largeHeap.enqueue(num);
-    } else this.smallHeap.enqueue(num);
+//   addNum(num) {
+//     if (this.largeHeap.size() !== 0 && this.largeHeap.front() < num) {
+//       this.smallHeap.enqueue(this.largeHeap.dequeue());
+//       this.largeHeap.enqueue(num);
+//     } else this.smallHeap.enqueue(num);
 
-    if (this.smallHeap.size() - this.largeHeap.size() > 1) {
-      const elementToMove = this.smallHeap.dequeue();
-      this.largeHeap.enqueue(elementToMove);
-    }
+//     if (this.smallHeap.size() - this.largeHeap.size() > 1) {
+//       const elementToMove = this.smallHeap.dequeue();
+//       this.largeHeap.enqueue(elementToMove);
+//     }
 
-    if (
-      this.smallHeap.size() - this.largeHeap.size() === 1 &&
-      this.largeHeap.size() !== 0
-    ) {
-      const elementToPossiblyMove = this.smallHeap.front();
-      if (elementToPossiblyMove >= this.largeHeap.front()) {
-        this.largeHeap.enqueue(this.smallHeap.dequeue());
-      }
-    }
-  }
+//     if (
+//       this.smallHeap.size() - this.largeHeap.size() === 1 &&
+//       this.largeHeap.size() !== 0
+//     ) {
+//       const elementToPossiblyMove = this.smallHeap.front();
+//       if (elementToPossiblyMove >= this.largeHeap.front()) {
+//         this.largeHeap.enqueue(this.smallHeap.dequeue());
+//       }
+//     }
+//   }
 
-  findMedian() {
-    if (this.smallHeap.size() > this.largeHeap.size())
-      return this.smallHeap.front();
-    if (this.smallHeap.size() < this.largeHeap.size())
-      return this.largeHeap.front();
+//   findMedian() {
+//     if (this.smallHeap.size() > this.largeHeap.size())
+//       return this.smallHeap.front();
+//     if (this.smallHeap.size() < this.largeHeap.size())
+//       return this.largeHeap.front();
 
-    return (this.smallHeap.front() + this.largeHeap.front()) / 2;
-  }
+//     return (this.smallHeap.front() + this.largeHeap.front()) / 2;
+//   }
+// }
+
+// function medianSlidingWindow(nums, k) {
+//   let res = [];
+
+//   for (let i = 0; i <= nums.length - k; i++) {
+//     const newHeap = new MedianFinder();
+//     for (let j = i; j < i + k; j++) {
+//       newHeap.addNum(nums[j]);
+//     }
+
+//     res.push(newHeap.findMedian());
+//   }
+
+//   return res;
+// }
+
+// console.log(medianSlidingWindow(nums, k));
+// console.log(medianSlidingWindow(nums1, k1));
+
+// -----  -----
+// ----- LeetCode 135. Candy -----
+// -----  -----
+
+// const ratings2 = [60, 80, 100, 100, 100, 100, 100];
+// const ratings = [1, 0, 2]; //5 [2,1,2]
+// const ratings3 = [1, 2, 2]; //4 [1,2,1]
+// const ratings4 = [1, 3, 2, 2, 1]; //7 [1,2,1,2,1]
+// const ratings5 = [2, 3, 4, 3, 2, 1]; // 13 [1,2,4,3,2,1]
+
+// function candy(ratings) {
+//   let res = new Array(ratings.length);
+//   const minEl = Math.min(...ratings);
+//   const el = ratings.indexOf(minEl);
+
+//   //As every kid should have at least one candy, absolute min will have a child with the smallest rating
+//   res[el] = 1;
+
+//   //Go left from min rating child
+//   if (el > 0) {
+//     for (let i = el - 1; i >= 0; i--) {
+//       if (ratings[i] > ratings[i + 1]) {
+//         res[i] = res[i + 1] + 1;
+//       }
+//       if (ratings[i] === ratings[i + 1]) {
+//         res[i] = 1;
+//       }
+
+//       if (ratings[i] < ratings[i + 1]) {
+//         res[i] = res[i + 1] === 1 ? 0 : 1;
+
+//         //If we face with a situation when  someone has 0 candies, fix it buy going opposite and checking if we need to increase N of candies
+//         if (res[i] === 0) {
+//           res[i] = 1;
+//           //go other -> direction to add candies if needed
+//           let goLeft = true;
+//           let start = i;
+//           while (goLeft && start + 1 < ratings.length - 1) {
+//             if (
+//               ratings[start + 1] > ratings[start] &&
+//               res[start + 1] <= res[start]
+//             ) {
+//               res[start + 1] = res[start] + 1;
+//               start++;
+//             } else goLeft = false;
+//           }
+//         }
+//       }
+//     }
+//   }
+
+//   //Go right from min rating child
+//   if (el < ratings.length - 1) {
+//     for (let i = el + 1; i < ratings.length; i++) {
+//       if (ratings[i] > ratings[i - 1]) {
+//         res[i] = res[i - 1] + 1;
+//       }
+//       if (ratings[i] === ratings[i - 1]) {
+//         res[i] = 1;
+//       }
+//       if (ratings[i] < ratings[i - 1]) {
+//         res[i] = res[i - 1] === 1 ? 0 : 1;
+
+//         //If we face with a situation when when someone has 0 candies, fix it buy going opposite and checking if we need to increase N of candies
+//         if (res[i] === 0) {
+//           res[i] = 1;
+//           //go other <- direction to add candies if needed
+//           let goLeft = true;
+//           let start = i;
+//           while (goLeft && start - 1 >= 0) {
+//             if (
+//               ratings[start - 1] > ratings[start] &&
+//               res[start - 1] <= res[start]
+//             ) {
+//               res[start - 1] = res[start] + 1;
+//               start--;
+//             } else goLeft = false;
+//           }
+//         }
+//       }
+//     }
+//   }
+
+//   console.log(res);
+//   return res.reduce((acc, cur) => acc + cur, 0);
+// }
+
+// console.log(candy(ratings));
+// console.log(candy(ratings2));
+// console.log(candy(ratings3));
+// console.log(candy(ratings4));
+// console.log(candy(ratings5));
+
+// -----  -----
+// ----- NeetCode, LeetCode 90. Subsets II -----
+// -----  -----
+const nums = [1, 2, 1]; //expected [[],[1],[1,2],[1,1],[1,2,1],[2]]
+const nums1 = [7, 7]; //expected [[],[7], [7,7]]
+
+function subsetsWithDup(nums) {
+  nums.sort((a, b) => a - b);
+
+  let curSet = [];
+  let subsets = [];
+
+  helperNoDup(0, nums, curSet, subsets);
+
+  return subsets;
 }
 
-function medianSlidingWindow(nums, k) {
-  let res = [];
-
-  for (let i = 0; i <= nums.length - k; i++) {
-    const newHeap = new MedianFinder();
-    for (let j = i; j < i + k; j++) {
-      newHeap.addNum(nums[j]);
-    }
-
-    res.push(newHeap.findMedian());
+function helperNoDup(i, nums, curSet, subsets) {
+  if (i >= nums.length) {
+    subsets.push([...curSet]);
+    return;
   }
-
-  return res;
+  // decision to include nums[i]
+  curSet.push(nums[i]);
+  helperNoDup(i + 1, nums, curSet, subsets);
+  curSet.pop();
+  // decision NOT to include nums[i]
+  while (i + 1 < nums.length && nums[i] == nums[i + 1]) {
+    i++;
+  }
+  helperNoDup(i + 1, nums, curSet, subsets);
 }
 
-console.log(medianSlidingWindow(nums, k));
-console.log(medianSlidingWindow(nums1, k1));
+console.log(subsetsWithDup(nums));
