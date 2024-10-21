@@ -1456,34 +1456,164 @@ import {
 // -----  -----
 // ----- NeetCode, LeetCode 90. Subsets II -----
 // -----  -----
-const nums = [1, 2, 1]; //expected [[],[1],[1,2],[1,1],[1,2,1],[2]]
-const nums1 = [7, 7]; //expected [[],[7], [7,7]]
 
-function subsetsWithDup(nums) {
-  nums.sort((a, b) => a - b);
+// const nums = [1, 2, 1]; //expected [[],[1],[1,2],[1,1],[1,2,1],[2]]
+// const nums1 = [7, 7]; //expected [[],[7], [7,7]]
 
-  let curSet = [];
-  let subsets = [];
+// function subsetsWithDup(nums) {
+//   nums.sort((a, b) => a - b);
 
-  helperNoDup(0, nums, curSet, subsets);
+//   let curSet = [];
+//   let subsets = [];
 
-  return subsets;
+//   helperNoDup(0, nums, curSet, subsets);
+
+//   return subsets;
+// }
+
+// function helperNoDup(i, nums, curSet, subsets) {
+//   if (i >= nums.length) {
+//     subsets.push([...curSet]);
+//     return;
+//   }
+//   // decision to include nums[i]
+//   curSet.push(nums[i]);
+//   helperNoDup(i + 1, nums, curSet, subsets);
+//   curSet.pop();
+//   // decision NOT to include nums[i]
+//   while (i + 1 < nums.length && nums[i] == nums[i + 1]) {
+//     i++;
+//   }
+//   helperNoDup(i + 1, nums, curSet, subsets);
+// }
+
+// console.log(subsetsWithDup(nums));
+
+// -----  -----
+// ----- LeetCode 77. Combinations -----
+// -----  -----
+
+// const n = 5;
+// const k = 3;
+
+// function combine(n, k) {
+//   let res = [];
+
+//   createCombination(1, n, k, res, []);
+
+//   return res;
+// }
+
+// function createCombination(start, n, k, res, curComb) {
+//   if (curComb.length === k) {
+//     res.push([...curComb]);
+//     return;
+//   }
+
+//   if (start > n) return;
+
+//   for (let i = start; i <= n; i++) {
+//     curComb.push(i);
+//     createCombination(i + 1, n, k, res, curComb);
+//     curComb.pop(); //IMP: remove the last element to continue creating new sets
+//   }
+// }
+
+//console.log(combine(n, k));
+
+// -----  -----
+// ----- Neetcode, LeetCode 39. Combination Sum -----
+// -----  -----
+
+// //test case 1
+// const candidates = [2, 3, 6, 7];
+// const target = 7; //Output: [[2,2,3],[7]]
+
+// //test case 2
+// const candidates2 = [2];
+// const target2 = 1; //Output: [[2,2,3],[7]]
+
+// const candidates3 = [2, 3, 5];
+// const target3 = 8;
+
+// function combinationSum(candidates, target) {
+//   let res = [];
+
+//   createSumCombination(0, candidates, target, res, [], 0);
+
+//   return res;
+// }
+
+// function createSumCombination(
+//   i_start,
+//   candidates,
+//   target,
+//   res,
+//   curComb,
+//   curSum
+// ) {
+//   if (curSum === target) {
+//     res.push([...curComb]);
+//     return;
+//   }
+
+//   if (i_start >= candidates.length || curSum > target) return;
+
+//   for (let i = i_start; i < candidates.length; i++) {
+//     curSum += candidates[i];
+//     curComb.push(candidates[i]);
+//     createSumCombination(i, candidates, target, res, curComb, curSum);
+//     curSum -= candidates[i];
+//     curComb.pop();
+//   }
+// }
+
+// console.log(combinationSum(candidates, target));
+// console.log(combinationSum(candidates2, target2));
+// console.log(combinationSum(candidates3, target3));
+
+// -----  -----
+// ----- Neetcode, LeetCode 17. Letter Combinations of a Phone Number -----
+// -----  -----
+const digits = ""; //Output: ["ad","ae","af","bd","be","bf","cd","ce","cf"]
+const letters = [
+  [],
+  [],
+  ["a", "b", "c"],
+  ["d", "e", "f"],
+  ["g", "h", "i"],
+  ["j", "k", "l"],
+  ["m", "n", "o"],
+  ["p", "q", "r", "s"],
+  ["t", "u", "v"],
+  ["w", "x", "y", "z"],
+];
+
+function letterCombinations(digits) {
+  let res = [];
+
+  if (digits.length === 0) return res;
+
+  createSubLetterSets(0, digits, res, "");
+
+  return res;
 }
 
-function helperNoDup(i, nums, curSet, subsets) {
-  if (i >= nums.length) {
-    subsets.push([...curSet]);
+function createSubLetterSets(i_start, digits, res, curSet) {
+  if (i_start >= digits.length) {
+    res.push(curSet);
     return;
   }
-  // decision to include nums[i]
-  curSet.push(nums[i]);
-  helperNoDup(i + 1, nums, curSet, subsets);
-  curSet.pop();
-  // decision NOT to include nums[i]
-  while (i + 1 < nums.length && nums[i] == nums[i + 1]) {
-    i++;
+
+  const curChars = letters[digits[i_start]];
+
+  for (let i = 0; i < curChars.length; i++) {
+    curSet = curSet.concat("", curChars[i]);
+
+    createSubLetterSets(i_start + 1, digits, res, curSet);
+    curSet.slice(0, -1);
+    curSet = curSet.slice(0, -1);
   }
-  helperNoDup(i + 1, nums, curSet, subsets);
 }
 
-console.log(subsetsWithDup(nums));
+console.log(letterCombinations(digits));
