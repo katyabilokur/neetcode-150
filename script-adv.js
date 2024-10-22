@@ -1808,203 +1808,296 @@ import {
 // ----- Neetcode, LeetCode 778. Swim in Rising Water -----
 // -----  -----
 
-//NOTE: this algorithm works on Neetcode but fails with grid5 on LeetCode. Difficult to debug because of big data. Leaving like this for now. Will return
-const grid = [
+// //NOTE: this algorithm works on Neetcode but fails with grid5 on LeetCode. Difficult to debug because of big data. Leaving like this for now. Will return
+// const grid = [
+//   [0, 2],
+//   [1, 3],
+// ]; //expected 3
+
+// const grid1 = [
+//   [0, 1, 2, 10],
+//   [9, 14, 4, 13],
+//   [12, 3, 8, 15],
+//   [11, 5, 7, 6],
+// ]; //expected 8
+
+// const grid2 = [
+//   [0, 1, 2, 3, 4],
+//   [24, 23, 22, 21, 5],
+//   [12, 13, 14, 15, 16],
+//   [11, 17, 18, 19, 20],
+//   [10, 9, 8, 7, 6],
+// ]; // expected 16
+
+// const grid3 = [[0, 2, 4, 6, 2]]; //expected 6
+// const grid4 = [[[0], [2], [4], [6], [2]]]; //expected 6
+
+// //expected 266
+// const grid5 = [
+//   [
+//     105, 209, 171, 91, 64, 394, 279, 11, 45, 84, 207, 321, 216, 197, 381, 377,
+//     78, 19, 203, 198,
+//   ],
+//   [
+//     141, 10, 335, 170, 265, 104, 338, 40, 397, 376, 346, 356, 212, 154, 280,
+//     177, 247, 90, 87, 360,
+//   ],
+//   [
+//     99, 59, 242, 149, 344, 172, 276, 230, 133, 193, 284, 345, 46, 363, 30, 142,
+//     295, 70, 224, 200,
+//   ],
+//   [
+//     251, 88, 379, 72, 319, 272, 243, 165, 180, 182, 387, 264, 23, 67, 137, 342,
+//     125, 139, 144, 367,
+//   ],
+//   [
+//     94, 211, 151, 37, 290, 112, 343, 157, 300, 271, 260, 373, 369, 294, 289, 57,
+//     44, 12, 20, 340,
+//   ],
+//   [
+//     220, 368, 186, 277, 181, 187, 273, 214, 315, 337, 328, 18, 231, 223, 331,
+//     75, 275, 96, 135, 150,
+//   ],
+//   [
+//     202, 74, 27, 184, 399, 341, 49, 62, 261, 86, 314, 383, 302, 257, 61, 148,
+//     268, 120, 36, 25,
+//   ],
+//   [
+//     15, 253, 285, 185, 226, 146, 126, 122, 83, 361, 110, 234, 183, 239, 52, 190,
+//     152, 81, 136, 188,
+//   ],
+//   [
+//     39, 199, 358, 26, 301, 116, 32, 386, 29, 138, 393, 159, 102, 140, 370, 227,
+//     282, 111, 5, 33,
+//   ],
+//   [
+//     189, 35, 132, 54, 210, 235, 28, 353, 281, 127, 318, 58, 100, 286, 384, 24,
+//     307, 252, 80, 103,
+//   ],
+//   [
+//     244, 176, 124, 79, 161, 355, 218, 398, 392, 380, 225, 121, 178, 352, 329,
+//     322, 167, 51, 313, 85,
+//   ],
+//   [
+//     107, 118, 351, 287, 324, 283, 48, 320, 82, 364, 357, 16, 219, 330, 89, 143,
+//     241, 262, 71, 191,
+//   ],
+//   [
+//     95, 97, 3, 7, 270, 249, 213, 339, 362, 298, 4, 258, 248, 390, 299, 306, 156,
+//     164, 109, 229,
+//   ],
+//   [
+//     221, 9, 228, 160, 274, 263, 374, 147, 98, 63, 13, 41, 326, 396, 349, 372,
+//     385, 317, 325, 266,
+//   ],
+//   [
+//     53, 131, 173, 312, 174, 114, 250, 119, 163, 22, 246, 92, 278, 365, 292, 215,
+//     14, 304, 204, 73,
+//   ],
+//   [
+//     233, 323, 366, 130, 378, 305, 311, 93, 134, 217, 297, 327, 232, 194, 240, 1,
+//     208, 6, 310, 47,
+//   ],
+//   [
+//     69, 101, 332, 195, 254, 236, 50, 166, 56, 168, 267, 17, 359, 347, 65, 316,
+//     238, 296, 348, 222,
+//   ],
+//   [
+//     76, 123, 129, 293, 391, 2, 245, 108, 303, 38, 66, 55, 43, 256, 162, 60, 179,
+//     77, 336, 21,
+//   ],
+//   [
+//     196, 388, 333, 395, 42, 382, 291, 237, 288, 375, 128, 145, 192, 158, 350,
+//     259, 206, 34, 334, 255,
+//   ],
+//   [
+//     201, 175, 153, 68, 205, 155, 115, 269, 389, 169, 371, 308, 117, 31, 354, 8,
+//     113, 309, 106, 0,
+//   ],
+// ];
+
+// function swimInWater(grid) {
+//   if (grid.length === 1) return Math.max(...grid[0]);
+//   if (grid[0].length === 1) return Math.max(...grid.flat());
+
+//   //Step 1 create a graph
+//   let graph = new Map();
+//   let swimMap = new Map();
+
+//   //Map to set nodes numbers based on i, j
+//   let nodes = new Array(grid.length)
+//     .fill()
+//     .map(() => new Array(grid[0].length));
+//   for (let i = 0; i < grid.length; i++) {
+//     for (let j = 0; j < grid[0].length; j++) {
+//       nodes[i][j] = i * 10 + j;
+//     }
+//   }
+
+//   //Creating a graph with swim to neighbours information
+//   for (let i = 0; i < grid.length; i++) {
+//     for (let j = 0; j < grid[0].length; j++) {
+//       let curElNeigh = [];
+
+//       if (i < grid.length - 1 && i > 0) {
+//         curElNeigh.push([nodes[i + 1][j], grid[i + 1][j]]);
+//         curElNeigh.push([nodes[i - 1][j], grid[i - 1][j]]);
+//       }
+//       if (i === 0) curElNeigh.push([nodes[i + 1][j], grid[i + 1][j]]);
+//       if (i === grid.length - 1)
+//         curElNeigh.push([nodes[i - 1][j], grid[i - 1][j]]);
+
+//       if (j > 0 && j < grid[0].length - 1) {
+//         curElNeigh.push([nodes[i][j - 1], grid[i][j - 1]]);
+//         curElNeigh.push([nodes[i][j + 1], grid[i][j + 1]]);
+//       }
+
+//       if (j === 0) curElNeigh.push([nodes[i][j + 1], grid[i][j + 1]]);
+//       if (j === grid[0].length - 1)
+//         curElNeigh.push([nodes[i][j - 1], grid[i][j - 1]]);
+
+//       graph.set(nodes[i][j], curElNeigh);
+//       swimMap.set(nodes[i][j], -1);
+//     }
+//   }
+
+//   //Step 2. Fill time table and min time heap until we can
+
+//   swimMap.set(0, grid[0][0]); //time to start at position 0
+//   // let minTimeHeap = new MinPriorityQueue({ priority: (elem) => elem[1] });
+//   let minTimeHeap = new MinPriorityQueue((elem) => elem[1]);
+
+//   //Added a first set to go
+//   graph.get(0).forEach((initNeigh) => {
+//     minTimeHeap.enqueue([initNeigh[0], initNeigh[1]]);
+//   });
+
+//   //While the last element is not reached, keep swimming
+//   while (swimMap.get(nodes[grid.length - 1][grid[0].length - 1]) === -1) {
+//     const curNode = minTimeHeap.dequeue();
+
+//     //if we haven't swam there yet, mark it and add all neighbours
+//     if (swimMap.get(curNode[0]) === -1) {
+//       //-1 means not filled, we need to add times
+//       swimMap.set(curNode[0], curNode[1]);
+
+//       //get all new neighbours and add them to the MinTime heap if there are not there yet
+//       const newNeigh = graph.get(curNode[0]);
+
+//       newNeigh.forEach((neighEl) => {
+//         minTimeHeap.enqueue(neighEl);
+
+//         //if one of the neighbours is the last cell, we can add it to the final time straight away
+//         if (
+//           neighEl[0][0] === grid.length - 1 &&
+//           neighEl[0][1] === grid[0].length - 1
+//         )
+//           swimMap.set(neighEl[0], neighEl[1]);
+//       });
+//     }
+//   }
+//   console.log(swimMap);
+
+//   //Step 3.  get biggest time from the swim path and return it
+//   return Math.max(...Array.from(swimMap.values()));
+// }
+
+// // console.log(swimInWater(grid));
+// // console.log(swimInWater(grid1));
+// // console.log(swimInWater(grid2));
+// // console.log(swimInWater(grid3));
+// // console.log(swimInWater(grid4));
+// console.log(swimInWater(grid5));
+
+// -----  -----
+// ----- Neetcode, LeetCode 1514. Path with Maximum Probability -----
+// -----  -----
+
+//expected 0.25000
+// const n = 3;
+// const edges = [
+//   [0, 1],
+//   [1, 2],
+//   [0, 2],
+// ];
+// const succProb = [0.5, 0.5, 0.2];
+// const start = 0;
+// const end = 2;
+
+//expected 0.3
+// const n = 3;
+// const edges = [
+//   [0, 1],
+//   [1, 2],
+//   [0, 2],
+// ];
+// const succProb = [0.5, 0.5, 0.3];
+// const start = 0;
+// const end = 2;
+
+//expected 0
+// const n = 3;
+// const edges = [[0, 1]];
+// const succProb = [0.5];
+// const start = 0;
+// const end = 2;
+
+//expected
+const n = 5;
+const edges = [
+  [1, 4],
+  [2, 4],
+  [0, 4],
+  [0, 3],
   [0, 2],
-  [1, 3],
-]; //expected 3
-
-const grid1 = [
-  [0, 1, 2, 10],
-  [9, 14, 4, 13],
-  [12, 3, 8, 15],
-  [11, 5, 7, 6],
-]; //expected 8
-
-const grid2 = [
-  [0, 1, 2, 3, 4],
-  [24, 23, 22, 21, 5],
-  [12, 13, 14, 15, 16],
-  [11, 17, 18, 19, 20],
-  [10, 9, 8, 7, 6],
-]; // expected 16
-
-const grid3 = [[0, 2, 4, 6, 2]]; //expected 6
-const grid4 = [[[0], [2], [4], [6], [2]]]; //expected 6
-
-//expected 266
-const grid5 = [
-  [
-    105, 209, 171, 91, 64, 394, 279, 11, 45, 84, 207, 321, 216, 197, 381, 377,
-    78, 19, 203, 198,
-  ],
-  [
-    141, 10, 335, 170, 265, 104, 338, 40, 397, 376, 346, 356, 212, 154, 280,
-    177, 247, 90, 87, 360,
-  ],
-  [
-    99, 59, 242, 149, 344, 172, 276, 230, 133, 193, 284, 345, 46, 363, 30, 142,
-    295, 70, 224, 200,
-  ],
-  [
-    251, 88, 379, 72, 319, 272, 243, 165, 180, 182, 387, 264, 23, 67, 137, 342,
-    125, 139, 144, 367,
-  ],
-  [
-    94, 211, 151, 37, 290, 112, 343, 157, 300, 271, 260, 373, 369, 294, 289, 57,
-    44, 12, 20, 340,
-  ],
-  [
-    220, 368, 186, 277, 181, 187, 273, 214, 315, 337, 328, 18, 231, 223, 331,
-    75, 275, 96, 135, 150,
-  ],
-  [
-    202, 74, 27, 184, 399, 341, 49, 62, 261, 86, 314, 383, 302, 257, 61, 148,
-    268, 120, 36, 25,
-  ],
-  [
-    15, 253, 285, 185, 226, 146, 126, 122, 83, 361, 110, 234, 183, 239, 52, 190,
-    152, 81, 136, 188,
-  ],
-  [
-    39, 199, 358, 26, 301, 116, 32, 386, 29, 138, 393, 159, 102, 140, 370, 227,
-    282, 111, 5, 33,
-  ],
-  [
-    189, 35, 132, 54, 210, 235, 28, 353, 281, 127, 318, 58, 100, 286, 384, 24,
-    307, 252, 80, 103,
-  ],
-  [
-    244, 176, 124, 79, 161, 355, 218, 398, 392, 380, 225, 121, 178, 352, 329,
-    322, 167, 51, 313, 85,
-  ],
-  [
-    107, 118, 351, 287, 324, 283, 48, 320, 82, 364, 357, 16, 219, 330, 89, 143,
-    241, 262, 71, 191,
-  ],
-  [
-    95, 97, 3, 7, 270, 249, 213, 339, 362, 298, 4, 258, 248, 390, 299, 306, 156,
-    164, 109, 229,
-  ],
-  [
-    221, 9, 228, 160, 274, 263, 374, 147, 98, 63, 13, 41, 326, 396, 349, 372,
-    385, 317, 325, 266,
-  ],
-  [
-    53, 131, 173, 312, 174, 114, 250, 119, 163, 22, 246, 92, 278, 365, 292, 215,
-    14, 304, 204, 73,
-  ],
-  [
-    233, 323, 366, 130, 378, 305, 311, 93, 134, 217, 297, 327, 232, 194, 240, 1,
-    208, 6, 310, 47,
-  ],
-  [
-    69, 101, 332, 195, 254, 236, 50, 166, 56, 168, 267, 17, 359, 347, 65, 316,
-    238, 296, 348, 222,
-  ],
-  [
-    76, 123, 129, 293, 391, 2, 245, 108, 303, 38, 66, 55, 43, 256, 162, 60, 179,
-    77, 336, 21,
-  ],
-  [
-    196, 388, 333, 395, 42, 382, 291, 237, 288, 375, 128, 145, 192, 158, 350,
-    259, 206, 34, 334, 255,
-  ],
-  [
-    201, 175, 153, 68, 205, 155, 115, 269, 389, 169, 371, 308, 117, 31, 354, 8,
-    113, 309, 106, 0,
-  ],
+  [2, 3],
 ];
+const succProb = [0.37, 0.17, 0.93, 0.23, 0.39, 0.04];
+const start = 3;
+const end = 4;
 
-function swimInWater(grid) {
-  if (grid.length === 1) return Math.max(...grid[0]);
-  if (grid[0].length === 1) return Math.max(...grid.flat());
-
+function maxProbability(n, edges, succProb, start, end) {
   //Step 1 create a graph
-  let graph = new Map();
-  let swimMap = new Map();
+  let graph = new Array(n).fill().map(() => []);
+  let probMap = new Array(n).fill(-1);
 
-  //Map to set nodes numbers based on i, j
-  let nodes = new Array(grid.length)
-    .fill()
-    .map(() => new Array(grid[0].length));
-  for (let i = 0; i < grid.length; i++) {
-    for (let j = 0; j < grid[0].length; j++) {
-      nodes[i][j] = i * 10 + j;
-    }
+  for (let i = 0; i < edges.length; i++) {
+    graph[edges[i][0]].push([edges[i][1], succProb[i]]);
+    graph[edges[i][1]].push([edges[i][0], succProb[i]]);
   }
 
-  //Creating a graph with swim to neighbours information
-  for (let i = 0; i < grid.length; i++) {
-    for (let j = 0; j < grid[0].length; j++) {
-      let curElNeigh = [];
-
-      if (i < grid.length - 1 && i > 0) {
-        curElNeigh.push([nodes[i + 1][j], grid[i + 1][j]]);
-        curElNeigh.push([nodes[i - 1][j], grid[i - 1][j]]);
-      }
-      if (i === 0) curElNeigh.push([nodes[i + 1][j], grid[i + 1][j]]);
-      if (i === grid.length - 1)
-        curElNeigh.push([nodes[i - 1][j], grid[i - 1][j]]);
-
-      if (j > 0 && j < grid[0].length - 1) {
-        curElNeigh.push([nodes[i][j - 1], grid[i][j - 1]]);
-        curElNeigh.push([nodes[i][j + 1], grid[i][j + 1]]);
-      }
-
-      if (j === 0) curElNeigh.push([nodes[i][j + 1], grid[i][j + 1]]);
-      if (j === grid[0].length - 1)
-        curElNeigh.push([nodes[i][j - 1], grid[i][j - 1]]);
-
-      graph.set(nodes[i][j], curElNeigh);
-      swimMap.set(nodes[i][j], -1);
-    }
-  }
-
-  //Step 2. Fill time table and min time heap until we can
-
-  swimMap.set(0, grid[0][0]); //time to start at position 0
-  // let minTimeHeap = new MinPriorityQueue({ priority: (elem) => elem[1] });
-  let minTimeHeap = new MinPriorityQueue((elem) => elem[1]);
+  //Step 2. Fill probability table
+  probMap[start] = 1; //To reach the initial node is 1 probability;
+  // let maxProbHeap = new MaxPriorityQueue({ priority: (elem) => elem.neigh[1] });
+  let maxProbHeap = new MaxPriorityQueue((elem) => elem[1]);
 
   //Added a first set to go
-  graph.get(0).forEach((initNeigh) => {
-    minTimeHeap.enqueue([initNeigh[0], initNeigh[1]]);
+  graph[start].forEach((neigh) => {
+    maxProbHeap.enqueue(neigh);
   });
 
-  //While the last element is not reached, keep swimming
-  while (swimMap.get(nodes[grid.length - 1][grid[0].length - 1]) === -1) {
-    const curNode = minTimeHeap.dequeue();
+  //While heap is not empty, keep adding to it, calculating probability and filling probMap
+  let runCalcluation = maxProbHeap.size() > 0;
+  while (runCalcluation) {
+    const curNode = maxProbHeap.dequeue();
 
-    //if we haven't swam there yet, mark it and add all neighbours
-    if (swimMap.get(curNode[0]) === -1) {
-      //-1 means not filled, we need to add times
-      swimMap.set(curNode[0], curNode[1]);
-
-      //get all new neighbours and add them to the MinTime heap if there are not there yet
-      const newNeigh = graph.get(curNode[0]);
-
-      newNeigh.forEach((neighEl) => {
-        minTimeHeap.enqueue(neighEl);
-
-        //if one of the neighbours is the last cell, we can add it to the final time straight away
-        if (
-          neighEl[0][0] === grid.length - 1 &&
-          neighEl[0][1] === grid[0].length - 1
-        )
-          swimMap.set(neighEl[0], neighEl[1]);
-      });
+    if (probMap[curNode[0]] === -1) {
+      //-1 means not passed yet, we need to add probability
+      probMap[curNode[0]] = curNode[1];
     }
-  }
-  console.log(swimMap);
 
-  //Step 3.  get bigest time from the swim path and return it
-  return Math.max(...Array.from(swimMap.values()));
+    const curNeigh = graph[curNode[0]];
+
+    curNeigh.forEach((elNeigh) => {
+      if (probMap[elNeigh[0]] === -1) {
+        maxProbHeap.enqueue([elNeigh[0], curNode[1] * elNeigh[1]]);
+      }
+    });
+
+    if (maxProbHeap.size() === 0 || probMap[end] !== -1) runCalcluation = false;
+  }
+
+  return probMap[end] === -1 ? 0 : probMap[end];
 }
 
-// console.log(swimInWater(grid));
-// console.log(swimInWater(grid1));
-// console.log(swimInWater(grid2));
-// console.log(swimInWater(grid3));
-// console.log(swimInWater(grid4));
-console.log(swimInWater(grid5));
+console.log(maxProbability(n, edges, succProb, start, end));
