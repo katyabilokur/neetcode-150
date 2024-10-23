@@ -2111,59 +2111,286 @@ import {
 // ----- Neetcode, LeetCode 1584. Min Cost to Connect All Points -----
 // -----  -----
 
-//expected 10
-const points = [
-  [0, 0],
-  [2, 2],
-  [3, 3],
-  [2, 4],
-  [4, 2],
+// //expected 10
+// const points = [
+//   [0, 0],
+//   [2, 2],
+//   [3, 3],
+//   [2, 4],
+//   [4, 2],
+// ];
+
+// function minCostConnectPoints(points) {
+//   let allConnections = new Array(points.length).fill().map(() => new Array());
+//   let connectedPoints = [0];
+//   let minHeap = new MinPriorityQueue((elem) => elem[1]);
+//   let minLength = 0;
+
+//   //Creating all possible connections
+//   for (let i = 0; i < points.length; i++) {
+//     for (let j = 0; j < points.length; j++) {
+//       if (i !== j) {
+//         //|xi - xj| + |yi - yj|
+//         allConnections[i].push([
+//           j,
+//           Math.abs(points[i][0] - points[j][0]) +
+//             Math.abs(points[i][1] - points[j][1]),
+//         ]);
+//       }
+//     }
+//   }
+
+//   //Starting with some point that we marked as 0 (first in the list)
+//   allConnections[0].forEach((point) => minHeap.enqueue(point));
+
+//   //Until there are some unconnected points all minHeap is not empty, try to connect
+//   let runConnection = minHeap.size() !== 0;
+
+//   while (runConnection) {
+//     const closestPoint = minHeap.dequeue();
+
+//     //check if the point is not visited
+//     if (!connectedPoints.includes(closestPoint[0])) {
+//       connectedPoints.push(closestPoint[0]);
+//       minLength += closestPoint[1];
+
+//       allConnections[closestPoint[0]].forEach((point) =>
+//         minHeap.enqueue(point)
+//       );
+//     }
+
+//     if (minHeap.size() === 0 || connectedPoints.length == points.length)
+//       runConnection = false;
+//   }
+
+//   return minLength;
+// }
+
+// console.log(minCostConnectPoints(points));
+
+// -----  -----
+// ----- Neetcode, LeetCode 1489. Find Critical and Pseudo-Critical Edges in Minimum Spanning Tree -----
+// -----  -----
+
+//Output: [[0,1],[2,3,4,5]]
+const n = 5;
+const edges = [
+  [0, 1, 1],
+  [1, 2, 1],
+  [2, 3, 2],
+  [0, 3, 2],
+  [0, 4, 3],
+  [3, 4, 3],
+  [1, 4, 6],
 ];
 
-function minCostConnectPoints(points) {
-  let allConnections = new Array(points.length).fill().map(() => new Array());
-  let connectedPoints = [0];
-  let minHeap = new MinPriorityQueue((elem) => elem[1]);
-  let minLength = 0;
+//test case 2 //Output: [[],[0,1,2,3]]
+const n1 = 4;
+const edges1 = [
+  [0, 1, 1],
+  [1, 2, 1],
+  [2, 3, 1],
+  [0, 3, 1],
+];
 
-  //Creating all possible connections
-  for (let i = 0; i < points.length; i++) {
-    for (let j = 0; j < points.length; j++) {
-      if (i !== j) {
-        //|xi - xj| + |yi - yj|
-        allConnections[i].push([
-          j,
-          Math.abs(points[i][0] - points[j][0]) +
-            Math.abs(points[i][1] - points[j][1]),
-        ]);
+//expected [[0,1],[]]
+const n2 = 3;
+const edges2 = [
+  [0, 1, 1],
+  [0, 2, 2],
+  [1, 2, 3],
+];
+
+function findCriticalAndPseudoCriticalEdges(n, edges) {
+  //This function builds MST and returns length and used edges
+  function buildMST(n, edges) {
+    let connectionNodes = new Array(n).fill().map(() => []);
+    for (let i = 0; i < edges.length; i++) {
+      if (edges[i] !== null) {
+        connectionNodes[edges[i][0]].push(i);
+        connectionNodes[edges[i][1]].push(i);
       }
     }
-  }
 
-  //Starting with some point that we marked as 0 (first in the list)
-  allConnections[0].forEach((point) => minHeap.enqueue(point));
+    let connectedNodes = [0];
+    let minHeap = new MinPriorityQueue((elem) => elem.edge[2]);
+    let length = 0;
+    //This to represent what edges use to connect in edges array
 
-  //Until there are some unconnected points all minHeap is not empty, try to connect
-  let runConnection = minHeap.size() !== 0;
+    let usedEdges = [];
 
-  while (runConnection) {
-    const closestPoint = minHeap.dequeue();
+    //Let's start with edge 0. Add to min heap
+    connectionNodes[0].forEach((i) => minHeap.enqueue({ i, edge: edges[i] }));
 
-    //check if the point is not visited
-    if (!connectedPoints.includes(closestPoint[0])) {
-      connectedPoints.push(closestPoint[0]);
-      minLength += closestPoint[1];
+    let keepAdding = minHeap.size() !== 0;
 
-      allConnections[closestPoint[0]].forEach((point) =>
-        minHeap.enqueue(point)
-      );
+    while (keepAdding) {
+      const closestNode = minHeap.dequeue();
+
+      let nextNode = !connectedNodes.includes(closestNode.edge[0])
+        ? closestNode.edge[0]
+        : closestNode.edge[1];
+      if (!connectedNodes.includes(nextNode)) {
+        length += closestNode.edge[2];
+        usedEdges.push(closestNode.i);
+        connectedNodes.push(nextNode);
+
+        connectionNodes[nextNode].forEach((ed) =>
+          minHeap.enqueue({ i: ed, edge: edges[ed] })
+        );
+      }
+
+      if (minHeap.size() === 0 || connectedNodes.length === n)
+        keepAdding = false;
     }
 
-    if (minHeap.size() === 0 || connectedPoints.length == points.length)
-      runConnection = false;
+    return { length, usedEdges };
   }
 
-  return minLength;
+  //------
+
+  let criticalNodes = [];
+  let semiCriticalNodes = [];
+  const { length, usedEdges } = buildMST(n, edges);
+
+  //If nodes were not used in the initial MST build, they are not critical, add them to the list
+  for (let i = 0; i < edges.length; i++) {
+    if (!usedEdges.includes(i)) semiCriticalNodes.push(i);
+  }
+
+  let unusedEdgesMain = [...semiCriticalNodes];
+
+  //Now for each node used in built check if it can be replaced
+  usedEdges.forEach((usedEdge) => {
+    let newEdgeList = [...edges];
+    newEdgeList[usedEdge] = null;
+
+    const { length: lengthNew, usedEdges: usedEdgesNew } = buildMST(
+      n,
+      newEdgeList
+    );
+    if (lengthNew === length) {
+      semiCriticalNodes.push(usedEdge);
+    } else {
+      criticalNodes.push(usedEdge);
+    }
+
+    //TODO: bug is somewhere here
+    //Check if some new edges were used, remove them from unusedEdgesMain list
+    //If any remaining edge is there, it is not any critical at all, remove t from semi-critical list
+    usedEdgesNew.forEach((usedNew) => {
+      if (unusedEdgesMain.includes(usedNew)) {
+        const index = unusedEdgesMain.indexOf(usedNew);
+        unusedEdgesMain.splice(index, 1);
+      }
+    });
+  });
+
+  unusedEdgesMain.forEach((neverUsedEdge) => {
+    const index = semiCriticalNodes.indexOf(neverUsedEdge);
+    semiCriticalNodes.splice(index, 1);
+  });
+
+  return [criticalNodes.sort(), semiCriticalNodes.sort()];
 }
 
-console.log(minCostConnectPoints(points));
+// console.log(findCriticalAndPseudoCriticalEdges(n, edges));
+// console.log(findCriticalAndPseudoCriticalEdges(n1, edges1));
+console.log(findCriticalAndPseudoCriticalEdges(n2, edges2));
+
+//expected [[13,16,45,55,57,58,61,89],[10,15,23,25,28,32,37,39,51,54,70,75,76,85]]
+const n3 = 14;
+const edges3 = [
+  [0, 1, 13],
+  [0, 2, 6],
+  [2, 3, 13],
+  [3, 4, 4],
+  [0, 5, 11],
+  [4, 6, 14],
+  [4, 7, 8],
+  [2, 8, 6],
+  [4, 9, 6],
+  [7, 10, 4],
+  [5, 11, 3],
+  [6, 12, 7],
+  [12, 13, 9],
+  [7, 13, 2],
+  [5, 13, 10],
+  [0, 6, 4],
+  [2, 7, 3],
+  [0, 7, 8],
+  [1, 12, 9],
+  [10, 12, 11],
+  [1, 2, 7],
+  [1, 3, 10],
+  [3, 10, 6],
+  [6, 10, 4],
+  [4, 8, 5],
+  [1, 13, 4],
+  [11, 13, 8],
+  [2, 12, 10],
+  [5, 8, 1],
+  [3, 7, 6],
+  [7, 12, 12],
+  [1, 7, 9],
+  [5, 9, 1],
+  [2, 13, 10],
+  [10, 11, 4],
+  [3, 5, 10],
+  [6, 11, 14],
+  [5, 12, 3],
+  [0, 8, 13],
+  [8, 9, 1],
+  [3, 6, 8],
+  [0, 3, 4],
+  [2, 9, 6],
+  [0, 11, 4],
+  [2, 5, 14],
+  [4, 11, 2],
+  [7, 11, 11],
+  [1, 11, 6],
+  [2, 10, 12],
+  [0, 13, 4],
+  [3, 9, 9],
+  [4, 12, 3],
+  [6, 7, 10],
+  [6, 8, 13],
+  [9, 11, 3],
+  [1, 6, 2],
+  [2, 4, 12],
+  [0, 10, 3],
+  [3, 12, 1],
+  [3, 8, 12],
+  [1, 8, 6],
+  [8, 13, 2],
+  [10, 13, 12],
+  [9, 13, 11],
+  [2, 11, 14],
+  [5, 10, 9],
+  [5, 6, 10],
+  [2, 6, 9],
+  [4, 10, 7],
+  [3, 13, 10],
+  [4, 13, 3],
+  [3, 11, 9],
+  [7, 9, 14],
+  [6, 9, 5],
+  [1, 5, 12],
+  [4, 5, 3],
+  [11, 12, 3],
+  [0, 4, 8],
+  [5, 7, 8],
+  [9, 12, 13],
+  [8, 12, 12],
+  [1, 10, 6],
+  [1, 9, 9],
+  [7, 8, 9],
+  [9, 10, 13],
+  [8, 11, 3],
+  [6, 13, 7],
+  [0, 12, 10],
+  [1, 4, 8],
+  [8, 10, 2],
+];
+
+//console.log(findCriticalAndPseudoCriticalEdges(n3, edges3));
