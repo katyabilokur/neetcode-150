@@ -1920,6 +1920,8 @@ import {
 //   if (grid.length === 1) return Math.max(...grid[0]);
 //   if (grid[0].length === 1) return Math.max(...grid.flat());
 
+//   let test = [];
+
 //   //Step 1 create a graph
 //   let graph = new Map();
 //   let swimMap = new Map();
@@ -1930,7 +1932,7 @@ import {
 //     .map(() => new Array(grid[0].length));
 //   for (let i = 0; i < grid.length; i++) {
 //     for (let j = 0; j < grid[0].length; j++) {
-//       nodes[i][j] = i * 10 + j;
+//       nodes[i][j] = i * 100 + j;
 //     }
 //   }
 
@@ -1961,6 +1963,8 @@ import {
 //     }
 //   }
 
+//   console.log(graph);
+
 //   //Step 2. Fill time table and min time heap until we can
 
 //   swimMap.set(0, grid[0][0]); //time to start at position 0
@@ -1980,6 +1984,7 @@ import {
 //     if (swimMap.get(curNode[0]) === -1) {
 //       //-1 means not filled, we need to add times
 //       swimMap.set(curNode[0], curNode[1]);
+//       test.push(curNode[1]);
 
 //       //get all new neighbours and add them to the MinTime heap if there are not there yet
 //       const newNeigh = graph.get(curNode[0]);
@@ -1996,7 +2001,7 @@ import {
 //       });
 //     }
 //   }
-//   console.log(swimMap);
+//   console.log(test);
 
 //   //Step 3.  get biggest time from the swim path and return it
 //   return Math.max(...Array.from(swimMap.values()));
@@ -2042,62 +2047,123 @@ import {
 // const start = 0;
 // const end = 2;
 
-//expected
-const n = 5;
-const edges = [
-  [1, 4],
+// //expected
+// const n = 5;
+// const edges = [
+//   [1, 4],
+//   [2, 4],
+//   [0, 4],
+//   [0, 3],
+//   [0, 2],
+//   [2, 3],
+// ];
+// const succProb = [0.37, 0.17, 0.93, 0.23, 0.39, 0.04];
+// const start = 3;
+// const end = 4;
+
+// function maxProbability(n, edges, succProb, start, end) {
+//   //Step 1 create a graph
+//   let graph = new Array(n).fill().map(() => []);
+//   let probMap = new Array(n).fill(-1);
+
+//   for (let i = 0; i < edges.length; i++) {
+//     graph[edges[i][0]].push([edges[i][1], succProb[i]]);
+//     graph[edges[i][1]].push([edges[i][0], succProb[i]]);
+//   }
+
+//   //Step 2. Fill probability table
+//   probMap[start] = 1; //To reach the initial node is 1 probability;
+//   // let maxProbHeap = new MaxPriorityQueue({ priority: (elem) => elem.neigh[1] });
+//   let maxProbHeap = new MaxPriorityQueue((elem) => elem[1]);
+
+//   //Added a first set to go
+//   graph[start].forEach((neigh) => {
+//     maxProbHeap.enqueue(neigh);
+//   });
+
+//   //While heap is not empty, keep adding to it, calculating probability and filling probMap
+//   let runCalcluation = maxProbHeap.size() > 0;
+//   while (runCalcluation) {
+//     const curNode = maxProbHeap.dequeue();
+
+//     if (probMap[curNode[0]] === -1) {
+//       //-1 means not passed yet, we need to add probability
+//       probMap[curNode[0]] = curNode[1];
+//     }
+
+//     const curNeigh = graph[curNode[0]];
+
+//     curNeigh.forEach((elNeigh) => {
+//       if (probMap[elNeigh[0]] === -1) {
+//         maxProbHeap.enqueue([elNeigh[0], curNode[1] * elNeigh[1]]);
+//       }
+//     });
+
+//     if (maxProbHeap.size() === 0 || probMap[end] !== -1) runCalcluation = false;
+//   }
+
+//   return probMap[end] === -1 ? 0 : probMap[end];
+// }
+
+// console.log(maxProbability(n, edges, succProb, start, end));
+
+// -----  -----
+// ----- Neetcode, LeetCode 1584. Min Cost to Connect All Points -----
+// -----  -----
+
+//expected 10
+const points = [
+  [0, 0],
+  [2, 2],
+  [3, 3],
   [2, 4],
-  [0, 4],
-  [0, 3],
-  [0, 2],
-  [2, 3],
+  [4, 2],
 ];
-const succProb = [0.37, 0.17, 0.93, 0.23, 0.39, 0.04];
-const start = 3;
-const end = 4;
 
-function maxProbability(n, edges, succProb, start, end) {
-  //Step 1 create a graph
-  let graph = new Array(n).fill().map(() => []);
-  let probMap = new Array(n).fill(-1);
+function minCostConnectPoints(points) {
+  let allConnections = new Array(points.length).fill().map(() => new Array());
+  let connectedPoints = [0];
+  let minHeap = new MinPriorityQueue((elem) => elem[1]);
+  let minLength = 0;
 
-  for (let i = 0; i < edges.length; i++) {
-    graph[edges[i][0]].push([edges[i][1], succProb[i]]);
-    graph[edges[i][1]].push([edges[i][0], succProb[i]]);
+  //Creating all possible connections
+  for (let i = 0; i < points.length; i++) {
+    for (let j = 0; j < points.length; j++) {
+      if (i !== j) {
+        //|xi - xj| + |yi - yj|
+        allConnections[i].push([
+          j,
+          Math.abs(points[i][0] - points[j][0]) +
+            Math.abs(points[i][1] - points[j][1]),
+        ]);
+      }
+    }
   }
 
-  //Step 2. Fill probability table
-  probMap[start] = 1; //To reach the initial node is 1 probability;
-  // let maxProbHeap = new MaxPriorityQueue({ priority: (elem) => elem.neigh[1] });
-  let maxProbHeap = new MaxPriorityQueue((elem) => elem[1]);
+  //Starting with some point that we marked as 0 (first in the list)
+  allConnections[0].forEach((point) => minHeap.enqueue(point));
 
-  //Added a first set to go
-  graph[start].forEach((neigh) => {
-    maxProbHeap.enqueue(neigh);
-  });
+  //Until there are some unconnected points all minHeap is not empty, try to connect
+  let runConnection = minHeap.size() !== 0;
 
-  //While heap is not empty, keep adding to it, calculating probability and filling probMap
-  let runCalcluation = maxProbHeap.size() > 0;
-  while (runCalcluation) {
-    const curNode = maxProbHeap.dequeue();
+  while (runConnection) {
+    const closestPoint = minHeap.dequeue();
 
-    if (probMap[curNode[0]] === -1) {
-      //-1 means not passed yet, we need to add probability
-      probMap[curNode[0]] = curNode[1];
+    //check if the point is not visited
+    if (!connectedPoints.includes(closestPoint[0])) {
+      connectedPoints.push(closestPoint[0]);
+      minLength += closestPoint[1];
+
+      allConnections[closestPoint[0]].forEach((point) =>
+        minHeap.enqueue(point)
+      );
     }
 
-    const curNeigh = graph[curNode[0]];
-
-    curNeigh.forEach((elNeigh) => {
-      if (probMap[elNeigh[0]] === -1) {
-        maxProbHeap.enqueue([elNeigh[0], curNode[1] * elNeigh[1]]);
-      }
-    });
-
-    if (maxProbHeap.size() === 0 || probMap[end] !== -1) runCalcluation = false;
+    if (minHeap.size() === 0 || connectedPoints.length == points.length)
+      runConnection = false;
   }
 
-  return probMap[end] === -1 ? 0 : probMap[end];
+  return minLength;
 }
 
-console.log(maxProbability(n, edges, succProb, start, end));
+console.log(minCostConnectPoints(points));
