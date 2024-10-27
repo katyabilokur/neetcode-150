@@ -2213,6 +2213,7 @@ function findCriticalAndPseudoCriticalEdges(n, edges) {
     }
 
     let connectedNodes = [0];
+    // let minHeap = new MinPriorityQueue({priority: (elem) => elem.edge[2]});
     let minHeap = new MinPriorityQueue((elem) => elem.edge[2]);
     let length = 0;
     //This to represent what edges use to connect in edges array
@@ -2251,16 +2252,20 @@ function findCriticalAndPseudoCriticalEdges(n, edges) {
 
   let criticalNodes = [];
   let semiCriticalNodes = [];
+
   const { length, usedEdges } = buildMST(n, edges);
 
-  //If nodes were not used in the initial MST build, they are not critical, add them to the list
+  let unusedInMSTs = new Array(edges.length).fill(0);
+  let graphN = 1;
+
+  //TODO:
+  // //If nodes were not used in the initial MST build, they are not critical, add them to unused list
   for (let i = 0; i < edges.length; i++) {
-    if (!usedEdges.includes(i)) semiCriticalNodes.push(i);
+    if (!usedEdges.includes(i)) {
+      unusedInMSTs[i] = 1;
+    }
   }
 
-  let unusedEdgesMain = [...semiCriticalNodes];
-
-  //Now for each node used in built check if it can be replaced
   usedEdges.forEach((usedEdge) => {
     let newEdgeList = [...edges];
     newEdgeList[usedEdge] = null;
@@ -2269,34 +2274,37 @@ function findCriticalAndPseudoCriticalEdges(n, edges) {
       n,
       newEdgeList
     );
+
     if (lengthNew === length) {
-      semiCriticalNodes.push(usedEdge);
+      graphN++;
+
+      for (let i = 0; i < edges.length; i++) {
+        if (!usedEdgesNew.includes(i)) {
+          unusedInMSTs[i]++;
+        }
+      }
     } else {
       criticalNodes.push(usedEdge);
     }
-
-    //TODO: bug is somewhere here
-    //Check if some new edges were used, remove them from unusedEdgesMain list
-    //If any remaining edge is there, it is not any critical at all, remove t from semi-critical list
-    usedEdgesNew.forEach((usedNew) => {
-      if (unusedEdgesMain.includes(usedNew)) {
-        const index = unusedEdgesMain.indexOf(usedNew);
-        unusedEdgesMain.splice(index, 1);
-      }
-    });
   });
 
-  unusedEdgesMain.forEach((neverUsedEdge) => {
-    const index = semiCriticalNodes.indexOf(neverUsedEdge);
-    semiCriticalNodes.splice(index, 1);
-  });
+  for (let i = 0; i < edges.length; i++) {
+    if (unusedInMSTs[i] > 0 && unusedInMSTs[i] < graphN) {
+      semiCriticalNodes.push(i);
+    }
+  }
+
+  //TEST:
+  for (let i = 0; i < unusedInMSTs.length; i++) {
+    console.log(`i: ${i} - ${unusedInMSTs[i]}`);
+  }
 
   return [criticalNodes.sort(), semiCriticalNodes.sort()];
 }
 
 // console.log(findCriticalAndPseudoCriticalEdges(n, edges));
 // console.log(findCriticalAndPseudoCriticalEdges(n1, edges1));
-console.log(findCriticalAndPseudoCriticalEdges(n2, edges2));
+// console.log(findCriticalAndPseudoCriticalEdges(n2, edges2));
 
 //expected [[13,16,45,55,57,58,61,89],[10,15,23,25,28,32,37,39,51,54,70,75,76,85]]
 const n3 = 14;
@@ -2393,4 +2401,4 @@ const edges3 = [
   [8, 10, 2],
 ];
 
-//console.log(findCriticalAndPseudoCriticalEdges(n3, edges3));
+console.log(findCriticalAndPseudoCriticalEdges(n3, edges3));
