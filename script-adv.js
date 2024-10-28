@@ -2172,233 +2172,331 @@ import {
 // ----- Neetcode, LeetCode 1489. Find Critical and Pseudo-Critical Edges in Minimum Spanning Tree -----
 // -----  -----
 
-//Output: [[0,1],[2,3,4,5]]
-const n = 5;
-const edges = [
-  [0, 1, 1],
-  [1, 2, 1],
-  [2, 3, 2],
-  [0, 3, 2],
-  [0, 4, 3],
-  [3, 4, 3],
-  [1, 4, 6],
+// //Output: [[0,1],[2,3,4,5]]
+// const n = 5;
+// const edges = [
+//   [0, 1, 1],
+//   [1, 2, 1],
+//   [2, 3, 2],
+//   [0, 3, 2],
+//   [0, 4, 3],
+//   [3, 4, 3],
+//   [1, 4, 6],
+// ];
+
+// //test case 2 //Output: [[],[0,1,2,3]]
+// const n1 = 4;
+// const edges1 = [
+//   [0, 1, 1],
+//   [1, 2, 1],
+//   [2, 3, 1],
+//   [0, 3, 1],
+// ];
+
+// //expected [[0,1],[]]
+// const n2 = 3;
+// const edges2 = [
+//   [0, 1, 1],
+//   [0, 2, 2],
+//   [1, 2, 3],
+// ];
+
+// function findCriticalAndPseudoCriticalEdges(n, edges) {
+//   //This function builds MST and returns length and used edges
+//   function buildMST(n, edges) {
+//     let connectionNodes = new Array(n).fill().map(() => []);
+//     for (let i = 0; i < edges.length; i++) {
+//       if (edges[i] !== null) {
+//         connectionNodes[edges[i][0]].push(i);
+//         connectionNodes[edges[i][1]].push(i);
+//       }
+//     }
+
+//     let connectedNodes = [0];
+//     // let minHeap = new MinPriorityQueue({priority: (elem) => elem.edge[2]});
+//     let minHeap = new MinPriorityQueue((elem) => elem.edge[2]);
+//     let length = 0;
+//     //This to represent what edges use to connect in edges array
+
+//     let usedEdges = [];
+
+//     //Let's start with edge 0. Add to min heap
+//     connectionNodes[0].forEach((i) => minHeap.enqueue({ i, edge: edges[i] }));
+
+//     let keepAdding = minHeap.size() !== 0;
+
+//     while (keepAdding) {
+//       const closestNode = minHeap.dequeue();
+
+//       let nextNode = !connectedNodes.includes(closestNode.edge[0])
+//         ? closestNode.edge[0]
+//         : closestNode.edge[1];
+//       if (!connectedNodes.includes(nextNode)) {
+//         length += closestNode.edge[2];
+//         usedEdges.push(closestNode.i);
+//         connectedNodes.push(nextNode);
+
+//         connectionNodes[nextNode].forEach((ed) =>
+//           minHeap.enqueue({ i: ed, edge: edges[ed] })
+//         );
+//       }
+
+//       if (minHeap.size() === 0 || connectedNodes.length === n)
+//         keepAdding = false;
+//     }
+
+//     return { length, usedEdges };
+//   }
+
+//   //------
+
+//   let criticalNodes = [];
+//   let semiCriticalNodes = [];
+
+//   const { length, usedEdges } = buildMST(n, edges);
+
+//   let unusedInMSTs = new Array(edges.length).fill(0);
+//   let graphN = 1;
+
+//   //TODO:
+//   // //If nodes were not used in the initial MST build, they are not critical, add them to unused list
+//   for (let i = 0; i < edges.length; i++) {
+//     if (!usedEdges.includes(i)) {
+//       unusedInMSTs[i] = 1;
+//     }
+//   }
+
+//   usedEdges.forEach((usedEdge) => {
+//     let newEdgeList = [...edges];
+//     newEdgeList[usedEdge] = null;
+
+//     const { length: lengthNew, usedEdges: usedEdgesNew } = buildMST(
+//       n,
+//       newEdgeList
+//     );
+
+//     if (lengthNew === length) {
+//       graphN++;
+
+//       for (let i = 0; i < edges.length; i++) {
+//         if (!usedEdgesNew.includes(i)) {
+//           unusedInMSTs[i]++;
+//         }
+//       }
+//     } else {
+//       criticalNodes.push(usedEdge);
+//     }
+//   });
+
+//   for (let i = 0; i < edges.length; i++) {
+//     if (unusedInMSTs[i] > 0 && unusedInMSTs[i] < graphN) {
+//       semiCriticalNodes.push(i);
+//     }
+//   }
+
+//   //TEST:
+//   for (let i = 0; i < unusedInMSTs.length; i++) {
+//     console.log(`i: ${i} - ${unusedInMSTs[i]}`);
+//   }
+
+//   return [criticalNodes.sort(), semiCriticalNodes.sort()];
+// }
+
+// // console.log(findCriticalAndPseudoCriticalEdges(n, edges));
+// // console.log(findCriticalAndPseudoCriticalEdges(n1, edges1));
+// // console.log(findCriticalAndPseudoCriticalEdges(n2, edges2));
+
+// //expected [[13,16,45,55,57,58,61,89],[10,15,23,25,28,32,37,39,51,54,70,75,76,85]]
+// const n3 = 14;
+// const edges3 = [
+//   [0, 1, 13],
+//   [0, 2, 6],
+//   [2, 3, 13],
+//   [3, 4, 4],
+//   [0, 5, 11],
+//   [4, 6, 14],
+//   [4, 7, 8],
+//   [2, 8, 6],
+//   [4, 9, 6],
+//   [7, 10, 4],
+//   [5, 11, 3],
+//   [6, 12, 7],
+//   [12, 13, 9],
+//   [7, 13, 2],
+//   [5, 13, 10],
+//   [0, 6, 4],
+//   [2, 7, 3],
+//   [0, 7, 8],
+//   [1, 12, 9],
+//   [10, 12, 11],
+//   [1, 2, 7],
+//   [1, 3, 10],
+//   [3, 10, 6],
+//   [6, 10, 4],
+//   [4, 8, 5],
+//   [1, 13, 4],
+//   [11, 13, 8],
+//   [2, 12, 10],
+//   [5, 8, 1],
+//   [3, 7, 6],
+//   [7, 12, 12],
+//   [1, 7, 9],
+//   [5, 9, 1],
+//   [2, 13, 10],
+//   [10, 11, 4],
+//   [3, 5, 10],
+//   [6, 11, 14],
+//   [5, 12, 3],
+//   [0, 8, 13],
+//   [8, 9, 1],
+//   [3, 6, 8],
+//   [0, 3, 4],
+//   [2, 9, 6],
+//   [0, 11, 4],
+//   [2, 5, 14],
+//   [4, 11, 2],
+//   [7, 11, 11],
+//   [1, 11, 6],
+//   [2, 10, 12],
+//   [0, 13, 4],
+//   [3, 9, 9],
+//   [4, 12, 3],
+//   [6, 7, 10],
+//   [6, 8, 13],
+//   [9, 11, 3],
+//   [1, 6, 2],
+//   [2, 4, 12],
+//   [0, 10, 3],
+//   [3, 12, 1],
+//   [3, 8, 12],
+//   [1, 8, 6],
+//   [8, 13, 2],
+//   [10, 13, 12],
+//   [9, 13, 11],
+//   [2, 11, 14],
+//   [5, 10, 9],
+//   [5, 6, 10],
+//   [2, 6, 9],
+//   [4, 10, 7],
+//   [3, 13, 10],
+//   [4, 13, 3],
+//   [3, 11, 9],
+//   [7, 9, 14],
+//   [6, 9, 5],
+//   [1, 5, 12],
+//   [4, 5, 3],
+//   [11, 12, 3],
+//   [0, 4, 8],
+//   [5, 7, 8],
+//   [9, 12, 13],
+//   [8, 12, 12],
+//   [1, 10, 6],
+//   [1, 9, 9],
+//   [7, 8, 9],
+//   [9, 10, 13],
+//   [8, 11, 3],
+//   [6, 13, 7],
+//   [0, 12, 10],
+//   [1, 4, 8],
+//   [8, 10, 2],
+// ];
+
+// console.log(findCriticalAndPseudoCriticalEdges(n3, edges3));
+
+// -----  -----
+// ----- Neetcode, LeetCode 210. Course Schedule II -----
+// -----  -----
+
+//test case 1 //Output: [0,1,2]
+const numCourses = 3;
+const prerequisites = [[1, 0]];
+
+//test case 2 //Output: []
+const numCourses1 = 3;
+const prerequisites1 = [
+  [0, 1],
+  [1, 2],
+  [2, 0],
 ];
 
-//test case 2 //Output: [[],[0,1,2,3]]
-const n1 = 4;
-const edges1 = [
-  [0, 1, 1],
-  [1, 2, 1],
-  [2, 3, 1],
-  [0, 3, 1],
+//test case 3 // [0]
+const numCourses2 = 1;
+const prerequisites2 = [];
+
+//test case 4 // [0, 1, 2, 3]
+const numCourses3 = 4;
+const prerequisites3 = [
+  [1, 0],
+  [2, 0],
+  [3, 1],
+  [3, 2],
 ];
 
-//expected [[0,1],[]]
-const n2 = 3;
-const edges2 = [
-  [0, 1, 1],
-  [0, 2, 2],
-  [1, 2, 3],
-];
+function findOrder(numCourses, prerequisites) {
+  if (numCourses === 0) return [];
 
-function findCriticalAndPseudoCriticalEdges(n, edges) {
-  //This function builds MST and returns length and used edges
-  function buildMST(n, edges) {
-    let connectionNodes = new Array(n).fill().map(() => []);
-    for (let i = 0; i < edges.length; i++) {
-      if (edges[i] !== null) {
-        connectionNodes[edges[i][0]].push(i);
-        connectionNodes[edges[i][1]].push(i);
-      }
-    }
-
-    let connectedNodes = [0];
-    // let minHeap = new MinPriorityQueue({priority: (elem) => elem.edge[2]});
-    let minHeap = new MinPriorityQueue((elem) => elem.edge[2]);
-    let length = 0;
-    //This to represent what edges use to connect in edges array
-
-    let usedEdges = [];
-
-    //Let's start with edge 0. Add to min heap
-    connectionNodes[0].forEach((i) => minHeap.enqueue({ i, edge: edges[i] }));
-
-    let keepAdding = minHeap.size() !== 0;
-
-    while (keepAdding) {
-      const closestNode = minHeap.dequeue();
-
-      let nextNode = !connectedNodes.includes(closestNode.edge[0])
-        ? closestNode.edge[0]
-        : closestNode.edge[1];
-      if (!connectedNodes.includes(nextNode)) {
-        length += closestNode.edge[2];
-        usedEdges.push(closestNode.i);
-        connectedNodes.push(nextNode);
-
-        connectionNodes[nextNode].forEach((ed) =>
-          minHeap.enqueue({ i: ed, edge: edges[ed] })
-        );
-      }
-
-      if (minHeap.size() === 0 || connectedNodes.length === n)
-        keepAdding = false;
-    }
-
-    return { length, usedEdges };
+  // Step 1. Init
+  //i element represent the course in preCourses array.
+  let courses = new Map();
+  //Init the prerequisites for each course
+  for (let index = 0; index < numCourses; index++) {
+    courses.set(index, []);
   }
-
-  //------
-
-  let criticalNodes = [];
-  let semiCriticalNodes = [];
-
-  const { length, usedEdges } = buildMST(n, edges);
-
-  let unusedInMSTs = new Array(edges.length).fill(0);
-  let graphN = 1;
-
-  //TODO:
-  // //If nodes were not used in the initial MST build, they are not critical, add them to unused list
-  for (let i = 0; i < edges.length; i++) {
-    if (!usedEdges.includes(i)) {
-      unusedInMSTs[i] = 1;
-    }
-  }
-
-  usedEdges.forEach((usedEdge) => {
-    let newEdgeList = [...edges];
-    newEdgeList[usedEdge] = null;
-
-    const { length: lengthNew, usedEdges: usedEdgesNew } = buildMST(
-      n,
-      newEdgeList
-    );
-
-    if (lengthNew === length) {
-      graphN++;
-
-      for (let i = 0; i < edges.length; i++) {
-        if (!usedEdgesNew.includes(i)) {
-          unusedInMSTs[i]++;
-        }
-      }
-    } else {
-      criticalNodes.push(usedEdge);
-    }
+  //Fill prerequisites in accordance with initial values in prerequisites
+  prerequisites.forEach((prerequisite) => {
+    let pre = courses.get(prerequisite[1]);
+    courses.set(prerequisite[1], [...pre, prerequisite[0]]);
   });
 
-  for (let i = 0; i < edges.length; i++) {
-    if (unusedInMSTs[i] > 0 && unusedInMSTs[i] < graphN) {
-      semiCriticalNodes.push(i);
+  //Check if there is no element with 0 prerequisite, it is not possible to take all courses
+  //const values = Array.from(courses.values());
+  const zeroCourses = Array.from(courses.values()).filter(
+    (course) => course.length === 0
+  );
+  if (zeroCourses.length === 0) return [];
+
+  //Step 2.
+  let coursesTaken = [];
+
+  //For each course check if to take it takes less than numCourses -1. Otherwise, there is a cycle.
+  for (let i = 0; i < numCourses; i++) {
+    let count = 0;
+    count = dfs(i, courses.get(i), courses, coursesTaken, count);
+
+    if (count > numCourses) return [];
+  }
+
+  function dfs(courseNum, depCourses, courses, coursesTaken, count) {
+    //If courses count are too much, return that max that can be taken
+    if (count > courses.size - 1) return courses.size + 1;
+
+    //If no courses prereq.
+    if (depCourses.length === 0) {
+      {
+        if (!coursesTaken.includes(courseNum)) coursesTaken.push(courseNum);
+        return count;
+      }
     }
+
+    if (depCourses.includes(courseNum)) return courses.size + 1;
+
+    depCourses.forEach((depCourse) => {
+      if (coursesTaken.includes(depCourse)) {
+        return ++count;
+      }
+
+      const newDepCourses = courses.get(depCourse);
+      count = dfs(depCourse, newDepCourses, courses, coursesTaken, ++count);
+    });
+
+    if (!coursesTaken.includes(courseNum)) coursesTaken.push(courseNum);
+    return count;
   }
 
-  //TEST:
-  for (let i = 0; i < unusedInMSTs.length; i++) {
-    console.log(`i: ${i} - ${unusedInMSTs[i]}`);
-  }
-
-  return [criticalNodes.sort(), semiCriticalNodes.sort()];
+  return coursesTaken.reverse();
 }
 
-// console.log(findCriticalAndPseudoCriticalEdges(n, edges));
-// console.log(findCriticalAndPseudoCriticalEdges(n1, edges1));
-// console.log(findCriticalAndPseudoCriticalEdges(n2, edges2));
-
-//expected [[13,16,45,55,57,58,61,89],[10,15,23,25,28,32,37,39,51,54,70,75,76,85]]
-const n3 = 14;
-const edges3 = [
-  [0, 1, 13],
-  [0, 2, 6],
-  [2, 3, 13],
-  [3, 4, 4],
-  [0, 5, 11],
-  [4, 6, 14],
-  [4, 7, 8],
-  [2, 8, 6],
-  [4, 9, 6],
-  [7, 10, 4],
-  [5, 11, 3],
-  [6, 12, 7],
-  [12, 13, 9],
-  [7, 13, 2],
-  [5, 13, 10],
-  [0, 6, 4],
-  [2, 7, 3],
-  [0, 7, 8],
-  [1, 12, 9],
-  [10, 12, 11],
-  [1, 2, 7],
-  [1, 3, 10],
-  [3, 10, 6],
-  [6, 10, 4],
-  [4, 8, 5],
-  [1, 13, 4],
-  [11, 13, 8],
-  [2, 12, 10],
-  [5, 8, 1],
-  [3, 7, 6],
-  [7, 12, 12],
-  [1, 7, 9],
-  [5, 9, 1],
-  [2, 13, 10],
-  [10, 11, 4],
-  [3, 5, 10],
-  [6, 11, 14],
-  [5, 12, 3],
-  [0, 8, 13],
-  [8, 9, 1],
-  [3, 6, 8],
-  [0, 3, 4],
-  [2, 9, 6],
-  [0, 11, 4],
-  [2, 5, 14],
-  [4, 11, 2],
-  [7, 11, 11],
-  [1, 11, 6],
-  [2, 10, 12],
-  [0, 13, 4],
-  [3, 9, 9],
-  [4, 12, 3],
-  [6, 7, 10],
-  [6, 8, 13],
-  [9, 11, 3],
-  [1, 6, 2],
-  [2, 4, 12],
-  [0, 10, 3],
-  [3, 12, 1],
-  [3, 8, 12],
-  [1, 8, 6],
-  [8, 13, 2],
-  [10, 13, 12],
-  [9, 13, 11],
-  [2, 11, 14],
-  [5, 10, 9],
-  [5, 6, 10],
-  [2, 6, 9],
-  [4, 10, 7],
-  [3, 13, 10],
-  [4, 13, 3],
-  [3, 11, 9],
-  [7, 9, 14],
-  [6, 9, 5],
-  [1, 5, 12],
-  [4, 5, 3],
-  [11, 12, 3],
-  [0, 4, 8],
-  [5, 7, 8],
-  [9, 12, 13],
-  [8, 12, 12],
-  [1, 10, 6],
-  [1, 9, 9],
-  [7, 8, 9],
-  [9, 10, 13],
-  [8, 11, 3],
-  [6, 13, 7],
-  [0, 12, 10],
-  [1, 4, 8],
-  [8, 10, 2],
-];
-
-console.log(findCriticalAndPseudoCriticalEdges(n3, edges3));
+// console.log(findOrder(numCourses, prerequisites));
+// console.log(findOrder(numCourses1, prerequisites1));
+// console.log(findOrder(numCourses2, prerequisites2));
+console.log(findOrder(numCourses3, prerequisites3));
