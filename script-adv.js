@@ -2407,96 +2407,205 @@ import {
 // ----- Neetcode, LeetCode 210. Course Schedule II -----
 // -----  -----
 
-//test case 1 //Output: [0,1,2]
-const numCourses = 3;
-const prerequisites = [[1, 0]];
+// //test case 1 //Output: [0,1,2]
+// const numCourses = 3;
+// const prerequisites = [[1, 0]];
 
-//test case 2 //Output: []
-const numCourses1 = 3;
-const prerequisites1 = [
-  [0, 1],
-  [1, 2],
-  [2, 0],
+// //test case 2 //Output: []
+// const numCourses1 = 3;
+// const prerequisites1 = [
+//   [0, 1],
+//   [1, 2],
+//   [2, 0],
+// ];
+
+// //test case 3 // [0]
+// const numCourses2 = 1;
+// const prerequisites2 = [];
+
+// //test case 4 // [0, 1, 2, 3]
+// const numCourses3 = 4;
+// const prerequisites3 = [
+//   [1, 0],
+//   [2, 0],
+//   [3, 1],
+//   [3, 2],
+// ];
+
+// function findOrder(numCourses, prerequisites) {
+//   if (numCourses === 0) return [];
+
+//   // Step 1. Init
+//   //i element represent the course in preCourses array.
+//   let courses = new Map();
+//   //Init the prerequisites for each course
+//   for (let index = 0; index < numCourses; index++) {
+//     courses.set(index, []);
+//   }
+//   //Fill prerequisites in accordance with initial values in prerequisites
+//   prerequisites.forEach((prerequisite) => {
+//     let pre = courses.get(prerequisite[1]);
+//     courses.set(prerequisite[1], [...pre, prerequisite[0]]);
+//   });
+
+//   //Check if there is no element with 0 prerequisite, it is not possible to take all courses
+//   //const values = Array.from(courses.values());
+//   const zeroCourses = Array.from(courses.values()).filter(
+//     (course) => course.length === 0
+//   );
+//   if (zeroCourses.length === 0) return [];
+
+//   //Step 2.
+//   let coursesTaken = [];
+
+//   //For each course check if to take it takes less than numCourses -1. Otherwise, there is a cycle.
+//   for (let i = 0; i < numCourses; i++) {
+//     let count = 0;
+//     count = dfs(i, courses.get(i), courses, coursesTaken, count);
+
+//     if (count > numCourses) return [];
+//   }
+
+//   function dfs(courseNum, depCourses, courses, coursesTaken, count) {
+//     //If courses count are too much, return that max that can be taken
+//     if (count > courses.size - 1) return courses.size + 1;
+
+//     //If no courses prereq.
+//     if (depCourses.length === 0) {
+//       {
+//         if (!coursesTaken.includes(courseNum)) coursesTaken.push(courseNum);
+//         return count;
+//       }
+//     }
+
+//     if (depCourses.includes(courseNum)) return courses.size + 1;
+
+//     depCourses.forEach((depCourse) => {
+//       if (coursesTaken.includes(depCourse)) {
+//         return ++count;
+//       }
+
+//       const newDepCourses = courses.get(depCourse);
+//       count = dfs(depCourse, newDepCourses, courses, coursesTaken, ++count);
+//     });
+
+//     if (!coursesTaken.includes(courseNum)) coursesTaken.push(courseNum);
+//     return count;
+//   }
+
+//   return coursesTaken.reverse();
+// }
+
+// // console.log(findOrder(numCourses, prerequisites));
+// // console.log(findOrder(numCourses1, prerequisites1));
+// // console.log(findOrder(numCourses2, prerequisites2));
+// console.log(findOrder(numCourses3, prerequisites3));
+
+//---------------------
+//------ DP -------------
+//---------------------
+
+// -----  -----
+// ----- Neetcode, LeetCode 416. Partition Equal Subset Sum -----
+// -----  -----
+
+// //test case 1: expected true
+// const nums = [1, 5, 11, 5];
+
+// function canPartition(nums) {
+//   //1. Check for edge values to save time
+
+//   //If there is only one element in the array, we cannot divide it
+//   if (nums.length === 1) return false;
+
+//   const totalSum = nums.reduce((acc, curr) => acc + curr, 0);
+
+//   //If sum is not even, there is no way we can divide it by 2
+//   if (totalSum % 2 !== 0) return false;
+
+//   //Check if there is a single element with half-sum
+//   if (nums.includes(totalSum / 2)) return true;
+
+//   //2. Otherwise see if the set of sub-sums can be found
+//   const sumSet = [];
+//   sumSet.push(0);
+//   sumSet.push(nums[0]);
+
+//   for (let i = 1; i < nums.length; i++) {
+//     const currSumLength = sumSet.length;
+//     for (let s = 0; s < currSumLength; s++) {
+//       const curSum = sumSet[s] + nums[i];
+//       if (curSum === totalSum / 2) return true;
+//       if (!sumSet.includes(curSum)) sumSet.push(curSum);
+//     }
+//   }
+
+//   console.log(sumSet);
+//   return false;
+// }
+
+// console.log(canPartition(nums));
+
+// -----  -----
+// ----- Neetcode, LeetCode 494. Target Sum -----
+// -----  -----
+
+//test case 1 //Output: 3
+const nums = [2, 2, 2];
+const target = 2;
+
+//expected 8160
+const nums1 = [
+  0, 17, 5, 0, 0, 18, 18, 28, 36, 29, 42, 4, 32, 2, 5, 31, 24, 30, 8, 6,
 ];
+const target1 = 27;
 
-//test case 3 // [0]
-const numCourses2 = 1;
-const prerequisites2 = [];
+//expected 5
+const nums2 = [1, 1, 1, 1, 1];
+const target2 = 3;
 
-//test case 4 // [0, 1, 2, 3]
-const numCourses3 = 4;
-const prerequisites3 = [
-  [1, 0],
-  [2, 0],
-  [3, 1],
-  [3, 2],
-];
-
-function findOrder(numCourses, prerequisites) {
-  if (numCourses === 0) return [];
-
-  // Step 1. Init
-  //i element represent the course in preCourses array.
-  let courses = new Map();
-  //Init the prerequisites for each course
-  for (let index = 0; index < numCourses; index++) {
-    courses.set(index, []);
-  }
-  //Fill prerequisites in accordance with initial values in prerequisites
-  prerequisites.forEach((prerequisite) => {
-    let pre = courses.get(prerequisite[1]);
-    courses.set(prerequisite[1], [...pre, prerequisite[0]]);
-  });
-
-  //Check if there is no element with 0 prerequisite, it is not possible to take all courses
-  //const values = Array.from(courses.values());
-  const zeroCourses = Array.from(courses.values()).filter(
-    (course) => course.length === 0
-  );
-  if (zeroCourses.length === 0) return [];
-
-  //Step 2.
-  let coursesTaken = [];
-
-  //For each course check if to take it takes less than numCourses -1. Otherwise, there is a cycle.
-  for (let i = 0; i < numCourses; i++) {
-    let count = 0;
-    count = dfs(i, courses.get(i), courses, coursesTaken, count);
-
-    if (count > numCourses) return [];
+function findTargetSumWays(nums, target) {
+  //Check edge case. One number in the array
+  if (nums.length === 1) {
+    if (Math.abs(nums[0]) === Math.abs(target)) return 1;
+    return 0;
   }
 
-  function dfs(courseNum, depCourses, courses, coursesTaken, count) {
-    //If courses count are too much, return that max that can be taken
-    if (count > courses.size - 1) return courses.size + 1;
+  //Otherwise, do calculations
+  let sumSet = new Map();
+  if (nums[0] === 0) {
+    sumSet.set(0, 2);
+  } else {
+    sumSet.set(nums[0], 1);
+    sumSet.set(-nums[0], 1);
+  }
 
-    //If no courses prereq.
-    if (depCourses.length === 0) {
-      {
-        if (!coursesTaken.includes(courseNum)) coursesTaken.push(courseNum);
-        return count;
+  for (let i = 1; i < nums.length; i++) {
+    let newSumSet = new Map();
+
+    sumSet.forEach((values, keys) => {
+      const newElPlus = keys + nums[i];
+      if (newSumSet.has(newElPlus)) {
+        newSumSet.set(newElPlus, newSumSet.get(newElPlus) + values);
+      } else {
+        newSumSet.set(newElPlus, values);
       }
-    }
 
-    if (depCourses.includes(courseNum)) return courses.size + 1;
-
-    depCourses.forEach((depCourse) => {
-      if (coursesTaken.includes(depCourse)) {
-        return ++count;
+      const newElMinus = keys - nums[i];
+      if (newSumSet.has(newElMinus)) {
+        newSumSet.set(newElMinus, newSumSet.get(newElMinus) + values);
+      } else {
+        newSumSet.set(newElMinus, values);
       }
-
-      const newDepCourses = courses.get(depCourse);
-      count = dfs(depCourse, newDepCourses, courses, coursesTaken, ++count);
     });
 
-    if (!coursesTaken.includes(courseNum)) coursesTaken.push(courseNum);
-    return count;
+    sumSet = new Map(newSumSet);
   }
 
-  return coursesTaken.reverse();
+  const res = sumSet.get(target);
+  return res ? res : 0;
 }
 
-// console.log(findOrder(numCourses, prerequisites));
-// console.log(findOrder(numCourses1, prerequisites1));
-// console.log(findOrder(numCourses2, prerequisites2));
-console.log(findOrder(numCourses3, prerequisites3));
+console.log(findTargetSumWays(nums, target));
+console.log(findTargetSumWays(nums1, target1));
+console.log(findTargetSumWays(nums2, target2));
