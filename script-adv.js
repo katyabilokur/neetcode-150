@@ -2550,62 +2550,189 @@ import {
 // ----- Neetcode, LeetCode 494. Target Sum -----
 // -----  -----
 
-//test case 1 //Output: 3
-const nums = [2, 2, 2];
-const target = 2;
+// //test case 1 //Output: 3
+// const nums = [2, 2, 2];
+// const target = 2;
 
-//expected 8160
-const nums1 = [
-  0, 17, 5, 0, 0, 18, 18, 28, 36, 29, 42, 4, 32, 2, 5, 31, 24, 30, 8, 6,
+// //expected 8160
+// const nums1 = [
+//   0, 17, 5, 0, 0, 18, 18, 28, 36, 29, 42, 4, 32, 2, 5, 31, 24, 30, 8, 6,
+// ];
+// const target1 = 27;
+
+// //expected 5
+// const nums2 = [1, 1, 1, 1, 1];
+// const target2 = 3;
+
+// function findTargetSumWays(nums, target) {
+//   //Check edge case. One number in the array
+//   if (nums.length === 1) {
+//     if (Math.abs(nums[0]) === Math.abs(target)) return 1;
+//     return 0;
+//   }
+
+//   //Otherwise, do calculations
+//   let sumSet = new Map();
+//   if (nums[0] === 0) {
+//     sumSet.set(0, 2);
+//   } else {
+//     sumSet.set(nums[0], 1);
+//     sumSet.set(-nums[0], 1);
+//   }
+
+//   for (let i = 1; i < nums.length; i++) {
+//     let newSumSet = new Map();
+
+//     sumSet.forEach((values, keys) => {
+//       const newElPlus = keys + nums[i];
+//       if (newSumSet.has(newElPlus)) {
+//         newSumSet.set(newElPlus, newSumSet.get(newElPlus) + values);
+//       } else {
+//         newSumSet.set(newElPlus, values);
+//       }
+
+//       const newElMinus = keys - nums[i];
+//       if (newSumSet.has(newElMinus)) {
+//         newSumSet.set(newElMinus, newSumSet.get(newElMinus) + values);
+//       } else {
+//         newSumSet.set(newElMinus, values);
+//       }
+//     });
+
+//     sumSet = new Map(newSumSet);
+//   }
+
+//   const res = sumSet.get(target);
+//   return res ? res : 0;
+// }
+
+// console.log(findTargetSumWays(nums, target));
+// console.log(findTargetSumWays(nums1, target1));
+// console.log(findTargetSumWays(nums2, target2));
+
+// -----  -----
+// ----- LeetCode 474. Ones and Zeroes -----
+// -----  -----
+
+//test case 1 //Output: 2
+const strs = ["10", "0", "1"];
+const m = 1;
+const n = 1;
+
+//test case 2 //Output: 4
+const strs1 = ["10", "0001", "111001", "1", "0"];
+const m1 = 5;
+const n1 = 3;
+
+//test case 3 // expected 0
+const strs2 = ["00", "000"];
+const m2 = 1;
+const n2 = 10;
+
+//test case 4 // expected 17
+const strs3 = [
+  "0",
+  "11",
+  "1000",
+  "01",
+  "0",
+  "101",
+  "1",
+  "1",
+  "1",
+  "0",
+  "0",
+  "0",
+  "0",
+  "1",
+  "0",
+  "0110101",
+  "0",
+  "11",
+  "01",
+  "00",
+  "01111",
+  "0011",
+  "1",
+  "1000",
+  "0",
+  "11101",
+  "1",
+  "0",
+  "10",
+  "0111",
 ];
-const target1 = 27;
+const m3 = 9;
+const n3 = 80;
 
-//expected 5
-const nums2 = [1, 1, 1, 1, 1];
-const target2 = 3;
+function findMaxForm(strs, m, n) {
+  let nums = [];
+  strs.forEach((str) => {
+    const sum = str.split("").reduce((acc, curr) => acc + +curr, 0);
+    nums.push({ o: str.length - sum, l: sum }); // o = 0, l =1
+  });
 
-function findTargetSumWays(nums, target) {
-  //Check edge case. One number in the array
-  if (nums.length === 1) {
-    if (Math.abs(nums[0]) === Math.abs(target)) return 1;
-    return 0;
+  let sets = new Array(nums.length + 1)
+    .fill()
+    .map(() => new Array(nums.length));
+
+  //Initial setup raw 0
+  //-1 means we cannot add that to our set
+  for (let i = 0; i < nums.length; i++) {
+    if (nums[i].o <= m && nums[i].l <= n) {
+      sets[0][i] = { n: 1, o: nums[i].o, l: nums[i].l };
+    } else {
+      sets[0][i] = { n: -1 };
+    }
   }
 
-  //Otherwise, do calculations
-  let sumSet = new Map();
-  if (nums[0] === 0) {
-    sumSet.set(0, 2);
-  } else {
-    sumSet.set(nums[0], 1);
-    sumSet.set(-nums[0], 1);
-  }
-
-  for (let i = 1; i < nums.length; i++) {
-    let newSumSet = new Map();
-
-    sumSet.forEach((values, keys) => {
-      const newElPlus = keys + nums[i];
-      if (newSumSet.has(newElPlus)) {
-        newSumSet.set(newElPlus, newSumSet.get(newElPlus) + values);
-      } else {
-        newSumSet.set(newElPlus, values);
+  //Do table calculation whether to include set or not
+  for (let r = 1; r < sets.length; r++) {
+    for (let c = 0; c < nums.length; c++) {
+      //1. if it's a clashing cell, we cannot add that value 2 times, jsu leave value as it is
+      if (r - 1 === c) {
+        sets[r][c] = {
+          n: sets[r - 1][c].n,
+          o: sets[r - 1][c].o,
+          l: sets[r - 1][c].l,
+        };
+        continue;
       }
 
-      const newElMinus = keys - nums[i];
-      if (newSumSet.has(newElMinus)) {
-        newSumSet.set(newElMinus, newSumSet.get(newElMinus) + values);
-      } else {
-        newSumSet.set(newElMinus, values);
+      //2. if prev value is -1, we cannot add anything more. Leave -1
+      if (sets[r - 1][c].n === -1) {
+        sets[r][c] = { n: -1 };
+        continue;
       }
-    });
 
-    sumSet = new Map(newSumSet);
+      //3. else, calculate new value
+      if (
+        sets[r - 1][c].o + nums[r - 1].o <= m &&
+        sets[r - 1][c].l + nums[r - 1].l <= n
+      ) {
+        sets[r][c] = {
+          n: sets[r - 1][c].n + 1,
+          o: sets[r - 1][c].o + nums[r - 1].o,
+          l: sets[r - 1][c].l + nums[r - 1].l,
+        };
+      } else {
+        sets[r][c] = {
+          n: sets[r - 1][c].n,
+          o: sets[r - 1][c].o,
+          l: sets[r - 1][c].l,
+        };
+      }
+    }
   }
 
-  const res = sumSet.get(target);
-  return res ? res : 0;
+  console.log(sets);
+
+  const flatArr = sets.flat().map((el) => el.n);
+  const res = Math.max(...flatArr);
+  return res === -1 ? 0 : res;
 }
 
-console.log(findTargetSumWays(nums, target));
-console.log(findTargetSumWays(nums1, target1));
-console.log(findTargetSumWays(nums2, target2));
+//console.log(findMaxForm(strs, m, n));
+//console.log(findMaxForm(strs1, m1, n1));
+//console.log(findMaxForm(strs2, m2, n2));
+console.log(findMaxForm(strs3, m3, n3));
