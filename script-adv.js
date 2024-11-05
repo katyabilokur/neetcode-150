@@ -2614,125 +2614,1452 @@ import {
 // ----- LeetCode 474. Ones and Zeroes -----
 // -----  -----
 
-//test case 1 //Output: 2
-const strs = ["10", "0", "1"];
-const m = 1;
-const n = 1;
+// //test case 1 //Output: 2
+// const strs = ["10", "0", "1"];
+// const m = 1;
+// const n = 1;
 
-//test case 2 //Output: 4
-const strs1 = ["10", "0001", "111001", "1", "0"];
-const m1 = 5;
-const n1 = 3;
+// //test case 2 //Output: 4
+// const strs1 = ["10", "0001", "111001", "1", "0"];
+// const m1 = 5;
+// const n1 = 3;
 
-//test case 3 // expected 0
-const strs2 = ["00", "000"];
-const m2 = 1;
-const n2 = 10;
+// //test case 3 // expected 0
+// const strs2 = ["00", "000"];
+// const m2 = 1;
+// const n2 = 10;
 
-//test case 4 // expected 17
-const strs3 = [
-  "0",
-  "11",
-  "1000",
-  "01",
-  "0",
-  "101",
-  "1",
-  "1",
-  "1",
-  "0",
-  "0",
-  "0",
-  "0",
-  "1",
-  "0",
-  "0110101",
-  "0",
-  "11",
-  "01",
-  "00",
-  "01111",
-  "0011",
-  "1",
-  "1000",
-  "0",
-  "11101",
-  "1",
-  "0",
-  "10",
-  "0111",
-];
-const m3 = 9;
-const n3 = 80;
+// //test case 4 // expected 17
+// const strs3 = [
+//   "0",
+//   "11",
+//   "1000",
+//   "01",
+//   "0",
+//   "101",
+//   "1",
+//   "1",
+//   "1",
+//   "0",
+//   "0",
+//   "0",
+//   "0",
+//   "1",
+//   "0",
+//   "0110101",
+//   "0",
+//   "11",
+//   "01",
+//   "00",
+//   "01111",
+//   "0011",
+//   "1",
+//   "1000",
+//   "0",
+//   "11101",
+//   "1",
+//   "0",
+//   "10",
+//   "0111",
+// ];
+// const m3 = 9;
+// const n3 = 80;
 
-function findMaxForm(strs, m, n) {
-  let nums = [];
-  strs.forEach((str) => {
-    const sum = str.split("").reduce((acc, curr) => acc + +curr, 0);
-    nums.push({ o: str.length - sum, l: sum }); // o = 0, l =1
-  });
+// //test case 5
+// // const strs4 = [
+// //   "11",
+// //   "01",
+// //   "11",
+// //   "01",
+// //   "11",
+// //   "01",
+// //   "11",
+// //   "01",
+// //   "11",
+// //   "01",
+// //   "11",
+// //   "01",
+// //   "11",
+// //   "01",
+// //   "11",
+// //   "01",
+// //   "11",
+// //   "01",
+// //   "11",
+// //   "01",
+// //   "11",
+// //   "01",
+// //   "11",
+// //   "01",
+// //   "11",
+// //   "01",
+// //   "11",
+// //   "01",
+// //   "11",
+// //   "01",
+// //   "11",
+// //   "01",
+// //   "11",
+// //   "01",
+// //   "11",
+// //   "01",
+// //   "11",
+// //   "01",
+// //   "11",
+// //   "01",
+// //   "11",
+// //   "01",
+// //   "11",
+// //   "01",
+// //   "11",
+// //   "01",
+// //   "11",
+// //   "01",
+// //   "11",
+// //   "01",
+// //   "11",
+// //   "01",
+// //   "11",
+// //   "01",
+// //   "11",
+// //   "01",
+// //   "11",
+// //   "01",
+// //   "11",
+// //   "01",
+// //   "11",
+// //   "01",
+// //   "11",
+// //   "01",
+// //   "11",
+// //   "01",
+// //   "11",
+// //   "01",
+// //   "11",
+// //   "01",
+// //   "11",
+// //   "01",
+// //   "11",
+// //   "01",
+// //   "11",
+// //   "01",
+// //   "11",
+// //   "01",
+// //   "11",
+// //   "01",
+// //   "11",
+// //   "01",
+// //   "11",
+// //   "01",
+// //   "11",
+// //   "01",
+// //   "11",
+// //   "01",
+// //   "11",
+// //   "01",
+// //   "11",
+// //   "01",
+// //   "11",
+// //   "01",
+// //   "11",
+// //   "01",
+// //   "11",
+// //   "01",
+// //   "11",
+// //   "01",
+// //   "11",
+// //   "01",
+// //   "11",
+// //   "01",
+// //   "11",
+// //   "01",
+// //   "11",
+// //   "01",
+// //   "11",
+// //   "01",
+// //   "11",
+// //   "01",
+// //   "11",
+// //   "01",
+// //   "11",
+// //   "01",
+// //   "11",
+// //   "01",
+// //   "11",
+// //   "01",
+// //   "11",
+// //   "01",
+// //   "11",
+// //   "01",
+// //   "11",
+// //   "01",
+// //   "11",
+// //   "01",
+// //   "11",
+// //   "01",
+// //   "11",
+// //   "01",
+// //   "11",
+// //   "01",
+// //   "11",
+// //   "01",
+// //   "11",
+// //   "01",
+// //   "11",
+// //   "01",
+// //   "11",
+// //   "01",
+// //   "11",
+// //   "01",
+// //   "11",
+// //   "01",
+// //   "11",
+// //   "01",
+// //   "11",
+// //   "01",
+// //   "11",
+// //   "01",
+// //   "11",
+// //   "01",
+// //   "11",
+// //   "01",
+// //   "11",
+// //   "01",
+// //   "11",
+// //   "01",
+// //   "11",
+// //   "01",
+// //   "11",
+// //   "01",
+// //   "11",
+// //   "01",
+// //   "11",
+// //   "01",
+// //   "11",
+// //   "01",
+// //   "11",
+// //   "01",
+// //   "11",
+// //   "01",
+// //   "11",
+// //   "01",
+// //   "11",
+// //   "01",
+// //   "11",
+// //   "01",
+// //   "11",
+// //   "01",
+// //   "11",
+// //   "01",
+// //   "11",
+// //   "01",
+// //   "11",
+// //   "01",
+// //   "11",
+// //   "01",
+// //   "11",
+// //   "01",
+// //   "11",
+// //   "01",
+// //   "11",
+// //   "01",
+// //   "11",
+// //   "01",
+// //   "11",
+// //   "01",
+// //   "11",
+// //   "01",
+// //   "11",
+// //   "01",
+// //   "11",
+// //   "01",
+// //   "11",
+// //   "01",
+// //   "11",
+// //   "01",
+// //   "11",
+// //   "01",
+// //   "11",
+// //   "01",
+// //   "11",
+// //   "01",
+// //   "11",
+// //   "01",
+// //   "11",
+// //   "01",
+// //   "11",
+// //   "01",
+// //   "11",
+// //   "01",
+// //   "11",
+// //   "01",
+// //   "11",
+// //   "01",
+// //   "11",
+// //   "01",
+// //   "11",
+// //   "01",
+// //   "11",
+// //   "01",
+// //   "11",
+// //   "01",
+// //   "11",
+// //   "01",
+// //   "11",
+// //   "01",
+// //   "11",
+// //   "01",
+// //   "11",
+// //   "01",
+// //   "11",
+// //   "01",
+// //   "11",
+// //   "01",
+// //   "11",
+// //   "01",
+// //   "11",
+// //   "01",
+// //   "11",
+// //   "01",
+// //   "11",
+// //   "01",
+// //   "11",
+// //   "01",
+// //   "11",
+// //   "01",
+// //   "11",
+// //   "01",
+// //   "11",
+// //   "01",
+// //   "11",
+// //   "01",
+// //   "11",
+// //   "01",
+// //   "11",
+// //   "01",
+// //   "11",
+// //   "01",
+// //   "11",
+// //   "01",
+// //   "11",
+// //   "01",
+// //   "11",
+// //   "01",
+// //   "11",
+// //   "01",
+// //   "11",
+// //   "01",
+// //   "11",
+// //   "01",
+// //   "11",
+// //   "01",
+// //   "11",
+// //   "01",
+// //   "11",
+// //   "01",
+// //   "11",
+// //   "01",
+// //   "11",
+// //   "01",
+// //   "11",
+// //   "01",
+// //   "11",
+// //   "01",
+// //   "11",
+// //   "01",
+// //   "11",
+// //   "01",
+// //   "11",
+// //   "01",
+// //   "11",
+// //   "01",
+// //   "11",
+// //   "01",
+// //   "11",
+// //   "01",
+// //   "11",
+// //   "01",
+// //   "11",
+// //   "01",
+// //   "11",
+// //   "01",
+// //   "11",
+// //   "01",
+// //   "11",
+// //   "01",
+// //   "11",
+// //   "01",
+// //   "11",
+// //   "01",
+// //   "11",
+// //   "01",
+// //   "11",
+// //   "01",
+// //   "11",
+// //   "01",
+// //   "11",
+// //   "01",
+// //   "11",
+// //   "01",
+// //   "11",
+// //   "01",
+// //   "11",
+// //   "01",
+// //   "11",
+// //   "01",
+// //   "11",
+// //   "01",
+// //   "11",
+// //   "01",
+// //   "11",
+// //   "01",
+// //   "11",
+// //   "01",
+// //   "11",
+// //   "01",
+// //   "11",
+// //   "01",
+// //   "11",
+// //   "01",
+// //   "11",
+// //   "01",
+// //   "11",
+// //   "01",
+// //   "11",
+// //   "01",
+// //   "11",
+// //   "01",
+// //   "11",
+// //   "01",
+// //   "11",
+// //   "01",
+// //   "11",
+// //   "01",
+// //   "11",
+// //   "01",
+// //   "11",
+// //   "01",
+// //   "11",
+// //   "01",
+// //   "11",
+// //   "01",
+// //   "11",
+// //   "01",
+// //   "11",
+// //   "01",
+// //   "11",
+// //   "01",
+// //   "11",
+// //   "01",
+// //   "11",
+// //   "01",
+// //   "11",
+// //   "01",
+// //   "11",
+// //   "01",
+// //   "11",
+// //   "01",
+// //   "11",
+// //   "01",
+// //   "11",
+// //   "01",
+// //   "11",
+// //   "01",
+// //   "11",
+// //   "01",
+// //   "11",
+// //   "01",
+// //   "11",
+// //   "01",
+// //   "11",
+// //   "01",
+// //   "11",
+// //   "01",
+// //   "11",
+// //   "01",
+// //   "11",
+// //   "01",
+// //   "11",
+// //   "01",
+// //   "11",
+// //   "01",
+// //   "11",
+// //   "01",
+// //   "11",
+// //   "01",
+// //   "11",
+// //   "01",
+// //   "11",
+// //   "01",
+// //   "11",
+// //   "01",
+// //   "11",
+// //   "01",
+// //   "11",
+// //   "01",
+// //   "11",
+// //   "01",
+// //   "11",
+// //   "01",
+// //   "11",
+// //   "01",
+// //   "11",
+// //   "01",
+// //   "11",
+// //   "01",
+// //   "11",
+// //   "01",
+// //   "11",
+// //   "01",
+// //   "11",
+// //   "01",
+// //   "11",
+// //   "01",
+// //   "11",
+// //   "01",
+// //   "11",
+// //   "01",
+// //   "11",
+// //   "01",
+// //   "11",
+// //   "01",
+// //   "11",
+// //   "01",
+// //   "11",
+// //   "01",
+// //   "11",
+// //   "01",
+// //   "11",
+// //   "01",
+// //   "11",
+// //   "01",
+// //   "11",
+// //   "01",
+// //   "11",
+// //   "01",
+// //   "11",
+// //   "01",
+// //   "11",
+// //   "01",
+// //   "11",
+// //   "01",
+// //   "11",
+// //   "01",
+// //   "11",
+// //   "01",
+// //   "11",
+// //   "01",
+// //   "11",
+// //   "01",
+// //   "11",
+// //   "01",
+// //   "11",
+// //   "01",
+// //   "11",
+// //   "01",
+// //   "11",
+// //   "01",
+// //   "11",
+// //   "01",
+// //   "11",
+// //   "01",
+// //   "11",
+// //   "01",
+// //   "11",
+// //   "01",
+// //   "11",
+// //   "01",
+// //   "11",
+// //   "01",
+// //   "11",
+// //   "01",
+// //   "11",
+// //   "01",
+// //   "11",
+// //   "01",
+// //   "11",
+// //   "01",
+// //   "11",
+// //   "01",
+// //   "11",
+// //   "01",
+// //   "11",
+// //   "01",
+// //   "11",
+// //   "01",
+// //   "11",
+// //   "01",
+// //   "11",
+// //   "01",
+// //   "11",
+// //   "01",
+// // ];
+// const strs4 = [
+//   "00",
+//   "01",
+//   "00",
+//   "01",
+//   "00",
+//   "01",
+//   "00",
+//   "01",
+//   "00",
+//   "01",
+//   "00",
+//   "01",
+//   "00",
+//   "01",
+//   "00",
+//   "01",
+//   "00",
+//   "01",
+//   "00",
+//   "01",
+//   "00",
+//   "01",
+//   "00",
+//   "01",
+//   "00",
+//   "01",
+//   "00",
+//   "01",
+//   "00",
+//   "01",
+//   "00",
+//   "01",
+//   "00",
+//   "01",
+//   "00",
+//   "01",
+//   "00",
+//   "01",
+//   "00",
+//   "01",
+//   "00",
+//   "01",
+//   "00",
+//   "01",
+//   "00",
+//   "01",
+//   "00",
+//   "01",
+//   "00",
+//   "01",
+//   "00",
+//   "01",
+//   "00",
+//   "01",
+//   "00",
+//   "01",
+//   "00",
+//   "01",
+//   "00",
+//   "01",
+//   "00",
+//   "01",
+//   "00",
+//   "01",
+//   "00",
+//   "01",
+//   "00",
+//   "01",
+//   "00",
+//   "01",
+//   "00",
+//   "01",
+//   "00",
+//   "01",
+//   "00",
+//   "01",
+//   "00",
+//   "01",
+//   "00",
+//   "01",
+//   "00",
+//   "01",
+//   "00",
+//   "01",
+//   "00",
+//   "01",
+//   "00",
+//   "01",
+//   "00",
+//   "01",
+//   "00",
+//   "01",
+//   "00",
+//   "01",
+//   "00",
+//   "01",
+//   "00",
+//   "01",
+//   "00",
+//   "01",
+//   "00",
+//   "01",
+//   "00",
+//   "01",
+//   "00",
+//   "01",
+//   "00",
+//   "01",
+//   "00",
+//   "01",
+//   "00",
+//   "01",
+//   "00",
+//   "01",
+//   "00",
+//   "01",
+//   "00",
+//   "01",
+//   "00",
+//   "01",
+//   "00",
+//   "01",
+//   "00",
+//   "01",
+//   "00",
+//   "01",
+//   "00",
+//   "01",
+//   "00",
+//   "01",
+//   "00",
+//   "01",
+//   "00",
+//   "01",
+//   "00",
+//   "01",
+//   "00",
+//   "01",
+//   "00",
+//   "01",
+//   "00",
+//   "01",
+//   "00",
+//   "01",
+//   "00",
+//   "01",
+//   "00",
+//   "01",
+//   "00",
+//   "01",
+//   "00",
+//   "01",
+//   "00",
+//   "01",
+//   "00",
+//   "01",
+//   "00",
+//   "01",
+//   "00",
+//   "01",
+//   "00",
+//   "01",
+//   "00",
+//   "01",
+//   "00",
+//   "01",
+//   "00",
+//   "01",
+//   "00",
+//   "01",
+//   "00",
+//   "01",
+//   "00",
+//   "01",
+//   "00",
+//   "01",
+//   "00",
+//   "01",
+//   "00",
+//   "01",
+//   "00",
+//   "01",
+//   "00",
+//   "01",
+//   "00",
+//   "01",
+//   "00",
+//   "01",
+//   "00",
+//   "01",
+//   "00",
+//   "01",
+//   "00",
+//   "01",
+//   "00",
+//   "01",
+//   "00",
+//   "01",
+//   "00",
+//   "01",
+//   "00",
+//   "01",
+//   "00",
+//   "01",
+//   "00",
+//   "01",
+//   "00",
+//   "01",
+//   "00",
+//   "01",
+//   "00",
+//   "01",
+//   "00",
+//   "01",
+//   "00",
+//   "01",
+//   "00",
+//   "01",
+//   "00",
+//   "01",
+//   "00",
+//   "01",
+//   "00",
+//   "01",
+//   "00",
+//   "01",
+//   "00",
+//   "01",
+//   "00",
+//   "01",
+//   "00",
+//   "01",
+//   "00",
+//   "01",
+//   "00",
+//   "01",
+//   "00",
+//   "01",
+//   "00",
+//   "01",
+//   "00",
+//   "01",
+//   "00",
+//   "01",
+//   "00",
+//   "01",
+//   "00",
+//   "01",
+//   "00",
+//   "01",
+//   "00",
+//   "01",
+//   "00",
+//   "01",
+//   "00",
+//   "01",
+//   "00",
+//   "01",
+//   "00",
+//   "01",
+//   "00",
+//   "01",
+//   "00",
+//   "01",
+//   "00",
+//   "01",
+//   "00",
+//   "01",
+//   "00",
+//   "01",
+//   "00",
+//   "01",
+//   "00",
+//   "01",
+//   "00",
+//   "01",
+//   "00",
+//   "01",
+//   "00",
+//   "01",
+//   "00",
+//   "01",
+//   "00",
+//   "01",
+//   "00",
+//   "01",
+//   "00",
+//   "01",
+//   "00",
+//   "01",
+//   "00",
+//   "01",
+//   "00",
+//   "01",
+//   "00",
+//   "01",
+//   "00",
+//   "01",
+//   "00",
+//   "01",
+//   "00",
+//   "01",
+//   "00",
+//   "01",
+//   "00",
+//   "01",
+//   "00",
+//   "01",
+//   "00",
+//   "01",
+//   "00",
+//   "01",
+//   "00",
+//   "01",
+//   "00",
+//   "01",
+//   "00",
+//   "01",
+//   "00",
+//   "01",
+//   "00",
+//   "01",
+//   "00",
+//   "01",
+//   "00",
+//   "01",
+//   "00",
+//   "01",
+//   "00",
+//   "01",
+//   "00",
+//   "01",
+//   "00",
+//   "01",
+//   "00",
+//   "01",
+//   "00",
+//   "01",
+//   "00",
+//   "01",
+//   "00",
+//   "01",
+//   "00",
+//   "01",
+//   "00",
+//   "01",
+//   "00",
+//   "01",
+//   "00",
+//   "01",
+//   "00",
+//   "01",
+//   "00",
+//   "01",
+//   "00",
+//   "01",
+//   "00",
+//   "01",
+//   "00",
+//   "01",
+//   "00",
+//   "01",
+//   "00",
+//   "01",
+//   "00",
+//   "01",
+//   "00",
+//   "01",
+//   "00",
+//   "01",
+//   "00",
+//   "01",
+//   "00",
+//   "01",
+//   "00",
+//   "01",
+//   "00",
+//   "01",
+//   "00",
+//   "01",
+//   "00",
+//   "01",
+//   "00",
+//   "01",
+//   "00",
+//   "01",
+//   "00",
+//   "01",
+//   "00",
+//   "01",
+//   "00",
+//   "01",
+//   "00",
+//   "01",
+//   "00",
+//   "01",
+//   "00",
+//   "01",
+//   "00",
+//   "01",
+//   "00",
+//   "01",
+//   "00",
+//   "01",
+//   "00",
+//   "01",
+//   "00",
+//   "01",
+//   "00",
+//   "01",
+//   "00",
+//   "01",
+//   "00",
+//   "01",
+//   "00",
+//   "01",
+//   "00",
+//   "01",
+//   "00",
+//   "01",
+//   "00",
+//   "01",
+//   "00",
+//   "01",
+//   "00",
+//   "01",
+//   "00",
+//   "01",
+//   "00",
+//   "01",
+//   "00",
+//   "01",
+//   "00",
+//   "01",
+//   "00",
+//   "01",
+//   "00",
+//   "01",
+//   "00",
+//   "01",
+//   "00",
+//   "01",
+//   "00",
+//   "01",
+//   "00",
+//   "01",
+//   "00",
+//   "01",
+//   "00",
+//   "01",
+//   "00",
+//   "01",
+//   "00",
+//   "01",
+//   "00",
+//   "01",
+//   "00",
+//   "01",
+//   "00",
+//   "01",
+//   "00",
+//   "01",
+//   "00",
+//   "01",
+//   "00",
+//   "01",
+//   "00",
+//   "01",
+//   "00",
+//   "01",
+//   "00",
+//   "01",
+//   "00",
+//   "01",
+//   "00",
+//   "01",
+//   "00",
+//   "01",
+//   "00",
+//   "01",
+//   "00",
+//   "01",
+//   "00",
+//   "01",
+//   "00",
+//   "01",
+//   "00",
+//   "01",
+//   "00",
+//   "01",
+//   "00",
+//   "01",
+//   "00",
+//   "01",
+//   "00",
+//   "01",
+//   "00",
+//   "01",
+//   "00",
+//   "01",
+//   "00",
+//   "01",
+//   "00",
+//   "01",
+//   "00",
+//   "01",
+//   "00",
+//   "01",
+//   "00",
+//   "01",
+//   "00",
+//   "01",
+//   "00",
+//   "01",
+//   "00",
+//   "01",
+//   "00",
+//   "01",
+//   "00",
+//   "01",
+//   "00",
+//   "01",
+//   "00",
+//   "01",
+//   "00",
+//   "01",
+// ];
+// const m4 = 50;
+// const n4 = 50;
 
-  let sets = new Array(nums.length + 1)
+// function findMaxForm(strs, m, n) {
+//   strs.sort().sort((a, b) => a.length - b.length || a.localeCompare(b));
+//   let nums = [];
+
+//   strs.forEach((str) => {
+//     const sum = str.split("").reduce((acc, curr) => acc + +curr, 0);
+//     nums.push({ o: str.length - sum, l: sum }); // o = 0, l =1
+//   });
+
+//   let prevSet = new Array(nums.length);
+//   let set = new Array(nums.length);
+
+//   //Initial setup raw 0
+//   //-1 means we cannot add that to our set
+//   for (let i = 0; i < nums.length; i++) {
+//     if (nums[i].o <= m && nums[i].l <= n) {
+//       prevSet[i] = { n: 1, o: nums[i].o, l: nums[i].l };
+//     } else {
+//       prevSet[i] = { n: -1 };
+//     }
+//   }
+
+//   //Do table calculation whether to include set or not
+//   for (let r = 0; r < nums.length; r++) {
+//     for (let c = 0; c < nums.length; c++) {
+//       //1. if it's a clashing cell, we cannot add that value 2 times, jsu leave value as it is
+//       if (r === c) {
+//         set[c] = {
+//           n: prevSet[c].n,
+//           o: prevSet[c].o,
+//           l: prevSet[c].l,
+//         };
+//         continue;
+//       }
+
+//       //2. if prev value is -1, we cannot add anything more. Leave -1
+//       if (prevSet[c].n === -1) {
+//         set[c] = { n: -1 };
+//         continue;
+//       }
+
+//       //3. else, calculate new value
+//       if (prevSet[c].o + nums[r].o <= m && prevSet[c].l + nums[r].l <= n) {
+//         set[c] = {
+//           n: prevSet[c].n + 1,
+//           o: prevSet[c].o + nums[r].o,
+//           l: prevSet[c].l + nums[r].l,
+//         };
+//       } else {
+//         set[c] = {
+//           n: prevSet[c].n,
+//           o: prevSet[c].o,
+//           l: prevSet[c].l,
+//         };
+//       }
+//     }
+
+//     prevSet = [...set];
+//   }
+
+//   const flatArr = set.flat().map((el) => el.n);
+
+//   const res = Math.max(...flatArr);
+//   return res === -1 ? 0 : res;
+// }
+
+// // console.log(findMaxForm(strs, m, n));
+// // console.log(findMaxForm(strs1, m1, n1));
+// // console.log(findMaxForm(strs2, m2, n2));
+// //console.log(findMaxForm(strs3, m3, n3));
+// console.log(findMaxForm(strs4, m4, n4));
+
+// -----  -----
+// ----- Neetcode, LeetCode 322. Coin Change -----
+// -----  -----
+
+// //expected 3
+// const coins = [1, 5, 10];
+// const amount = 12;
+
+// //test case 2 //output -1
+// const coins1 = [2];
+// const amount1 = 3;
+
+// //test case 3 //output 0
+// const coins2 = [2];
+// const amount2 = 0;
+
+// //test case 4 //expected 4
+// const coins3 = [11, 22, 33, 44, 55, 66, 77, 88, 99, 111];
+// const amount3 = 330;
+
+// //test case 5 // expected 35
+// const coins4 = [357, 239, 73, 52];
+// const amount4 = 9832;
+
+// function coinChange(coins, amount) {
+//   // coins.sort((a, b) => a - b);
+
+//   let dp = new Array(amount + 1).fill(-1);
+//   dp[0] = 0;
+
+//   for (let i = 1; i < dp.length; i++) {
+//     for (let c = 0; c < coins.length; c++) {
+//       if (coins[c] <= i) {
+//         if (dp[i - coins[c]] !== -1) {
+//           const newN = 1 + dp[i - coins[c]];
+//           dp[i] = dp[i] === -1 ? newN : Math.min(newN, dp[i]);
+//         }
+//       }
+//     }
+//   }
+
+//   return dp[amount];
+// }
+
+// console.log(coinChange(coins, amount));
+// console.log(coinChange(coins1, amount1));
+// console.log(coinChange(coins2, amount2));
+// console.log(coinChange(coins3, amount3));
+// console.log(coinChange(coins4, amount4));
+
+// -----  -----
+// ----- LeetCode 983. Minimum Cost For Tickets -----
+// -----  -----
+
+// //test case 1 //Output: 11
+// const days = [1, 4, 6, 7, 8, 20];
+// const costs = [2, 7, 15];
+
+// //test case 2 //Output: 17
+// const days1 = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 30, 31];
+// const costs1 = [2, 7, 15];
+
+// //test case 3 //expected 44
+// const days2 = [
+//   1, 4, 6, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 20, 21, 22, 23, 27, 28,
+// ];
+// const costs2 = [3, 13, 45];
+
+// //test case 4 //expected 1
+// const days3 = [364];
+// const costs3 = [3, 3, 1];
+
+// //test case 5 //expected 6
+// const days4 = [1, 4, 6, 7, 8, 20];
+// const costs4 = [7, 2, 15];
+
+// function dfsTickets(days, costs) {
+//   let totalCost = 0;
+
+//   while (days.length > 0) {
+//     //calculate min cost per each ticket price range
+//     const day1 = days.at(0);
+//     const days7 = days.reduce((count, day) => {
+//       return count + (day <= day1 + 6 ? 1 : 0);
+//     }, 0);
+
+//     const days30 = days.reduce((count, day) => {
+//       return count + (day <= day1 + 29 ? 1 : 0);
+//     }, 0);
+
+//     const pricePer1Day = costs[0];
+//     const pricePer7Day = costs[1] / days7;
+//     const pricePer30Day = costs[2] / days30;
+
+//     if (pricePer30Day <= pricePer7Day && pricePer30Day <= pricePer1Day) {
+//       // const newTempCost = costs[0] + dfsTickets([...days.slice(1)], costs);
+//       // console.log(newTempCost);
+
+//       totalCost += costs[2];
+//       days.splice(0, days30);
+//     } else if (pricePer7Day <= pricePer1Day && pricePer7Day <= pricePer30Day) {
+//       // const newTempCost = costs[0] + dfsTickets([...days.slice(1)], costs);
+//       // console.log(newTempCost);
+
+//       totalCost += costs[1];
+//       days.splice(0, days7);
+//     } else {
+//       totalCost += costs[0];
+//       days.shift();
+//     }
+//   }
+//   return totalCost;
+// }
+
+// function mincostTickets(days, costs) {
+//   let cost = dfsTickets(days, costs);
+
+//   return cost;
+// }
+
+// // console.log(mincostTickets(days, costs)); //11
+// // console.log(mincostTickets(days1, costs1)); //17
+// console.log(mincostTickets(days2, costs2)); //44
+// // console.log(mincostTickets(days3, costs3)); //1
+// // console.log(mincostTickets(days4, costs4)); //6
+
+// -----  -----
+// ----- NeetCode, LeetCode 5. Longest Palindromic Substring -----
+// -----  -----
+
+// //Output: "bab" or "aba"
+// const s = "babad";
+// const s1 = "ac";
+// const s2 =
+//   "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaabcaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa";
+
+// function longestPalindrome(s) {
+//   if (s.length === 0) return "";
+
+//   let res = { length: 1, i: 0 };
+
+//   for (let i = 0; i < s.length; i++) {
+//     //Check odd lengths
+//     const newOddVal = helper(s, i, i);
+//     if (newOddVal.length > res.length) {
+//       res.length = newOddVal.length;
+//       res.i = newOddVal.i;
+//     }
+
+//     //Check even lengths
+//     const newEvenVal = helper(s, i, i + 1);
+//     if (newEvenVal.length > res.length) {
+//       res.length = newEvenVal.length;
+//       res.i = newEvenVal.i;
+//     }
+//   }
+
+//   //return res;
+//   return s.slice(res.i, res.i + res.length);
+// }
+
+// function helper(s, l, r) {
+//   let maxLength = 0;
+//   let i = 0;
+//   while (l >= 0 && r < s.length && s.charAt(l) == s.charAt(r)) {
+//     if (r - l + 1 > maxLength) {
+//       maxLength = r - l + 1;
+//       i = l;
+//     }
+//     l--;
+//     r++;
+//   }
+//   return { length: maxLength, i };
+// }
+
+// console.log(longestPalindrome(s2));
+
+// -----  -----
+// ----- NeetCode, LeetCode 647. Palindromic Substrings -----
+// -----  -----
+
+// const s = "aaa"; //expected 6
+// const s1 = "abc"; // expected 3
+
+// function countSubstrings(s) {
+//   if (s.length === 0) return 0;
+
+//   let count = 0;
+
+//   for (let i = 0; i < s.length; i++) {
+//     //Check odd lengths
+//     count += helper(s, i, i);
+
+//     //Check even lengths
+//     count += helper(s, i, i + 1);
+//   }
+
+//   return count;
+// }
+
+// function helper(s, l, r) {
+//   let number = 0;
+
+//   while (l >= 0 && r < s.length && s.charAt(l) == s.charAt(r)) {
+//     if (s[l] === s[r]) {
+//       number++;
+//     }
+//     l--;
+//     r++;
+//   }
+//   return number;
+// }
+
+// console.log(countSubstrings(s));
+// console.log(countSubstrings(s1));
+
+// -----  -----
+// ----- LeetCode 516. Longest Palindromic Subsequence -----
+// -----  -----
+
+const s = "bbbab"; //expected 4
+const s1 = "girafarig"; //expected 9
+const s3 = "azertyuiopqsdfghjklmwxcvbn";
+//const s2 = "azaearatayauaiaoapaqasadafagahajakalamawaxacavabanaazaearatayauaiaoapaqasadafagahajakalamawaxacavabananab";
+
+function longestPalindromeSubseq(s) {
+  if (s.length === 0) return 0;
+
+  //1. Initialise result matrix for max subsequence
+  let resMatr = new Array(s.length)
     .fill()
-    .map(() => new Array(nums.length));
+    .map(() => new Array(s.length).fill(-1));
+  for (let i = 0; i < s.length; i++) {
+    resMatr[i][i] = 1;
+  }
 
-  //Initial setup raw 0
-  //-1 means we cannot add that to our set
-  for (let i = 0; i < nums.length; i++) {
-    if (nums[i].o <= m && nums[i].l <= n) {
-      sets[0][i] = { n: 1, o: nums[i].o, l: nums[i].l };
-    } else {
-      sets[0][i] = { n: -1 };
+  //2. Start filling it from the last row (s.length - 2, because s.length -1 is already calculated and has one value only)
+  for (let i = s.length - 2; i >= 0; i--) {
+    for (let j = i + 1; j < s.length; j++) {
+      resMatr[i][j] = helperCalcValue(s, resMatr, i, j);
     }
   }
 
-  //Do table calculation whether to include set or not
-  for (let r = 1; r < sets.length; r++) {
-    for (let c = 0; c < nums.length; c++) {
-      //1. if it's a clashing cell, we cannot add that value 2 times, jsu leave value as it is
-      if (r - 1 === c) {
-        sets[r][c] = {
-          n: sets[r - 1][c].n,
-          o: sets[r - 1][c].o,
-          l: sets[r - 1][c].l,
-        };
-        continue;
-      }
+  console.log(resMatr);
 
-      //2. if prev value is -1, we cannot add anything more. Leave -1
-      if (sets[r - 1][c].n === -1) {
-        sets[r][c] = { n: -1 };
-        continue;
-      }
-
-      //3. else, calculate new value
-      if (
-        sets[r - 1][c].o + nums[r - 1].o <= m &&
-        sets[r - 1][c].l + nums[r - 1].l <= n
-      ) {
-        sets[r][c] = {
-          n: sets[r - 1][c].n + 1,
-          o: sets[r - 1][c].o + nums[r - 1].o,
-          l: sets[r - 1][c].l + nums[r - 1].l,
-        };
-      } else {
-        sets[r][c] = {
-          n: sets[r - 1][c].n,
-          o: sets[r - 1][c].o,
-          l: sets[r - 1][c].l,
-        };
-      }
-    }
-  }
-
-  console.log(sets);
-
-  const flatArr = sets.flat().map((el) => el.n);
-  const res = Math.max(...flatArr);
-  return res === -1 ? 0 : res;
+  return resMatr[0][s.length - 1];
 }
 
-//console.log(findMaxForm(strs, m, n));
-//console.log(findMaxForm(strs1, m1, n1));
-//console.log(findMaxForm(strs2, m2, n2));
-console.log(findMaxForm(strs3, m3, n3));
+function helperCalcValue(s, resMatr, i, j) {
+  if (i > j) return 0;
+  if (i === j) return 1;
+
+  let res = 0;
+
+  if (s[i] === s[j]) res = 2 + helperCalcValue(s, resMatr, i + 1, j - 1);
+
+  if (s[i] !== s[j]) {
+    const h1 = helperCalcValue(s, resMatr, i + 1, j);
+    const h2 = helperCalcValue(s, resMatr, i, j - 1);
+    res = Math.max(h1, h2);
+  }
+
+  return res;
+}
+
+console.log(longestPalindromeSubseq(s3));
