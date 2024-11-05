@@ -4019,30 +4019,79 @@ import {
 
 const s = "bbbab"; //expected 4
 const s1 = "girafarig"; //expected 9
-const s3 = "azertyuiopqsdfghjklmwxcvbn";
-//const s2 = "azaearatayauaiaoapaqasadafagahajakalamawaxacavabanaazaearatayauaiaoapaqasadafagahajakalamawaxacavabananab";
+const s3 = "azertyuiopqsdfghjklmwxcvbn"; //1
+const s2 =
+  "azaearatayauaiaoapaqasadafagahajakalamawaxacavabanaazaearatayauaiaoapaqasadafagahajakalamawaxacavabananab";
+const s4 =
+  "aaaabbbbbbbbbbccccccccccddddddddddeeeeeeeeeeffffffffffgggggggggghhhhhhhhhhiiiiiiiiiijjjjjjjjjjkkkkkkkkkkllllllllllmmmmmmmmmmnnnnnnnnnnooooooooooppppppppppqqqqqqqqqqrrrrrrrrrrssssssssssttttttttttuuuuuuuuuuvvvvvvvvvvwwwwwwwwwwxxxxxxxxxxyyyyyyyyyyzzzzzzzzzzyyyyyyyyyyxxxxxxxxxxwwwwwwwwwwvvvvvvvvvvuuuuuuuuuuttttttttttssssssssssrrrrrrrrrrqqqqqqqqqqppppppppppoooooooooonnnnnnnnnnmmmmmmmmmmllllllllllkkkkkkkkkkjjjjjjjjjjiiiiiiiiiihhhhhhhhhhggggggggggffffffffffeeeeeeeeeeddddddddddccccccccccbbbbbbbbbbaaaaaaaabbbbbbbbbbccccccccccddddddddddeeeeeeeeeeffffffffffgggggggggghhhhhhhhhhiiiiiiiiiijjjjjjjjjjkkkkkkkkkkllllllllllmmmmmmmmmmnnnnnnnnnnooooooooooppppppppppqqqqqqqqqqrrrrrrrrrrssssssssssttttttttttuuuuuuuuuuvvvvvvvvvvwwwwwwwwwwxxxxxxxxxxyyyyyyyyyyzzzzzzzzzzyyyyyyyyyyxxxxxxxxxxwwwwwwwwwwvvvvvvvvvvuuuuuuuuuuttttttttttssssssssssrrrrrrrrrrqqqqqqqqqqppppppppppoooooooooonnnnnnnnnnmmmmmmmmmmllllllllllkkkkkkkkkkjjjjjjjjjjiiiiiiiiiihhhhhhhhhhggggggggggffffffffffeeeeeeeeeeddddddddddccccccccccbbbbbbbbbbaaaa";
 
 function longestPalindromeSubseq(s) {
   if (s.length === 0) return 0;
 
-  //1. Initialise result matrix for max subsequence
-  let resMatr = new Array(s.length)
-    .fill()
-    .map(() => new Array(s.length).fill(-1));
-  for (let i = 0; i < s.length; i++) {
-    resMatr[i][i] = 1;
-  }
+  // //1. Initialise result matrix for max subsequence
+  // let resMatr = new Array(s.length)
+  //   .fill()
+  //   .map(() => new Array(s.length).fill(-1));
+  // for (let i = 0; i < s.length; i++) {
+  //   resMatr[i][i] = 1;
+  // }
 
-  //2. Start filling it from the last row (s.length - 2, because s.length -1 is already calculated and has one value only)
-  for (let i = s.length - 2; i >= 0; i--) {
-    for (let j = i + 1; j < s.length; j++) {
-      resMatr[i][j] = helperCalcValue(s, resMatr, i, j);
+  // //2. Start filling it from the last row (s.length - 2, because s.length -1 is already calculated and has one value only)
+  // // for (let i = s.length - 2; i >= 0; i--) {
+  // //   for (let j = i + 1; j < s.length; j++) {
+  // //     resMatr[i][j] = helperCalcValue(s, resMatr, i, j);
+  // //   }
+  // // }
+
+  // //Way 2
+  // let level = s.length - 2;
+  // let j = 1;
+
+  // while (level >= 0) {
+  //   for (let i = 0; i <= level; i++) {
+  //     for (let y = j; y < s.length; y++) {
+  //       //do calculations
+
+  //       if (s[i] === s[y]) {
+  //         if (y - i === 1) resMatr[i][y] = 2;
+  //         if (y - i > 1) resMatr[i][y] = 2 + resMatr[i + 1][y - 1];
+  //       }
+
+  //       if (s[i] !== s[y]) {
+  //         if (y - i === 1) resMatr[i][y] = 1;
+  //         if (y - i > 1) {
+  //           resMatr[i][y] = Math.max(resMatr[i + 1][y], resMatr[i][y - 1]);
+  //         }
+  //       }
+  //     }
+  //   }
+
+  //   j++;
+  //   level--;
+  // }
+
+  // console.log(resMatr);
+
+  // return resMatr[0][s.length - 1];
+
+  //Way 3
+  const n = s.length;
+  const dp = Array(n).fill(0);
+  for (let i = n - 1; i >= 0; i--) {
+    let prev = 0;
+    for (let j = i; j < n; j++) {
+      let temp = dp[j];
+      if (i === j) {
+        dp[j] = 1;
+      } else if (s[i] === s[j]) {
+        dp[j] = prev + 2;
+      } else {
+        dp[j] = Math.max(dp[j], dp[j - 1]);
+      }
+      prev = temp;
     }
   }
-
-  console.log(resMatr);
-
-  return resMatr[0][s.length - 1];
+  return dp[n - 1];
 }
 
 function helperCalcValue(s, resMatr, i, j) {
@@ -4062,4 +4111,7 @@ function helperCalcValue(s, resMatr, i, j) {
   return res;
 }
 
+console.log(longestPalindromeSubseq(s));
+console.log(longestPalindromeSubseq(s1));
 console.log(longestPalindromeSubseq(s3));
+console.log(longestPalindromeSubseq(s4));
