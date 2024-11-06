@@ -4017,101 +4017,145 @@ import {
 // ----- LeetCode 516. Longest Palindromic Subsequence -----
 // -----  -----
 
-const s = "bbbab"; //expected 4
-const s1 = "girafarig"; //expected 9
-const s3 = "azertyuiopqsdfghjklmwxcvbn"; //1
-const s2 =
-  "azaearatayauaiaoapaqasadafagahajakalamawaxacavabanaazaearatayauaiaoapaqasadafagahajakalamawaxacavabananab";
-const s4 =
-  "aaaabbbbbbbbbbccccccccccddddddddddeeeeeeeeeeffffffffffgggggggggghhhhhhhhhhiiiiiiiiiijjjjjjjjjjkkkkkkkkkkllllllllllmmmmmmmmmmnnnnnnnnnnooooooooooppppppppppqqqqqqqqqqrrrrrrrrrrssssssssssttttttttttuuuuuuuuuuvvvvvvvvvvwwwwwwwwwwxxxxxxxxxxyyyyyyyyyyzzzzzzzzzzyyyyyyyyyyxxxxxxxxxxwwwwwwwwwwvvvvvvvvvvuuuuuuuuuuttttttttttssssssssssrrrrrrrrrrqqqqqqqqqqppppppppppoooooooooonnnnnnnnnnmmmmmmmmmmllllllllllkkkkkkkkkkjjjjjjjjjjiiiiiiiiiihhhhhhhhhhggggggggggffffffffffeeeeeeeeeeddddddddddccccccccccbbbbbbbbbbaaaaaaaabbbbbbbbbbccccccccccddddddddddeeeeeeeeeeffffffffffgggggggggghhhhhhhhhhiiiiiiiiiijjjjjjjjjjkkkkkkkkkkllllllllllmmmmmmmmmmnnnnnnnnnnooooooooooppppppppppqqqqqqqqqqrrrrrrrrrrssssssssssttttttttttuuuuuuuuuuvvvvvvvvvvwwwwwwwwwwxxxxxxxxxxyyyyyyyyyyzzzzzzzzzzyyyyyyyyyyxxxxxxxxxxwwwwwwwwwwvvvvvvvvvvuuuuuuuuuuttttttttttssssssssssrrrrrrrrrrqqqqqqqqqqppppppppppoooooooooonnnnnnnnnnmmmmmmmmmmllllllllllkkkkkkkkkkjjjjjjjjjjiiiiiiiiiihhhhhhhhhhggggggggggffffffffffeeeeeeeeeeddddddddddccccccccccbbbbbbbbbbaaaa";
+// const s = "bbbab"; //expected 4
+// const s1 = "girafarig"; //expected 9
+// const s3 = "azertyuiopqsdfghjklmwxcvbn"; //1
+// const s2 =
+//   "azaearatayauaiaoapaqasadafagahajakalamawaxacavabanaazaearatayauaiaoapaqasadafagahajakalamawaxacavabananab";
+// const s4 =
+//   "aaaabbbbbbbbbbccccccccccddddddddddeeeeeeeeeeffffffffffgggggggggghhhhhhhhhhiiiiiiiiiijjjjjjjjjjkkkkkkkkkkllllllllllmmmmmmmmmmnnnnnnnnnnooooooooooppppppppppqqqqqqqqqqrrrrrrrrrrssssssssssttttttttttuuuuuuuuuuvvvvvvvvvvwwwwwwwwwwxxxxxxxxxxyyyyyyyyyyzzzzzzzzzzyyyyyyyyyyxxxxxxxxxxwwwwwwwwwwvvvvvvvvvvuuuuuuuuuuttttttttttssssssssssrrrrrrrrrrqqqqqqqqqqppppppppppoooooooooonnnnnnnnnnmmmmmmmmmmllllllllllkkkkkkkkkkjjjjjjjjjjiiiiiiiiiihhhhhhhhhhggggggggggffffffffffeeeeeeeeeeddddddddddccccccccccbbbbbbbbbbaaaaaaaabbbbbbbbbbccccccccccddddddddddeeeeeeeeeeffffffffffgggggggggghhhhhhhhhhiiiiiiiiiijjjjjjjjjjkkkkkkkkkkllllllllllmmmmmmmmmmnnnnnnnnnnooooooooooppppppppppqqqqqqqqqqrrrrrrrrrrssssssssssttttttttttuuuuuuuuuuvvvvvvvvvvwwwwwwwwwwxxxxxxxxxxyyyyyyyyyyzzzzzzzzzzyyyyyyyyyyxxxxxxxxxxwwwwwwwwwwvvvvvvvvvvuuuuuuuuuuttttttttttssssssssssrrrrrrrrrrqqqqqqqqqqppppppppppoooooooooonnnnnnnnnnmmmmmmmmmmllllllllllkkkkkkkkkkjjjjjjjjjjiiiiiiiiiihhhhhhhhhhggggggggggffffffffffeeeeeeeeeeddddddddddccccccccccbbbbbbbbbbaaaa";
 
-function longestPalindromeSubseq(s) {
-  if (s.length === 0) return 0;
+// function longestPalindromeSubseq(s) {
+//   if (s.length === 0) return 0;
 
-  // //1. Initialise result matrix for max subsequence
-  // let resMatr = new Array(s.length)
-  //   .fill()
-  //   .map(() => new Array(s.length).fill(-1));
-  // for (let i = 0; i < s.length; i++) {
-  //   resMatr[i][i] = 1;
-  // }
+//   // //1. Initialise result matrix for max subsequence
+//   // let resMatr = new Array(s.length)
+//   //   .fill()
+//   //   .map(() => new Array(s.length).fill(-1));
+//   // for (let i = 0; i < s.length; i++) {
+//   //   resMatr[i][i] = 1;
+//   // }
 
-  // //2. Start filling it from the last row (s.length - 2, because s.length -1 is already calculated and has one value only)
-  // // for (let i = s.length - 2; i >= 0; i--) {
-  // //   for (let j = i + 1; j < s.length; j++) {
-  // //     resMatr[i][j] = helperCalcValue(s, resMatr, i, j);
-  // //   }
-  // // }
+//   // //2. Start filling it from the last row (s.length - 2, because s.length -1 is already calculated and has one value only)
+//   // // for (let i = s.length - 2; i >= 0; i--) {
+//   // //   for (let j = i + 1; j < s.length; j++) {
+//   // //     resMatr[i][j] = helperCalcValue(s, resMatr, i, j);
+//   // //   }
+//   // // }
 
-  // //Way 2
-  // let level = s.length - 2;
-  // let j = 1;
+//   // //Way 2
+//   // let level = s.length - 2;
+//   // let j = 1;
 
-  // while (level >= 0) {
-  //   for (let i = 0; i <= level; i++) {
-  //     for (let y = j; y < s.length; y++) {
-  //       //do calculations
+//   // while (level >= 0) {
+//   //   for (let i = 0; i <= level; i++) {
+//   //     for (let y = j; y < s.length; y++) {
+//   //       //do calculations
 
-  //       if (s[i] === s[y]) {
-  //         if (y - i === 1) resMatr[i][y] = 2;
-  //         if (y - i > 1) resMatr[i][y] = 2 + resMatr[i + 1][y - 1];
-  //       }
+//   //       if (s[i] === s[y]) {
+//   //         if (y - i === 1) resMatr[i][y] = 2;
+//   //         if (y - i > 1) resMatr[i][y] = 2 + resMatr[i + 1][y - 1];
+//   //       }
 
-  //       if (s[i] !== s[y]) {
-  //         if (y - i === 1) resMatr[i][y] = 1;
-  //         if (y - i > 1) {
-  //           resMatr[i][y] = Math.max(resMatr[i + 1][y], resMatr[i][y - 1]);
-  //         }
-  //       }
-  //     }
-  //   }
+//   //       if (s[i] !== s[y]) {
+//   //         if (y - i === 1) resMatr[i][y] = 1;
+//   //         if (y - i > 1) {
+//   //           resMatr[i][y] = Math.max(resMatr[i + 1][y], resMatr[i][y - 1]);
+//   //         }
+//   //       }
+//   //     }
+//   //   }
 
-  //   j++;
-  //   level--;
-  // }
+//   //   j++;
+//   //   level--;
+//   // }
 
-  // console.log(resMatr);
+//   // console.log(resMatr);
 
-  // return resMatr[0][s.length - 1];
+//   // return resMatr[0][s.length - 1];
 
-  //Way 3
-  const n = s.length;
-  const dp = Array(n).fill(0);
-  for (let i = n - 1; i >= 0; i--) {
-    let prev = 0;
-    for (let j = i; j < n; j++) {
-      let temp = dp[j];
-      if (i === j) {
-        dp[j] = 1;
-      } else if (s[i] === s[j]) {
-        dp[j] = prev + 2;
+//   //Way 3
+//   const n = s.length;
+//   const dp = Array(n).fill(0);
+//   for (let i = n - 1; i >= 0; i--) {
+//     let prev = 0;
+//     for (let j = i; j < n; j++) {
+//       let temp = dp[j];
+//       if (i === j) {
+//         dp[j] = 1;
+//       } else if (s[i] === s[j]) {
+//         dp[j] = prev + 2;
+//       } else {
+//         dp[j] = Math.max(dp[j], dp[j - 1]);
+//       }
+//       prev = temp;
+//     }
+//   }
+//   return dp[n - 1];
+// }
+
+// function helperCalcValue(s, resMatr, i, j) {
+//   if (i > j) return 0;
+//   if (i === j) return 1;
+
+//   let res = 0;
+
+//   if (s[i] === s[j]) res = 2 + helperCalcValue(s, resMatr, i + 1, j - 1);
+
+//   if (s[i] !== s[j]) {
+//     const h1 = helperCalcValue(s, resMatr, i + 1, j);
+//     const h2 = helperCalcValue(s, resMatr, i, j - 1);
+//     res = Math.max(h1, h2);
+//   }
+
+//   return res;
+// }
+
+// console.log(longestPalindromeSubseq(s));
+// console.log(longestPalindromeSubseq(s1));
+// console.log(longestPalindromeSubseq(s3));
+// console.log(longestPalindromeSubseq(s4));
+
+// -----  -----
+// ----- Neetcode, LeetCode 115. Distinct Subsequences -----
+// -----  -----
+
+const s = "caaat"; //expected 3
+const t = "cat";
+
+const s1 = "xxyxy"; //expected 5
+const t1 = "xy";
+
+const s2 = "rabbbit"; //expected 3
+const t2 = "rabbit";
+
+const s3 = "babgbag"; //expected 5
+const t3 = "bag";
+
+function numDistinct(s, t) {
+  let prevRow = new Array(s.length + 1);
+
+  prevRow[0] = 0;
+  for (let i = 0; i < s.length; i++) {
+    prevRow[i + 1] = t[0] === s[i] ? 1 + prevRow[i] : prevRow[i];
+  }
+
+  for (let i = 2; i <= t.length; i++) {
+    let curRow = new Array(s.length + 1).fill(0);
+    for (let j = 1; j <= s.length; j++) {
+      if (t[i - 1] === s[j - 1]) {
+        curRow[j] = curRow[j - 1] + prevRow[j - 1];
       } else {
-        dp[j] = Math.max(dp[j], dp[j - 1]);
+        curRow[j] = curRow[j - 1];
       }
-      prev = temp;
     }
-  }
-  return dp[n - 1];
-}
-
-function helperCalcValue(s, resMatr, i, j) {
-  if (i > j) return 0;
-  if (i === j) return 1;
-
-  let res = 0;
-
-  if (s[i] === s[j]) res = 2 + helperCalcValue(s, resMatr, i + 1, j - 1);
-
-  if (s[i] !== s[j]) {
-    const h1 = helperCalcValue(s, resMatr, i + 1, j);
-    const h2 = helperCalcValue(s, resMatr, i, j - 1);
-    res = Math.max(h1, h2);
+    prevRow = curRow;
   }
 
-  return res;
+  return prevRow[s.length];
 }
 
-console.log(longestPalindromeSubseq(s));
-console.log(longestPalindromeSubseq(s1));
-console.log(longestPalindromeSubseq(s3));
-console.log(longestPalindromeSubseq(s4));
+console.log(numDistinct(s, t));
+console.log(numDistinct(s1, t1));
+console.log(numDistinct(s2, t2));
+console.log(numDistinct(s3, t3));
