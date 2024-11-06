@@ -4120,42 +4120,97 @@ import {
 // ----- Neetcode, LeetCode 115. Distinct Subsequences -----
 // -----  -----
 
-const s = "caaat"; //expected 3
-const t = "cat";
+// const s = "caaat"; //expected 3
+// const t = "cat";
 
-const s1 = "xxyxy"; //expected 5
-const t1 = "xy";
+// const s1 = "xxyxy"; //expected 5
+// const t1 = "xy";
 
-const s2 = "rabbbit"; //expected 3
-const t2 = "rabbit";
+// const s2 = "rabbbit"; //expected 3
+// const t2 = "rabbit";
 
-const s3 = "babgbag"; //expected 5
-const t3 = "bag";
+// const s3 = "babgbag"; //expected 5
+// const t3 = "bag";
 
-function numDistinct(s, t) {
-  let prevRow = new Array(s.length + 1);
+// function numDistinct(s, t) {
+//   let prevRow = new Array(s.length + 1);
 
-  prevRow[0] = 0;
-  for (let i = 0; i < s.length; i++) {
-    prevRow[i + 1] = t[0] === s[i] ? 1 + prevRow[i] : prevRow[i];
-  }
+//   prevRow[0] = 0;
+//   for (let i = 0; i < s.length; i++) {
+//     prevRow[i + 1] = t[0] === s[i] ? 1 + prevRow[i] : prevRow[i];
+//   }
 
-  for (let i = 2; i <= t.length; i++) {
-    let curRow = new Array(s.length + 1).fill(0);
-    for (let j = 1; j <= s.length; j++) {
-      if (t[i - 1] === s[j - 1]) {
-        curRow[j] = curRow[j - 1] + prevRow[j - 1];
-      } else {
-        curRow[j] = curRow[j - 1];
-      }
-    }
-    prevRow = curRow;
-  }
+//   for (let i = 2; i <= t.length; i++) {
+//     let curRow = new Array(s.length + 1).fill(0);
+//     for (let j = 1; j <= s.length; j++) {
+//       if (t[i - 1] === s[j - 1]) {
+//         curRow[j] = curRow[j - 1] + prevRow[j - 1];
+//       } else {
+//         curRow[j] = curRow[j - 1];
+//       }
+//     }
+//     prevRow = curRow;
+//   }
 
-  return prevRow[s.length];
-}
+//   return prevRow[s.length];
+// }
 
-console.log(numDistinct(s, t));
-console.log(numDistinct(s1, t1));
-console.log(numDistinct(s2, t2));
-console.log(numDistinct(s3, t3));
+// console.log(numDistinct(s, t));
+// console.log(numDistinct(s1, t1));
+// console.log(numDistinct(s2, t2));
+// console.log(numDistinct(s3, t3));
+
+// -----  -----
+// ----- Neetcode, LeetCode 72. Edit Distance -----
+// -----  -----
+
+// const word1 = "horse"; //expected 3
+// const word2 = "ros";
+
+// const word11 = "intention"; //expected 5
+// const word21 = "execution";
+
+// const word12 = "monkeys"; //expetced 2
+// const word22 = "money";
+
+// const word13 = "neatcdee"; //expected 3
+// const word23 = "neetcode";
+
+// function minDistance(s, t) {
+//   if (s.length === 0 && t.length === 0) return 0;
+//   if (s.length !== 0 && t.length === 0) return s.length;
+//   if (t.length !== 0 && s.length === 0) return t.length;
+
+//   let prevRow = new Array(s.length + 1);
+
+//   //Initial state for first char in t
+//   prevRow[0] = 0;
+//   for (let i = 0; i < s.length; i++) {
+//     prevRow[i + 1] = t[0] !== s[i] ? 1 + prevRow[i] : prevRow[i];
+//   }
+//   prevRow[0] = 1;
+
+//   //Calculate starting from char 2 in string to compare - t, i = 1
+//   for (let i = 1; i < t.length; i++) {
+//     let curRow = new Array(s.length + 1);
+//     curRow[0] = i + 1;
+
+//     for (let j = 1; j <= s.length; j++) {
+//       if (t[i] === s[j - 1]) {
+//         curRow[j] = prevRow[j - 1];
+//       } else {
+//         curRow[j] =
+//           1 + Math.min(prevRow[j - 1], Math.min(curRow[j - 1], prevRow[j]));
+//       }
+//     }
+//     prevRow = curRow;
+//     // console.log(prevRow);
+//   }
+
+//   return prevRow[s.length];
+// }
+
+// console.log(minDistance(word1, word2)); //3
+// console.log(minDistance(word11, word21)); //5
+// console.log(minDistance(word12, word22)); //2
+// console.log(minDistance(word13, word23)); //3
