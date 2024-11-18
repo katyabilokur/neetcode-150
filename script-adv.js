@@ -4216,7 +4216,7 @@ import {
 // console.log(minDistance(word13, word23)); //3
 
 // -----  -----
-// ----- Neetcode, LeetCode 1092. Shortest Common Supersequence  -----
+// ----- LeetCode 1092. Shortest Common Supersequence  -----
 // -----  -----
 
 //output 'cabac'
@@ -4229,7 +4229,7 @@ const str11 = "cccababab";
 const str12 = "aaaaaaaa"; //aaaaaaaa
 const str22 = "aaaaaaaa";
 
-const str23 = "bbbaaaba"; //expected bbbaaababbb bbbabaabbba
+const str23 = "bbbaaaba"; //expected bbbaaababbb bbbabaabbba //bbabaaababb
 const str13 = "bbababbb";
 
 const str14 =
@@ -4238,88 +4238,84 @@ const str24 =
   "dddbbdcbccaccbababaacbcbacdddcdabadcacddbacadabdabcdbaaabaccbdaa";
 
 function shortestCommonSupersequence(str2, str1) {
-  // let prevRow = new Array(str1.length + 1).fill(0);
-  // let longestSubseq = new Array(str2.length).fill(-1);
-  // let curMaxCommonChars = 0;
+  //Step 1. Build subsequence matrix to find common chars
 
-  // for (let i = 0; i < str1.length; i++) {
-  //   let curRow = new Array(str2.length + 1).fill(0);
-  //   for (let j = 0; j < str2.length; j++) {
-  //     if (str1[i] === str2[j]) {
-  //       curRow[j + 1] = 1 + prevRow[j];
+  let matr = new Array(str1.length + 1)
+    .fill()
+    .map(() => new Array(str2.length + 1).fill(0));
 
-  //       //Saving best chars for common sequence
-  //       if (curRow[j + 1] > curMaxCommonChars) {
-  //         curMaxCommonChars = curRow[j + 1];
-  //         if (longestSubseq[j] === -1 || longestSubseq[j] > j)
-  //           longestSubseq[j] = curRow[j + 1];
-  //       }
-  //     } else {
-  //       curRow[j + 1] = Math.max(prevRow[j + 1], curRow[j]);
-  //     }
-  //   }
-  //   prevRow = curRow;
-  //   console.log(prevRow);
-  // }
-
-  // //compose common sub-sequence array
-  // // const longArr = new Array(prevRow[str2.length]);
-  // const longArr = new Array();
-  // for (let i = 0; i < longestSubseq.length; i++) {
-  //   if (longestSubseq[i] !== -1) {
-  //     longArr.push(str2[i]);
-  //     // longArr[longestSubseq[i] - 1] = str2[longestSubseq[i] - 1];
-  //   }
-  // }
-
-  // console.log("-----");
-  // console.log(longestSubseq);
-  // console.log(longArr);
-  //return prevRow[str2.length];
-
-  //WAY 2 - WORKING algorithm that gives TLE. Fix the one above to get faster solution
-  //1. Find the longest common subsequence
-  let prevRow = new Array(str2.length + 1).fill().map(() => new Array());
+  let curMaxCommonChars = 0;
+  let lastCommonIJ = { i: -1, j: -1 };
 
   for (let i = 0; i < str1.length; i++) {
-    let curRow = new Array(str2.length + 1).fill().map(() => new Array());
-
     for (let j = 0; j < str2.length; j++) {
       if (str1[i] === str2[j]) {
-        if (prevRow[j].length === 0) {
-          curRow[j + 1].push(str1[i]);
-        } else {
-          let elements = [...prevRow[j]];
-          for (let y = 0; y < elements.length; y++) {
-            elements[y] += str1[i];
-          }
-          curRow[j + 1] = Array.from(new Set(elements));
+        matr[i + 1][j + 1] = 1 + matr[i][j];
+
+        //Saving best last char for common sequence to do backtracking later
+        if (matr[i + 1][j + 1] > curMaxCommonChars) {
+          curMaxCommonChars = matr[i + 1][j + 1];
+          lastCommonIJ.i = i;
+          lastCommonIJ.j = j;
         }
       } else {
-        if (prevRow[j + 1].length === 0) {
-          curRow[j + 1] = [...curRow[j]];
-        } else if (curRow[j].length === 0) {
-          curRow[j + 1] = [...prevRow[j + 1]];
-        } else {
-          //keep all valid subsequences
-          curRow[j + 1].push(...prevRow[j + 1]);
-          curRow[j + 1].push(...curRow[j]);
-          curRow[j + 1] = Array.from(new Set(curRow[j + 1]));
-        }
+        matr[i + 1][j + 1] = Math.max(matr[i][j + 1], matr[i + 1][j]);
       }
     }
-    prevRow = curRow;
   }
-  console.log(prevRow[str2.length]);
 
-  const longest = prevRow[str2.length].reduce(function (a, b) {
-    return a.length > b.length ? a : b;
-  });
-  console.log(longest);
+  if (curMaxCommonChars === 0) return str1.concat(str2);
+  //Otherwise, do calculations
 
-  //2. Run through both strings and add common letters once but unique subsets separatelly
+  let longArr = [str1[lastCommonIJ.i]];
+  curMaxCommonChars--;
+
+  //Step 2. Do backtracking and compose best common subsequence
+  while (curMaxCommonChars > 0) {
+    //if corner is the one we need, move there.
+    if (
+      matr[lastCommonIJ.i - 1][lastCommonIJ.j - 1] === curMaxCommonChars &&
+      matr[lastCommonIJ.i - 1][lastCommonIJ.j - 1] >=
+        matr[lastCommonIJ.i][lastCommonIJ.j - 1] &&
+      matr[lastCommonIJ.i - 1][lastCommonIJ.j - 1] >=
+        matr[lastCommonIJ.i - 1][lastCommonIJ.j]
+    ) {
+      lastCommonIJ.i--;
+      lastCommonIJ.j--;
+      continue;
+    } else {
+      //if all top are less, we found a corner, move there, add a char to the result
+      if (
+        matr[lastCommonIJ.i - 1][lastCommonIJ.j - 1] ===
+          curMaxCommonChars - 1 &&
+        matr[lastCommonIJ.i - 1][lastCommonIJ.j] === curMaxCommonChars - 1 &&
+        matr[lastCommonIJ.i][lastCommonIJ.j - 1] === curMaxCommonChars - 1
+      ) {
+        longArr.unshift(str1[lastCommonIJ.i - 1]);
+        curMaxCommonChars--;
+        lastCommonIJ.i--;
+        lastCommonIJ.j--;
+        continue;
+      }
+      // Otherwise move up
+      if (
+        matr[lastCommonIJ.i - 1][lastCommonIJ.j - 1] ===
+          curMaxCommonChars - 1 &&
+        matr[lastCommonIJ.i - 1][lastCommonIJ.j] === curMaxCommonChars
+      ) {
+        lastCommonIJ.i--;
+        //Move left
+      } else {
+        lastCommonIJ.j--;
+      }
+    }
+  }
+
+  // console.log(longArr);
+
+  //Step 3. Run through both strings and add common letters once but unique subsets separatelly
   let res = "";
-  let longArr = longest.split("");
+  // let longArr = longest.split("");
   let str1Arr = str1.split("");
   let str2Arr = str2.split("");
 
