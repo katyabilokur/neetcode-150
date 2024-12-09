@@ -54,6 +54,7 @@ import { Heap } from "heap-js";
 //     while (cur) {
 //       next = cur.next;
 //       cur.next = prev;
+//      //cur.prev = cur.next; //NOTE: add this line to the task for reversing double linked list
 
 //       prev = cur;
 //       cur = next;

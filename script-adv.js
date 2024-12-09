@@ -4220,131 +4220,136 @@ import {
 // -----  -----
 
 //output 'cabac'
-const str1 = "abac";
-const str2 = "cab";
+// const str1 = "abac";
+// const str2 = "cab";
 
-const str21 = "bbabacaa";
-const str11 = "cccababab";
+// const str21 = "bbabacaa";
+// const str11 = "cccababab";
 
-const str12 = "aaaaaaaa"; //aaaaaaaa
-const str22 = "aaaaaaaa";
+// const str12 = "aaaaaaaa"; //aaaaaaaa
+// const str22 = "aaaaaaaa";
 
-const str23 = "bbbaaaba"; //expected bbbaaababbb bbbabaabbba //bbabaaababb
-const str13 = "bbababbb";
+// const str23 = "bbbaaaba"; //expected bbbaaababbb bbbabaabbba //bbabaaababb
+// const str13 = "bbababbb";
 
-const str14 =
-  "bcaaacbbbcbdcaddadcacbdddcdcccdadadcbabaccbccdcdcbcaccacbbdcbabb";
-const str24 =
-  "dddbbdcbccaccbababaacbcbacdddcdabadcacddbacadabdabcdbaaabaccbdaa";
+// const str14 =
+//   "bcaaacbbbcbdcaddadcacbdddcdcccdadadcbabaccbccdcdcbcaccacbbdcbabb";
+// const str24 =
+//   "dddbbdcbccaccbababaacbcbacdddcdabadcacddbacadabdabcdbaaabaccbdaa";
 
-function shortestCommonSupersequence(str2, str1) {
-  //Step 1. Build subsequence matrix to find common chars
+// function shortestCommonSupersequence(str2, str1) {
+//   //Step 1. Build subsequence matrix to find common chars
 
-  let matr = new Array(str1.length + 1)
-    .fill()
-    .map(() => new Array(str2.length + 1).fill(0));
+//   let matr = new Array(str1.length + 1)
+//     .fill()
+//     .map(() => new Array(str2.length + 1).fill(0));
 
-  let curMaxCommonChars = 0;
-  let lastCommonIJ = { i: -1, j: -1 };
+//   let curMaxCommonChars = 0;
+//   let lastCommonIJ = { i: -1, j: -1 };
 
-  for (let i = 0; i < str1.length; i++) {
-    for (let j = 0; j < str2.length; j++) {
-      if (str1[i] === str2[j]) {
-        matr[i + 1][j + 1] = 1 + matr[i][j];
+//   for (let i = 0; i < str1.length; i++) {
+//     for (let j = 0; j < str2.length; j++) {
+//       if (str1[i] === str2[j]) {
+//         matr[i + 1][j + 1] = 1 + matr[i][j];
 
-        //Saving best last char for common sequence to do backtracking later
-        if (matr[i + 1][j + 1] > curMaxCommonChars) {
-          curMaxCommonChars = matr[i + 1][j + 1];
-          lastCommonIJ.i = i;
-          lastCommonIJ.j = j;
-        }
-      } else {
-        matr[i + 1][j + 1] = Math.max(matr[i][j + 1], matr[i + 1][j]);
-      }
-    }
-  }
+//         //Saving best last char for common sequence to do backtracking later
+//         if (matr[i + 1][j + 1] > curMaxCommonChars) {
+//           curMaxCommonChars = matr[i + 1][j + 1];
+//           lastCommonIJ.i = i;
+//           lastCommonIJ.j = j;
+//         }
+//       } else {
+//         matr[i + 1][j + 1] = Math.max(matr[i][j + 1], matr[i + 1][j]);
+//       }
+//     }
+//   }
 
-  if (curMaxCommonChars === 0) return str1.concat(str2);
-  //Otherwise, do calculations
+//   if (curMaxCommonChars === 0) return str1.concat(str2);
+//   //Otherwise, do calculations
 
-  let longArr = [str1[lastCommonIJ.i]];
-  curMaxCommonChars--;
+//   let longArr = [str1[lastCommonIJ.i]];
+//   curMaxCommonChars--;
 
-  //Step 2. Do backtracking and compose best common subsequence
-  while (curMaxCommonChars > 0) {
-    //if corner is the one we need, move there.
-    if (
-      matr[lastCommonIJ.i - 1][lastCommonIJ.j - 1] === curMaxCommonChars &&
-      matr[lastCommonIJ.i - 1][lastCommonIJ.j - 1] >=
-        matr[lastCommonIJ.i][lastCommonIJ.j - 1] &&
-      matr[lastCommonIJ.i - 1][lastCommonIJ.j - 1] >=
-        matr[lastCommonIJ.i - 1][lastCommonIJ.j]
-    ) {
-      lastCommonIJ.i--;
-      lastCommonIJ.j--;
-      continue;
-    } else {
-      //if all top are less, we found a corner, move there, add a char to the result
-      if (
-        matr[lastCommonIJ.i - 1][lastCommonIJ.j - 1] ===
-          curMaxCommonChars - 1 &&
-        matr[lastCommonIJ.i - 1][lastCommonIJ.j] === curMaxCommonChars - 1 &&
-        matr[lastCommonIJ.i][lastCommonIJ.j - 1] === curMaxCommonChars - 1
-      ) {
-        longArr.unshift(str1[lastCommonIJ.i - 1]);
-        curMaxCommonChars--;
-        lastCommonIJ.i--;
-        lastCommonIJ.j--;
-        continue;
-      }
-      // Otherwise move up
-      if (
-        matr[lastCommonIJ.i - 1][lastCommonIJ.j - 1] ===
-          curMaxCommonChars - 1 &&
-        matr[lastCommonIJ.i - 1][lastCommonIJ.j] === curMaxCommonChars
-      ) {
-        lastCommonIJ.i--;
-        //Move left
-      } else {
-        lastCommonIJ.j--;
-      }
-    }
-  }
+//   //Step 2. Do backtracking and compose best common subsequence
+//   while (curMaxCommonChars > 0) {
+//     //if corner is the one we need, move there.
+//     if (
+//       matr[lastCommonIJ.i - 1][lastCommonIJ.j - 1] === curMaxCommonChars &&
+//       matr[lastCommonIJ.i - 1][lastCommonIJ.j - 1] >=
+//         matr[lastCommonIJ.i][lastCommonIJ.j - 1] &&
+//       matr[lastCommonIJ.i - 1][lastCommonIJ.j - 1] >=
+//         matr[lastCommonIJ.i - 1][lastCommonIJ.j]
+//     ) {
+//       lastCommonIJ.i--;
+//       lastCommonIJ.j--;
+//       continue;
+//     } else {
+//       //if all top are less, we found a corner, move there, add a char to the result
+//       if (
+//         matr[lastCommonIJ.i - 1][lastCommonIJ.j - 1] ===
+//           curMaxCommonChars - 1 &&
+//         matr[lastCommonIJ.i - 1][lastCommonIJ.j] === curMaxCommonChars - 1 &&
+//         matr[lastCommonIJ.i][lastCommonIJ.j - 1] === curMaxCommonChars - 1
+//       ) {
+//         longArr.unshift(str1[lastCommonIJ.i - 1]);
+//         curMaxCommonChars--;
+//         lastCommonIJ.i--;
+//         lastCommonIJ.j--;
+//         continue;
+//       }
+//       // Otherwise move up
+//       if (
+//         matr[lastCommonIJ.i - 1][lastCommonIJ.j - 1] ===
+//           curMaxCommonChars - 1 &&
+//         matr[lastCommonIJ.i - 1][lastCommonIJ.j] === curMaxCommonChars
+//       ) {
+//         lastCommonIJ.i--;
+//         //Move left
+//       } else {
+//         lastCommonIJ.j--;
+//       }
+//     }
+//   }
 
-  // console.log(longArr);
+//   // console.log(longArr);
 
-  //Step 3. Run through both strings and add common letters once but unique subsets separatelly
-  let res = "";
-  // let longArr = longest.split("");
-  let str1Arr = str1.split("");
-  let str2Arr = str2.split("");
+//   //Step 3. Run through both strings and add common letters once but unique subsets separatelly
+//   let res = "";
+//   // let longArr = longest.split("");
+//   let str1Arr = str1.split("");
+//   let str2Arr = str2.split("");
 
-  longArr.forEach((charCommon) => {
-    let c1 = 0;
-    let c2 = 0;
+//   longArr.forEach((charCommon) => {
+//     let c1 = 0;
+//     let c2 = 0;
 
-    for (let i = 0; i < str1Arr.length; i++) {
-      if (str1Arr[i] !== charCommon) {
-        c1++;
-        res = res.concat(str1Arr[i]);
-      } else break;
-    }
-    for (let i = 0; i < str2Arr.length; i++) {
-      if (str2Arr[i] !== charCommon) {
-        c2++;
-        res = res.concat(str2Arr[i]);
-      } else break;
-    }
+//     for (let i = 0; i < str1Arr.length; i++) {
+//       if (str1Arr[i] !== charCommon) {
+//         c1++;
+//         res = res.concat(str1Arr[i]);
+//       } else break;
+//     }
+//     for (let i = 0; i < str2Arr.length; i++) {
+//       if (str2Arr[i] !== charCommon) {
+//         c2++;
+//         res = res.concat(str2Arr[i]);
+//       } else break;
+//     }
 
-    res = res.concat(charCommon);
-    str1Arr.splice(0, c1 + 1);
-    str2Arr.splice(0, c2 + 1);
-  });
+//     res = res.concat(charCommon);
+//     str1Arr.splice(0, c1 + 1);
+//     str2Arr.splice(0, c2 + 1);
+//   });
 
-  res = res.concat(str1Arr.join(""));
-  res = res.concat(str2Arr.join(""));
+//   res = res.concat(str1Arr.join(""));
+//   res = res.concat(str2Arr.join(""));
 
-  return res;
-}
+//   return res;
+// }
 
-console.log(shortestCommonSupersequence(str14, str24));
+// console.log(shortestCommonSupersequence(str14, str24));
+
+
+// -----  -----
+// ----- LeetCode . -----
+// -----  -----
