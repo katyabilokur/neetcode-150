@@ -274,8 +274,21 @@ class MinHeap {
     return min;
   }
 
-  _heapifyUp() {
-    let idx = this.size() - 1;
+  delete(el) {
+    const idx = this.store.indexOf(el);
+    if (idx === -1) return false; // Element not found
+
+    const last = this.store.pop();
+    if (idx < this.size()) {
+      this.store[idx] = last;
+      this._heapifyDown(idx);
+      this._heapifyUp(idx);
+    }
+    return true;
+  }
+
+  _heapifyUp(startIdx = this.size() - 1) {
+    let idx = startIdx;
     while (idx > 0) {
       const parentIdx = (idx - 1) >> 1; // Faster division
       if (this.store[idx] >= this.store[parentIdx]) break;
@@ -287,8 +300,8 @@ class MinHeap {
     }
   }
 
-  _heapifyDown() {
-    let idx = 0;
+  _heapifyDown(startIdx = 0) {
+    let idx = startIdx;
     const size = this.size();
 
     while (true) {
@@ -412,34 +425,34 @@ class MinHeap {
 // 2 4
 // 3`;
 
-// const input1 = `
-// 1 10
-// 1 9
-// 3
-// 1 3
-// 3
-// 2 9
-// 3
-// 2 3
-// 3
-// 1 5
-// 1 2
-// 3`;
+const input1 = `
+1 10
+1 9
+3
+1 3
+3
+2 9
+3
+2 3
+3
+1 5
+1 2
+3`;
 
-// function processData(input) {
-//   let heap = new MinHeap();
+function processData(input) {
+  let heap = new MinHeap();
 
-//   const inputData = input.split(/\r?\n/);
-//   inputData.forEach((line) => {
-//     const lineInput = line.split(" ");
+  const inputData = input.split(/\r?\n/);
+  inputData.forEach((line) => {
+    const lineInput = line.split(" ");
 
-//     if (+lineInput[0] === 1) heap.enqueue(lineInput[1]);
-//     if (+lineInput[0] === 2) heap.dequeue();
-//     if (+lineInput[0] === 3) console.log(heap.front());
-//   });
-// }
+    if (+lineInput[0] === 1) heap.enqueue(+lineInput[1]);
+    if (+lineInput[0] === 2) heap.delete(+lineInput[1]);
+    if (+lineInput[0] === 3) console.log(heap.front());
+  });
+}
 
-//processData(input1);
+processData(input1);
 
 //TEST 1 Visit all petrolium stations (solution 1 has a bug)
 // const petrolpumps = [
@@ -484,8 +497,8 @@ class MinHeap {
 //     let pumpCount = 0;
 
 //     while (true) {
-//       if (pumpCount === size) return i; 
-//       if (tank < 0) break; 
+//       if (pumpCount === size) return i;
+//       if (tank < 0) break;
 
 //       tank += petrolpumps[position % petrolpumps.length][0] - petrolpumps[position % petrolpumps.length][1];
 
