@@ -259,6 +259,16 @@ class MinHeap {
     return this.store[0];
   }
 
+  secondFront() {
+    if (this.size() < 2) return null;
+    const left = 1;
+    const right = 2;
+    if (right < this.size()) {
+      return Math.max(this.store[left], this.store[right]);
+    }
+    return this.store[left];
+  }
+
   enqueue(el) {
     this.store.push(el);
     this._heapifyUp();
@@ -329,69 +339,91 @@ class MinHeap {
 //NOTE: Max heap is not verified. Min is working
 // class MaxHeap {
 //   constructor() {
-//       this.store = [];
+//     this.store = [];
 //   }
 
 //   size() {
-//       return this.store.length;
+//     return this.store.length;
 //   }
 
 //   front() {
-//       return this.store[0];
+//     return this.store[0];
 //   }
 
 //   enqueue(el) {
-//       this.store.push(el);
-//       this._heapifyUp();
+//     this.store.push(el);
+//     this._heapifyUp();
 //   }
 
 //   dequeue() {
-//       if (this.size() === 0) return null;
-//       const max = this.store[0];
-//       const last = this.store.pop();
-//       if (this.size() > 0) {
-//           this.store[0] = last;
-//           this._heapifyDown();
-//       }
-//       return max;
+//     const max = this.store[0];
+//     const last = this.store.pop();
+//     if (this.size() > 0) {
+//       this.store[0] = last;
+//       this._heapifyDown();
+//     }
+//     return max;
 //   }
 
-//   _heapifyUp() {
-//       let idx = this.size() - 1;
-//       while (idx > 0) {
-//           const parentIdx = (idx - 1) >> 1;  // Faster division by 2
-//           if (this.store[idx] <= this.store[parentIdx]) break;
-//           [this.store[idx], this.store[parentIdx]] = [this.store[parentIdx], this.store[idx]];
-//           idx = parentIdx;
-//       }
+//   delete(el) {
+//     const idx = this.store.indexOf(el);
+//     if (idx === -1) return false; // Element not found
+
+//     const last = this.store.pop();
+//     if (idx < this.size()) {
+//       this.store[idx] = last;
+//       this._heapifyDown(idx);
+//       this._heapifyUp(idx);
+//     }
+//     return true;
 //   }
 
-//   _heapifyDown() {
-//       let idx = 0;
-//       const size = this.size();
+//   _heapifyUp(startIdx = this.size() - 1) {
+//     let idx = startIdx;
+//     while (idx > 0) {
+//       const parentIdx = (idx - 1) >> 1; // Faster division
+//       if (this.store[idx] <= this.store[parentIdx]) break;
+//       [this.store[idx], this.store[parentIdx]] = [
+//         this.store[parentIdx],
+//         this.store[idx],
+//       ];
+//       idx = parentIdx;
+//     }
+//   }
 
-//       while (true) {
-//           const left = (idx << 1) + 1;  // 2 * idx + 1
-//           const right = left + 1;       // 2 * idx + 2
-//           let largest = idx;
+//   _heapifyDown(startIdx = 0) {
+//     let idx = startIdx;
+//     const size = this.size();
 
-//           if (left < size && this.store[left] > this.store[largest]) {
-//               largest = left;
-//           }
-//           if (right < size && this.store[right] > this.store[largest]) {
-//               largest = right;
-//           }
-//           if (largest === idx) break;
+//     while (true) {
+//       const left = (idx << 1) + 1; // 2 * idx + 1
+//       const right = left + 1; // 2 * idx + 2
+//       let largest = idx;
 
-//           [this.store[idx], this.store[largest]] = [this.store[largest], this.store[idx]];
-//           idx = largest;
+//       if (left < size && this.store[left] > this.store[largest]) {
+//         largest = left;
 //       }
+//       if (right < size && this.store[right] > this.store[largest]) {
+//         largest = right;
+//       }
+//       if (largest === idx) break;
+
+//       [this.store[idx], this.store[largest]] = [
+//         this.store[largest],
+//         this.store[idx],
+//       ];
+//       idx = largest;
+//     }
 //   }
 // }
 
-// const k = 9;
-// const A = [2, 7, 3, 6, 4, 6];
+const k = 9;
+const A = [2, 7, 3, 6, 4, 6];
 
+const k1 = 10;
+const A1 = [1, 1, 1];
+
+//NOTE: Realisation 1. Works but 4 tests are failing on big data
 // function cookies(k, A) {
 //   let count = 0;
 //   let minHeap = new MinHeap();
@@ -413,7 +445,50 @@ class MinHeap {
 //   return minHeap.front() >= k ? count : -1;
 // }
 
-//console.log(cookies(k, A));
+//NOTE: Realisation 2.
+function cookies(k, A) {
+  let count = 0;
+  let minHeap = new MinHeap();
+  let minTemp = null;
+
+  A.forEach((element) => {
+    minHeap.enqueue(element);
+  });
+
+  while (minHeap.front() < k && minHeap.size() > 1) {
+    // console.log(minHeap.data);
+    const cookie1 = minHeap.dequeue();
+    const cookie2 = minHeap.dequeue();
+    // console.log(`Mix: ${cookie1} and ${cookie2}`);
+
+    const newValue = cookie1 + 2 * cookie2;
+    if (newValue < k) {
+      minHeap.enqueue(newValue);
+    } else {
+      minTemp = minTemp === null ? newValue : Math.min(minTemp, newValue);
+    }
+
+    count++;
+  }
+
+  if (minHeap.size() === 0 || minHeap.front() >= k) return count;
+
+  if (minHeap.size() === 1 && minTemp === null) return -1;
+
+  //calculate a last edge case. minHeap has one element that is < k
+  const lastEl =
+    minHeap.front() < minTemp
+      ? minHeap.front() + 2 * minTemp
+      : minTemp + 2 * minHeap.front();
+  if (lastEl >= k) return ++count;
+
+  return -1;
+
+  // return minHeap.front() >= k ? count : -1;
+}
+
+// console.log(cookies(k, A));
+console.log(cookies(k1, A1));
 
 //-----  -----
 //----- Hackerrank: QHEAP1 -----
@@ -425,34 +500,34 @@ class MinHeap {
 // 2 4
 // 3`;
 
-const input1 = `
-1 10
-1 9
-3
-1 3
-3
-2 9
-3
-2 3
-3
-1 5
-1 2
-3`;
+// const input1 = `
+// 1 10
+// 1 9
+// 3
+// 1 3
+// 3
+// 2 9
+// 3
+// 2 3
+// 3
+// 1 5
+// 1 2
+// 3`;
 
-function processData(input) {
-  let heap = new MinHeap();
+// function processData(input) {
+//   let heap = new MinHeap();
 
-  const inputData = input.split(/\r?\n/);
-  inputData.forEach((line) => {
-    const lineInput = line.split(" ");
+//   const inputData = input.split(/\r?\n/);
+//   inputData.forEach((line) => {
+//     const lineInput = line.split(" ");
 
-    if (+lineInput[0] === 1) heap.enqueue(+lineInput[1]);
-    if (+lineInput[0] === 2) heap.delete(+lineInput[1]);
-    if (+lineInput[0] === 3) console.log(heap.front());
-  });
-}
+//     if (+lineInput[0] === 1) heap.enqueue(+lineInput[1]);
+//     if (+lineInput[0] === 2) heap.delete(+lineInput[1]);
+//     if (+lineInput[0] === 3) console.log(heap.front());
+//   });
+// }
 
-processData(input1);
+// processData(input1);
 
 //TEST 1 Visit all petrolium stations (solution 1 has a bug)
 // const petrolpumps = [
