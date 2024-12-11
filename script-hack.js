@@ -417,78 +417,55 @@ class MinHeap {
 //   }
 // }
 
-const k = 9;
-const A = [2, 7, 3, 6, 4, 6];
+// const k = 9;
+// const A = [2, 7, 3, 6, 4, 6];
 
-const k1 = 10;
-const A1 = [1, 1, 1];
+// const k1 = 10;
+// const A1 = [1, 1, 1];
 
-//NOTE: Realisation 1. Works but 4 tests are failing on big data
 // function cookies(k, A) {
 //   let count = 0;
 //   let minHeap = new MinHeap();
+//   let minTemp = null;
 
 //   A.forEach((element) => {
 //     minHeap.enqueue(element);
 //   });
 
 //   while (minHeap.front() < k && minHeap.size() > 1) {
-//     console.log(minHeap.data);
+//     // console.log(minHeap.data);
 //     const cookie1 = minHeap.dequeue();
 //     const cookie2 = minHeap.dequeue();
-//     console.log(`Mix: ${cookie1} and ${cookie2}`);
+//     // console.log(`Mix: ${cookie1} and ${cookie2}`);
 
-//     minHeap.enqueue(cookie1 + 2 * cookie2);
+//     const newValue = cookie1 + 2 * cookie2;
+//     if (newValue < k) {
+//       minHeap.enqueue(newValue);
+//     } else {
+//       minTemp = minTemp === null ? newValue : Math.min(minTemp, newValue);
+//     }
+
 //     count++;
 //   }
 
-//   return minHeap.front() >= k ? count : -1;
+//   if (minHeap.size() === 0 || minHeap.front() >= k) return count;
+
+//   if (minHeap.size() === 1 && minTemp === null) return -1;
+
+//   //calculate a last edge case. minHeap has one element that is < k
+//   const lastEl =
+//     minHeap.front() < minTemp
+//       ? minHeap.front() + 2 * minTemp
+//       : minTemp + 2 * minHeap.front();
+//   if (lastEl >= k) return ++count;
+
+//   return -1;
+
+//   // return minHeap.front() >= k ? count : -1;
 // }
 
-//NOTE: Realisation 2.
-function cookies(k, A) {
-  let count = 0;
-  let minHeap = new MinHeap();
-  let minTemp = null;
-
-  A.forEach((element) => {
-    minHeap.enqueue(element);
-  });
-
-  while (minHeap.front() < k && minHeap.size() > 1) {
-    // console.log(minHeap.data);
-    const cookie1 = minHeap.dequeue();
-    const cookie2 = minHeap.dequeue();
-    // console.log(`Mix: ${cookie1} and ${cookie2}`);
-
-    const newValue = cookie1 + 2 * cookie2;
-    if (newValue < k) {
-      minHeap.enqueue(newValue);
-    } else {
-      minTemp = minTemp === null ? newValue : Math.min(minTemp, newValue);
-    }
-
-    count++;
-  }
-
-  if (minHeap.size() === 0 || minHeap.front() >= k) return count;
-
-  if (minHeap.size() === 1 && minTemp === null) return -1;
-
-  //calculate a last edge case. minHeap has one element that is < k
-  const lastEl =
-    minHeap.front() < minTemp
-      ? minHeap.front() + 2 * minTemp
-      : minTemp + 2 * minHeap.front();
-  if (lastEl >= k) return ++count;
-
-  return -1;
-
-  // return minHeap.front() >= k ? count : -1;
-}
-
-// console.log(cookies(k, A));
-console.log(cookies(k1, A1));
+// // console.log(cookies(k, A));
+// console.log(cookies(k1, A1));
 
 //-----  -----
 //----- Hackerrank: QHEAP1 -----
@@ -625,3 +602,63 @@ console.log(cookies(k1, A1));
 // }
 
 // console.log(bigSorting(unsorted));
+
+//-----  -----
+//----- Hackerrank: Hackerland Radio Transmitters -----
+//-----  -----
+
+//expected 3
+const k = 1;
+const x = [1, 2, 3, 4, 5, 9];
+
+//expected 2
+const k1 = 1;
+const x1 = [1, 2, 3, 4, 5];
+
+//expected 3
+const k2 = 2;
+const x2 = [7, 2, 4, 6, 5, 9, 12, 11];
+
+function hackerlandRadioTransmitters(x, k) {
+  //Define the Lane/street length
+  const uniqueHouses = [...new Set(x)];
+  const houseLaneLenght = Math.max(...uniqueHouses);
+  let transmitters = 0;
+
+  //Create the initial street with houses setup.
+  //0: no house
+  //1: there is one or more houses
+  let lane = new Array(houseLaneLenght - 1).fill(0);
+  uniqueHouses.forEach((house) => {
+    lane[house - 1] = 1;
+  });
+
+  let curPositionI = 0;
+  while (curPositionI < lane.length) {
+    //1. Find a first house to be covered
+    let firstHouseI = null;
+    for (let i = curPositionI; i < lane.length; i++) {
+      if (lane[i] === 1) {
+        firstHouseI = i;
+        break;
+      }
+    }
+    //2. Find a nearest further house to put the transmitter
+    for (
+      let i = Math.min(firstHouseI + k, lane.length - 1);
+      i >= firstHouseI;
+      i--
+    ) {
+      if (lane[i] === 1) {
+        transmitters++; //House to set a transmitter is defined. Update number of them
+        curPositionI = i + k + 1;
+        break;
+      }
+    }
+  }
+  return transmitters;
+}
+
+console.log(hackerlandRadioTransmitters(x, k));
+console.log(hackerlandRadioTransmitters(x1, k1));
+console.log(hackerlandRadioTransmitters(x2, k2));
