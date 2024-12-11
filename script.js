@@ -1832,3 +1832,17 @@ const node = new TreeNode(50, node30, node70);
 // }
 
 // console.log(longestCommonSubsequence(text1, text2));
+
+// const buttonGroupDiv = document.getElementById("buttonGroup");
+// let buttons = new Array(19);
+
+// for (let i = 1; i <= 20; i++) {
+//   buttons[i] = document.createElement("button");
+//   buttons[i].textContent = i;
+//   buttonGroupDiv.appendChild(buttons[i]);
+
+//   buttons[i].addEventListener("click", () => {
+//     alert(i);
+//   });
+// }
+

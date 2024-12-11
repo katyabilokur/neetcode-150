@@ -607,58 +607,122 @@ class MinHeap {
 //----- Hackerrank: Hackerland Radio Transmitters -----
 //-----  -----
 
-//expected 3
-const k = 1;
-const x = [1, 2, 3, 4, 5, 9];
+// //expected 3
+// const k = 1;
+// const x = [1, 2, 3, 4, 5, 9];
 
-//expected 2
-const k1 = 1;
-const x1 = [1, 2, 3, 4, 5];
+// //expected 2
+// const k1 = 1;
+// const x1 = [1, 2, 3, 4, 5];
 
-//expected 3
-const k2 = 2;
-const x2 = [7, 2, 4, 6, 5, 9, 12, 11];
+// //expected 3
+// const k2 = 2;
+// const x2 = [7, 2, 4, 6, 5, 9, 12, 11];
 
-function hackerlandRadioTransmitters(x, k) {
-  //Define the Lane/street length
-  const uniqueHouses = [...new Set(x)];
-  const houseLaneLenght = Math.max(...uniqueHouses);
-  let transmitters = 0;
+// function hackerlandRadioTransmitters(x, k) {
+//   //Define the Lane/street length
+//   const uniqueHouses = [...new Set(x)];
+//   const houseLaneLenght = Math.max(...uniqueHouses);
+//   let transmitters = 0;
 
-  //Create the initial street with houses setup.
-  //0: no house
-  //1: there is one or more houses
-  let lane = new Array(houseLaneLenght - 1).fill(0);
-  uniqueHouses.forEach((house) => {
-    lane[house - 1] = 1;
-  });
+//   //Create the initial street with houses setup.
+//   //0: no house
+//   //1: there is one or more houses
+//   let lane = new Array(houseLaneLenght - 1).fill(0);
+//   uniqueHouses.forEach((house) => {
+//     lane[house - 1] = 1;
+//   });
 
-  let curPositionI = 0;
-  while (curPositionI < lane.length) {
-    //1. Find a first house to be covered
-    let firstHouseI = null;
-    for (let i = curPositionI; i < lane.length; i++) {
-      if (lane[i] === 1) {
-        firstHouseI = i;
-        break;
-      }
-    }
-    //2. Find a nearest further house to put the transmitter
-    for (
-      let i = Math.min(firstHouseI + k, lane.length - 1);
-      i >= firstHouseI;
-      i--
-    ) {
-      if (lane[i] === 1) {
-        transmitters++; //House to set a transmitter is defined. Update number of them
-        curPositionI = i + k + 1;
-        break;
-      }
-    }
+//   let curPositionI = 0;
+//   while (curPositionI < lane.length) {
+//     //1. Find a first house to be covered
+//     let firstHouseI = null;
+//     for (let i = curPositionI; i < lane.length; i++) {
+//       if (lane[i] === 1) {
+//         firstHouseI = i;
+//         break;
+//       }
+//     }
+//     //2. Find a nearest further house to put the transmitter
+//     for (
+//       let i = Math.min(firstHouseI + k, lane.length - 1);
+//       i >= firstHouseI;
+//       i--
+//     ) {
+//       if (lane[i] === 1) {
+//         transmitters++; //House to set a transmitter is defined. Update number of them
+//         curPositionI = i + k + 1;
+//         break;
+//       }
+//     }
+//   }
+//   return transmitters;
+// }
+
+// console.log(hackerlandRadioTransmitters(x, k));
+// console.log(hackerlandRadioTransmitters(x1, k1));
+// console.log(hackerlandRadioTransmitters(x2, k2));
+
+//-----  -----
+//----- Hackerrank: No Prefix Set -----
+//-----  -----
+
+const words = ["aab", "defgab", "abcde", "aabcde", "bbbbbbbbbb", "jabjjjad"];
+const words1 = ["ab", "cd", "fd"];
+const words2 = ["aab", "aac", "aacghgh", "aabghgh"];
+
+class PrefixTreeNode {
+  constructor() {
+    this.children = {};
+    this.isWord = false;
   }
-  return transmitters;
 }
 
-console.log(hackerlandRadioTransmitters(x, k));
-console.log(hackerlandRadioTransmitters(x1, k1));
-console.log(hackerlandRadioTransmitters(x2, k2));
+class PrefixTree {
+  constructor() {
+    this.root = new PrefixTreeNode();
+  }
+
+  //returns true if prefix exists for a new inserted word
+  insert(word) {
+    let node = this.root;
+    let prefIncluded = false;
+    let newNodesCreated = 0;
+
+    for (const char of word) {
+      let child;
+      if (node.children[char]) {
+        child = node.children[char];
+        if (node.children[char].isWord) prefIncluded = true;
+      } else {
+        child = new PrefixTreeNode();
+        newNodesCreated++;
+      }
+      node.children[char] = child;
+      node = child;
+    }
+
+    node.isWord = true;
+
+    return prefIncluded || newNodesCreated === 0;
+  }
+}
+
+function noPrefix(words) {
+  const prefixTree = new PrefixTree();
+
+  for (let i = 0; i < words.length; i++) {
+    const insertedPrefix = prefixTree.insert(words[i]);
+    if (insertedPrefix) {
+      console.log("BAD SET");
+      console.log(words[i]);
+      return;
+    }
+  }
+
+  console.log("GOOD SET");
+}
+
+noPrefix(words);
+noPrefix(words1);
+noPrefix(words2);
