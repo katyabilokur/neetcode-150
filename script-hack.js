@@ -667,62 +667,170 @@ class MinHeap {
 //----- Hackerrank: No Prefix Set -----
 //-----  -----
 
-const words = ["aab", "defgab", "abcde", "aabcde", "bbbbbbbbbb", "jabjjjad"];
-const words1 = ["ab", "cd", "fd"];
-const words2 = ["aab", "aac", "aacghgh", "aabghgh"];
+// const words = ["aab", "defgab", "abcde", "aabcde", "bbbbbbbbbb", "jabjjjad"];
+// const words1 = ["ab", "cd", "fd"];
+// const words2 = ["aab", "aac", "aacghgh", "aabghgh"];
 
-class PrefixTreeNode {
-  constructor() {
-    this.children = {};
-    this.isWord = false;
+// class PrefixTreeNode {
+//   constructor() {
+//     this.children = {};
+//     this.isWord = false;
+//   }
+// }
+
+// class PrefixTree {
+//   constructor() {
+//     this.root = new PrefixTreeNode();
+//   }
+
+//   //returns true if prefix exists for a new inserted word
+//   insert(word) {
+//     let node = this.root;
+//     let prefIncluded = false;
+//     let newNodesCreated = 0;
+
+//     for (const char of word) {
+//       let child;
+//       if (node.children[char]) {
+//         child = node.children[char];
+//         if (node.children[char].isWord) prefIncluded = true;
+//       } else {
+//         child = new PrefixTreeNode();
+//         newNodesCreated++;
+//       }
+//       node.children[char] = child;
+//       node = child;
+//     }
+
+//     node.isWord = true;
+
+//     return prefIncluded || newNodesCreated === 0;
+//   }
+// }
+
+// function noPrefix(words) {
+//   const prefixTree = new PrefixTree();
+
+//   for (let i = 0; i < words.length; i++) {
+//     const insertedPrefix = prefixTree.insert(words[i]);
+//     if (insertedPrefix) {
+//       console.log("BAD SET");
+//       console.log(words[i]);
+//       return;
+//     }
+//   }
+
+//   console.log("GOOD SET");
+// }
+
+// noPrefix(words);
+// noPrefix(words1);
+// noPrefix(words2);
+
+//-----  -----
+//----- Hackerrank: Highest Value Palindrome -----
+//-----  -----
+
+const s = "1231";
+const n = 4;
+const k = 3;
+
+// const s1 = "0011";
+// const n1 = 4;
+// const k1 = 1;
+const s1 = "12621";
+const n1 = 5;
+const k1 = 5;
+
+const s2 = "092282";
+const n2 = 6;
+const k2 = 3;
+
+function highestValuePalindrome(s, n, k) {
+  s.padStart(n, "0");
+  let arrS = s.split("");
+  let charsToChange = 0;
+  let changesLeft = k;
+
+  const middle = Math.floor(n / 2);
+
+  //1. Define how may changes needed to be made to make a valid palindrome
+
+  //Represent validity in
+  //1 char corresponds palindrome rule
+  //0 char doesn't correspond
+
+  let palVal = new Array(n).fill(1);
+  if (n % 2 !== 0) {
+    palVal[middle] = 1;
   }
-}
 
-class PrefixTree {
-  constructor() {
-    this.root = new PrefixTreeNode();
+  for (let i = 0; i < middle; i++) {
+    if (arrS[i] !== arrS[n - 1 - i]) {
+      palVal[i] = 0;
+      palVal[n - 1 - i] = 0;
+      charsToChange++;
+    }
   }
 
-  //returns true if prefix exists for a new inserted word
-  insert(word) {
-    let node = this.root;
-    let prefIncluded = false;
-    let newNodesCreated = 0;
+  //If more than K - Palindrome cannot be created
+  if (charsToChange > k) return -1;
 
-    for (const char of word) {
-      let child;
-      if (node.children[char]) {
-        child = node.children[char];
-        if (node.children[char].isWord) prefIncluded = true;
-      } else {
-        child = new PrefixTreeNode();
-        newNodesCreated++;
+  //2. If there are more than extra 2 changes, change valid pairs to higher number
+  let finish = false;
+  let j = 0; // || changesLeft !== 0
+  while (changesLeft >= charsToChange + 2 && !finish) {
+    for (let i = j; i < middle; i++) {
+      if (+arrS[i] < 9 || +arrS[n - 1 - i] < 9) {
+        let changed = false;
+        if (+arrS[i] < 9) {
+          changesLeft--;
+          arrS[i] = 9;
+          if (palVal[i] === 0) {
+            charsToChange--;
+            changed = true;
+            palVal[i] = 1;
+          }
+        }
+        if (+arrS[n - 1 - i] < 9) {
+          changesLeft--;
+          arrS[n - 1 - i] = 9;
+          if (palVal[n - 1 - i] === 0) {
+            if (!changed) charsToChange--;
+            palVal[n - 1 - i] = 1;
+          }
+        }
+        j = i + 1;
+        break;
       }
-      node.children[char] = child;
-      node = child;
-    }
 
-    node.isWord = true;
-
-    return prefIncluded || newNodesCreated === 0;
-  }
-}
-
-function noPrefix(words) {
-  const prefixTree = new PrefixTree();
-
-  for (let i = 0; i < words.length; i++) {
-    const insertedPrefix = prefixTree.insert(words[i]);
-    if (insertedPrefix) {
-      console.log("BAD SET");
-      console.log(words[i]);
-      return;
+      if (i === middle - 1) finish = true;
     }
   }
 
-  console.log("GOOD SET");
+  //3. Do all remaining required changes to create a valid palindrome
+  finish = false;
+  j = 0;
+  while (changesLeft !== 0 && !finish) {
+    for (let i = j; i < middle; i++) {
+      if (palVal[i] === 0) {
+        const maxVal = Math.max(+arrS[i], +arrS[n - 1 - i]);
+        arrS[i] = maxVal;
+        arrS[n - 1 - i] = maxVal;
+        changesLeft--;
+        j = i + 1;
+        break;
+      }
+      if (i === middle - 1) finish = true;
+    }
+  }
+
+  //4. If there is uneven number array and one change left, change middle value to 9 if needed
+  if (changesLeft >= 1 && n % 2 !== 0) arrS[middle] = 9;
+
+  return arrS.join("");
 }
 
-noPrefix(words);
-noPrefix(words1);
-noPrefix(words2);
+// console.log(highestValuePalindrome(s, n, k));
+// console.log(highestValuePalindrome(s1, n1, k1));
+console.log(highestValuePalindrome(s2, n2, k2));
